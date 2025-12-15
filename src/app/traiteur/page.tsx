@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
 import styles from './page.module.css';
 
@@ -14,11 +15,41 @@ interface Product {
     image: string;
 }
 
-export default function TraiteurPage() {
-    const [activeTab, setActiveTab] = useState('buffet');
-    const [activeSubTab, setActiveSubTab] = useState('standard'); // For cocktails
+function TraiteurContent() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+
+    const initialCategory = searchParams.get('category') || 'buffet';
+    const initialSubcategory = searchParams.get('subcategory') || 'standard';
+
+    const [activeTab, setActiveTab] = useState(initialCategory);
+    const [activeSubTab, setActiveSubTab] = useState(initialSubcategory);
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
+
+    // Update state when URL params change
+    useEffect(() => {
+        const cat = searchParams.get('category');
+        const sub = searchParams.get('subcategory');
+        if (cat) setActiveTab(cat);
+        if (sub) setActiveSubTab(sub);
+    }, [searchParams]);
+
+    // Update URL when state changes (optional, but good for UX)
+    const handleTabChange = (tab: string) => {
+        setActiveTab(tab);
+        const url = new URL(window.location.href);
+        url.searchParams.set('category', tab);
+        if (tab !== 'cocktail') url.searchParams.delete('subcategory');
+        router.push(url.pathname + url.search);
+    };
+
+    const handleSubTabChange = (sub: string) => {
+        setActiveSubTab(sub);
+        const url = new URL(window.location.href);
+        url.searchParams.set('subcategory', sub);
+        router.push(url.pathname + url.search);
+    };
 
     useEffect(() => {
         async function fetchProducts() {
@@ -51,20 +82,20 @@ export default function TraiteurPage() {
 
             <div className={styles.tabs}>
                 <button
-                    className={`${styles.tab} ${activeTab === 'buffet' ? styles.active : ''}`}
-                    onClick={() => setActiveTab('buffet')}
+                    className={`${styles.tab} ${activeTab === 'buffet' ? styles.activeTab : ''}`} // Fixed styles.active -> styles.activeTab
+                    onClick={() => handleTabChange('buffet')}
                 >
                     Buffets / Banquets
                 </button>
                 <button
-                    className={`${styles.tab} ${activeTab === 'plateau' ? styles.active : ''}`}
-                    onClick={() => setActiveTab('plateau')}
+                    className={`${styles.tab} ${activeTab === 'plateau' ? styles.activeTab : ''}`}
+                    onClick={() => handleTabChange('plateau')}
                 >
                     Plateaux Repas
                 </button>
                 <button
-                    className={`${styles.tab} ${activeTab === 'cocktail' ? styles.active : ''}`}
-                    onClick={() => setActiveTab('cocktail')}
+                    className={`${styles.tab} ${activeTab === 'cocktail' ? styles.activeTab : ''}`}
+                    onClick={() => handleTabChange('cocktail')}
                 >
                     Pièces Cocktails
                 </button>
@@ -73,20 +104,20 @@ export default function TraiteurPage() {
             {activeTab === 'cocktail' && (
                 <div className={styles.subTabs}>
                     <button
-                        className={`${styles.subTab} ${activeSubTab === 'standard' ? styles.activeSub : ''}`}
-                        onClick={() => setActiveSubTab('standard')}
+                        className={`${styles.subTab} ${activeSubTab === 'standard' ? styles.activeSubTab : ''}`} // Fixed activeSub -> activeSubTab
+                        onClick={() => handleSubTabChange('standard')}
                     >
                         Standard
                     </button>
                     <button
-                        className={`${styles.subTab} ${activeSubTab === 'premium' ? styles.activeSub : ''}`}
-                        onClick={() => setActiveSubTab('premium')}
+                        className={`${styles.subTab} ${activeSubTab === 'premium' ? styles.activeSubTab : ''}`}
+                        onClick={() => handleSubTabChange('premium')}
                     >
                         Premium
                     </button>
                     <button
-                        className={`${styles.subTab} ${activeSubTab === 'deluxe' ? styles.activeSub : ''}`}
-                        onClick={() => setActiveSubTab('deluxe')}
+                        className={`${styles.subTab} ${activeSubTab === 'deluxe' ? styles.activeSubTab : ''}`}
+                        onClick={() => handleSubTabChange('deluxe')}
                     >
                         Deluxe
                     </button>
@@ -106,5 +137,13 @@ export default function TraiteurPage() {
                 </div>
             )}
         </div>
+    );
+}
+
+export default function TraiteurPage() {
+    return (
+        <Suspense fallback={<div style={{ textAlign: 'center', padding: '5rem' }}>Chargement...</div>}>
+            <TraiteurContent />
+        </Suspense>
     );
 }

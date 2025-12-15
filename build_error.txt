@@ -1,0 +1,34 @@
+﻿
+> temp-app@0.1.0 build
+> next build
+
+   Ôû▓ Next.js 16.0.10 (Turbopack)
+
+   Creating an optimized production build ...
+ Ô£ô Compiled successfully in 2.9s
+   Running TypeScript ...
+   Collecting page data using 11 workers ...
+   Generating static pages using 11 workers (0/13) ...
+   Generating static pages using 11 workers (3/13) 
+   Generating static pages using 11 workers (6/13) 
+   Generating static pages using 11 workers (9/13) 
+ Ô£ô Generating static pages using 11 workers (13/13) in 1349.1ms
+   Finalizing page optimization ...
+
+Route (app)
+Ôöî Ôùï /
+Ôö£ Ôùï /_not-found
+Ôö£ Ôùï /a-propos
+Ôö£ ãÆ /api/auth/login
+Ôö£ ãÆ /api/auth/register
+Ôö£ ãÆ /api/products
+Ôö£ Ôùï /chef-a-domicile
+Ôö£ Ôùï /compte
+Ôö£ Ôùï /consultant
+Ôö£ Ôùï /panier
+Ôöö Ôùï /traiteur
+
+
+Ôùï  (Static)   prerendered as static content
+ãÆ  (Dynamic)  server-rendered on demand
+

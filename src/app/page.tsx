@@ -5,105 +5,170 @@ import styles from './page.module.css';
 export default function Home() {
   return (
     <div className={styles.container}>
-      {/* Hero Section */}
+      {/* 1. Video Header */}
       <section className={styles.hero}>
-        <div className={styles.heroBackground}>
-          <Image
-            src="/images/hero.jpg"
-            alt="Art de la table Luxe"
-            fill
-            className={styles.heroImage}
-            priority
-          />
+        <div className={styles.videoBackground}>
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className={styles.heroVideo}
+          >
+            <source src="/videos/header_bg.mp4" type="video/mp4" />
+          </video>
+          <div className={styles.heroFallback}>
+            <Image
+              src="/images/hero.jpg"
+              alt="Hero Fallback"
+              fill
+              className={styles.heroImage}
+              priority
+            />
+          </div>
         </div>
+
+        <div className={styles.heroOverlay} />
+
         <div className={styles.heroContent}>
-          <h1 className={styles.title}>L&apos;Excellence Culinaire</h1>
+          <h1 className={styles.title}>L&apos;Art de Recevoir</h1>
           <p className={styles.subtitle}>
-            Une symphonie de saveurs pour vos moments d&apos;exception.
-            L&apos;art de recevoir à la française.
+            Haute Couture Gastronomique
           </p>
-          <div className={styles.ctaGroup}>
-            <Link href="/traiteur" className={styles.primaryButton}>
-              La Boutique
-            </Link>
-            <Link href="/chef-a-domicile" className={styles.secondaryButton}>
-              Nos Services
-            </Link>
-          </div>
+          <Link href="/traiteur" className={styles.primaryButton}>
+            Entrer dans la Maison
+          </Link>
         </div>
       </section>
 
-      {/* Savoir-Faire Section */}
-      <section className={styles.section}>
-        <div className={styles.gridTwo}>
-          <div className={styles.textBlock}>
-            <h3>Un Savoir-Faire Unique</h3>
-            <p>
-              Depuis plus de vingt ans, notre Maison incarne l&apos;élégance et la créativité gastronomique.
-              Inspirés par les saisons et les produits les plus nobles, nos chefs composent des partitions culinaires
-              qui ravissent les palais les plus exigeants. Du caviar impérial à la truffe blanche d&apos;Alba,
-              nous sélectionnons l&apos;exceptionnel pour le sublimer.
-            </p>
-            <Link href="/a-propos" className={styles.link}>Découvrir notre histoire</Link>
-          </div>
-          <div className={styles.imageBlock}>
-            <Image
-              src="/images/chef_hero.jpg"
-              alt="Chef en action"
-              fill
-              className={styles.featureImage}
-            />
-          </div>
+      {/* 2. Discover Our Products */}
+      <section className={styles.discoverSection}>
+        <h2 className={styles.sectionTitle}>Collections Culinaires</h2>
+        <div className={styles.discoverGrid}>
+
+          {/* Buffets */}
+          <Link href="/traiteur?category=buffet" className={styles.discoverCard}>
+            <div className={styles.cardImageContainer}>
+              <Image
+                src="/images/buffet_hero.jpg"
+                alt="Buffets & Banquets"
+                fill
+                className={styles.cardImage}
+              />
+              <div className={styles.cardOverlay}>
+                <span className={styles.cardLabel}>Voir la Collection</span>
+              </div>
+            </div>
+            <h3 className={styles.cardTitle}>Buffets & Banquets</h3>
+          </Link>
+
+          {/* Plateaux Repas */}
+          <Link href="/traiteur?category=plateau" className={styles.discoverCard}>
+            <div className={styles.cardImageContainer}>
+              <Image
+                src="/images/main_hero.jpg"
+                alt="Plateaux Repas"
+                fill
+                className={styles.cardImage}
+              />
+              <div className={styles.cardOverlay}>
+                <span className={styles.cardLabel}>Voir la Collection</span>
+              </div>
+            </div>
+            <h3 className={styles.cardTitle}>Plateaux d&apos;Affaires</h3>
+          </Link>
+
+          {/* Pièces Cocktails */}
+          <Link href="/traiteur?category=cocktail" className={styles.discoverCard}>
+            <div className={styles.cardImageContainer}>
+              <Image
+                src="/images/cocktail_hero.jpg"
+                alt="Pièces Cocktails"
+                fill
+                className={styles.cardImage}
+              />
+              <div className={styles.cardOverlay}>
+                <span className={styles.cardLabel}>Voir la Collection</span>
+              </div>
+            </div>
+            <h3 className={styles.cardTitle}>Cocktails & Réceptions</h3>
+          </Link>
+
         </div>
       </section>
 
-      {/* Traiteur Preview Section */}
-      <section className={styles.section} style={{ backgroundColor: '#f9f9f9', width: '100%', maxWidth: '100%', padding: '8rem 10%' }}>
-        <h2 className={styles.sectionTitle}>Collections Traiteur</h2>
-        <div className={styles.gridTwo}>
-          <div className={styles.imageBlock}>
-            <Image
-              src="/images/cocktail_tray_luxury.jpg"
-              alt="Cocktails Prestige"
-              fill
-              className={styles.featureImage}
-              // Fallback if image name is slightly different, using generic naming logic in real app
-              // Just using the one copied earlier: cocktail_hero.jpg
-              srcSet="/images/cocktail_hero.jpg"
-            />
-          </div>
-          <div className={styles.textBlock}>
-            <h3>Cocktails & Réceptions</h3>
-            <p>
-              Pour vos événements privés ou corporatifs, découvrez nos pièces cocktails d&apos;une finesse absolue.
-              Nos collections &quot;Signature&quot; et &quot;Prestige&quot; sont conçues comme des bijoux comestibles,
-              aussi beaux à regarder que délicieux à déguster.
+      {/* 3. Nos Prestations */}
+      <section className={styles.servicesSection}>
+        <div className={styles.servicesHeader}>
+          <div className={styles.servicesTitleBlock}>
+            <h2 className={styles.servicesMainTitle}>
+              Héritage & <br /> <span>Savoir-Faire</span>
+            </h2>
+            <p className={styles.servicesDesc}>
+              Chaque événement est une page blanche que nous écrivons avec vous.
+              De l&apos;intime au grandiose, nos équipes orchestrent une symphonie de saveurs
+              et d&apos;élégance pour sublimer vos instants précieux.
             </p>
-            <Link href="/traiteur" className={styles.link}>Explorer la carte</Link>
           </div>
-        </div>
-      </section>
-
-      {/* Chef à Domicile */}
-      <section className={styles.section}>
-        <div className={styles.gridTwo}>
-          <div className={styles.textBlock}>
-            <h3>Le Restaurant chez Vous</h3>
-            <p>
-              Laissez entrer la haute gastronomie dans votre intimité. Notre service de Chef à Domicile
-              transforme votre salle à manger en étoilé. Service au gant blanc, vaisselle en porcelaine de Limoges,
-              et une discrétion absolue pour un moment hors du temps.
-            </p>
-            <Link href="/chef-a-domicile" className={styles.link}>Réserver un chef</Link>
-          </div>
-          <div className={styles.imageBlock}>
+          <div className={styles.servicesHeaderImage}>
             <Image
               src="/images/buffet_hero.jpg"
-              alt="Table dressée"
+              alt="Réception grandiose"
               fill
-              className={styles.featureImage}
+              className={styles.serviceImage}
             />
           </div>
+        </div>
+
+        <div className={styles.servicesGrid}>
+          {/* Grands Événements */}
+          <div className={styles.serviceItem}>
+            <div className={styles.serviceItemImage}>
+              <Image
+                src="/images/hero.jpg"
+                alt="Grands Événements"
+                fill
+                className={styles.serviceImage}
+              />
+            </div>
+            <div className={styles.serviceItemText}>
+              <h3>Grands Événements</h3>
+              <Link href="/contact" className={styles.discoverLink}>Découvrir</Link>
+            </div>
+          </div>
+
+          {/* Réceptions d'Entreprise */}
+          <div className={styles.serviceItem}>
+            <div className={styles.serviceItemTextRight}>
+              <h3>Réceptions Corporate</h3>
+              <Link href="/contact" className={styles.discoverLink}>Découvrir</Link>
+            </div>
+            <div className={styles.serviceItemImage}>
+              <Image
+                src="/images/dessert_hero.jpg"
+                alt="Réceptions d'Entreprise"
+                fill
+                className={styles.serviceImage}
+              />
+            </div>
+          </div>
+
+          {/* Gastronomie */}
+          <div className={styles.serviceItem}>
+            <div className={styles.serviceItemImage}>
+              <Image
+                src="/images/chef_hero.jpg"
+                alt="La Gastronomie"
+                fill
+                className={styles.serviceImage}
+              />
+            </div>
+            <div className={styles.serviceItemText}>
+              <h3>Haute Gastronomie</h3>
+              <Link href="/traiteur" className={styles.discoverLink}>Découvrir</Link>
+            </div>
+          </div>
+
         </div>
       </section>
 

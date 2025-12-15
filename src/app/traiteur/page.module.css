@@ -1,114 +1,172 @@
+/* Traiteur Page specific luxury update */
 .container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 4rem 2rem;
-    min-height: 80vh;
+  min-height: 100vh;
+  background-color: white;
+  padding-bottom: 6rem;
 }
 
 .header {
-    text-align: center;
-    margin-bottom: 4rem;
+  padding: 10rem 2rem 6rem;
+  text-align: center;
+  background-color: #fcfcfc;
+  margin-bottom: 4rem;
+  position: relative;
+}
+
+/* Header decorative luxury line */
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 1px;
+  background-color: #aa8b55;
+  /* Gold/Bronze accent */
 }
 
 .title {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+  font-family: var(--font-playfair), serif;
+  font-size: 4rem;
+  font-weight: 400;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+  color: #111;
 }
 
 .subtitle {
-    color: #666;
-    font-size: 1.2rem;
-    font-weight: 300;
+  font-family: var(--font-inter);
+  color: #666;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-/* Main Tabs */
 .tabs {
-    display: flex;
-    justify-content: center;
-    gap: 3rem;
-    margin-bottom: 3rem;
-    border-bottom: 1px solid var(--gray-medium);
-    padding-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-bottom: 4rem;
+  padding: 0 1rem;
+  flex-wrap: wrap;
 }
 
 .tab {
-    background: none;
-    border: none;
-    font-family: var(--font-heading);
-    font-size: 1.1rem;
-    color: #888;
-    cursor: pointer;
-    padding: 0.5rem 0;
-    position: relative;
-    transition: color 0.3s ease;
+  padding: 1rem 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid transparent;
+  font-family: var(--font-playfair);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  color: #888;
+  letter-spacing: 0.05em;
 }
 
 .tab:hover {
-    color: var(--accent);
+  color: #111;
 }
 
-.active {
-    color: var(--accent);
+.activeTab {
+  color: #111;
+  border-bottom: 1px solid #111;
+  font-style: italic;
 }
 
-.active::after {
-    content: '';
-    position: absolute;
-    bottom: -1.1rem;
-    /* Aligns with border-bottom of .tabs */
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: var(--accent);
-}
-
-/* Sub Tabs (Cocktails) */
 .subTabs {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 4rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 6rem;
+  border-top: 1px solid #eee;
+  padding-top: 3rem;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 900px;
 }
 
 .subTab {
-    background: none;
-    border: 1px solid var(--gray-medium);
-    padding: 0.5rem 1.5rem;
-    border-radius: 9999px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    color: #666;
-    transition: all 0.2s ease;
+  background: none;
+  border: none;
+  font-family: var(--font-inter);
+  font-size: 0.9rem;
+  color: #999;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  position: relative;
+  transition: color 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
 }
 
 .subTab:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+  color: black;
 }
 
-.activeSub {
-    background-color: var(--accent);
-    color: white;
-    border-color: var(--accent);
+.activeSubTab {
+  color: black;
 }
 
-/* Grid */
+.activeSubTab::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: black;
+}
+
 .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 3rem;
+  display: grid;
+  /* Hermès style */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3rem;
+  padding: 0 5%;
+  max-width: 1800px;
+  margin: 0 auto;
 }
 
+.empty,
 .loading {
-    text-align: center;
-    font-size: 1.2rem;
-    color: #888;
-    margin-top: 4rem;
+  text-align: center;
+  padding: 5rem;
+  color: #999;
+  font-family: var(--font-playfair);
+  font-size: 1.2rem;
+  font-style: italic;
 }
 
-.empty {
-    grid-column: 1 / -1;
-    text-align: center;
-    color: #888;
-    margin-top: 4rem;
+/* Responsive */
+@media (max-width: 1400px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 4rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 2rem;
+  }
+
+  .header {
+    padding: 8rem 1rem 4rem;
+  }
+
+  .title {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }

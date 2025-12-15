@@ -2,211 +2,486 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  background-color: white;
 }
 
-/* Hero Section */
+/* 1. HERO VIDEO HEADER */
 .hero {
   position: relative;
-  height: 100vh;
+  height: 90vh;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  text-align: center;
   overflow: hidden;
 }
 
-.heroBackground {
+.videoBackground {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;
+  z-index: 0;
+}
+
+.heroVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.heroFallback {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
 }
 
 .heroImage {
   object-fit: cover;
+}
+
+.heroOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  filter: brightness(0.7);
-  /* Dim image slightly for text readability */
-  animation: slowZoom 20s infinite alternate;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 2;
 }
 
 .heroContent {
+  position: relative;
   z-index: 10;
-  animation: fadeInUp 1s ease-out;
-  padding: 0 2rem;
+  text-align: center;
+  color: white;
+  animation: fadeInUp 1.2s ease-out;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  /* Delicate line below hero text */
 }
 
+/* Luxury Font Styles */
 .title {
-  font-size: 5rem;
-  font-weight: 600;
+  font-family: var(--font-playfair), serif;
+  /* Serif for titles */
+  font-size: 5.5rem;
+  font-weight: 500;
+  font-style: italic;
+  /* Italian luxury touch */
+  letter-spacing: -0.02em;
   margin-bottom: 1.5rem;
-  letter-spacing: -0.03em;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
 }
 
 .subtitle {
-  font-size: 1.8rem;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 1.2rem;
   font-weight: 300;
-  margin-bottom: 3rem;
+  margin-bottom: 3.5rem;
+  letter-spacing: 0.2em;
+  /* Wide tracking for modern luxury */
+  text-transform: uppercase;
   opacity: 0.9;
-  max-width: 600px;
+}
+
+.primaryButton {
+  display: inline-block;
+  padding: 1.2rem 3.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.8rem;
+  transition: all 0.4s ease;
+  background: transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.primaryButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: white;
+  transition: left 0.4s ease;
+  z-index: -1;
+}
+
+.primaryButton:hover {
+  color: black;
+}
+
+.primaryButton:hover::before {
+  left: 0;
+}
+
+/* 2. DISCOVER SECTION */
+.discoverSection {
+  padding: 8rem 4rem;
+  background-color: white;
+  text-align: center;
+}
+
+.sectionTitle {
+  font-family: var(--font-playfair), serif;
+  font-size: 3.5rem;
+  font-weight: 400;
+  margin-bottom: 5rem;
+  color: #111;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 2rem;
+}
+
+/* Decorative line centered below title */
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 1px;
+  background-color: #000;
+}
+
+.discoverGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.discoverCard {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+}
+
+.cardImageContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/5;
+  /* Taller portrait */
+  overflow: hidden;
+  margin-bottom: 2rem;
+  /* Dalloyau / Luxury style: subtle border or frame effect possible, keeping it clean for now */
+}
+
+.cardImage {
+  object-fit: cover;
+  transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.discoverCard:hover .cardImage {
+  transform: scale(1.08);
+}
+
+.cardLabel {
+  /* Hidden label on hover, stylized */
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  color: white;
+  font-family: var(--font-inter);
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: all 0.4s ease;
+  border-bottom: 1px solid white;
+  padding-bottom: 0.3rem;
+}
+
+.discoverCard:hover .cardLabel {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.cardTitle {
+  font-family: var(--font-playfair), serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  font-style: italic;
+  color: #111;
+  margin-top: 1rem;
+  position: relative;
+  align-self: flex-start;
+  /* Left align title */
+  padding-left: 1rem;
+  border-left: 1px solid transparent;
+  transition: all 0.4s ease;
+}
+
+/* Line appearing on hover next to title */
+.discoverCard:hover .cardTitle {
+  border-left: 1px solid #111;
+  padding-left: 1.5rem;
+}
+
+/* 3. NOS PRESTATIONS SECTION */
+.servicesSection {
+  padding: 8rem 4rem;
+  background-color: #FDFDFD;
+  border-top: 1px solid #eee;
+}
+
+.servicesHeader {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 6rem;
+  align-items: center;
+  margin-bottom: 8rem;
+  max-width: 1500px;
   margin-left: auto;
   margin-right: auto;
 }
 
-/* Buttons */
-.ctaGroup {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
+.servicesTitleBlock {
+  padding-top: 2rem;
+  position: relative;
 }
 
-.primaryButton {
-  padding: 1rem 3rem;
-  background-color: white;
-  color: black;
-  border-radius: 9999px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  border: 1px solid white;
+/* The vertical line extending above title */
+.servicesTitleBlock::before {
+  content: '';
+  position: absolute;
+  top: -3rem;
+  left: 0;
+  width: 1px;
+  height: 60px;
+  background-color: #333;
+  /* Dark accents */
 }
 
-.primaryButton:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
-  transform: translateY(-2px);
-}
-
-.secondaryButton {
-  padding: 1rem 3rem;
-  background-color: transparent;
-  color: white;
-  border: 1px solid white;
-  border-radius: 9999px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.secondaryButton:hover {
-  background-color: white;
-  color: black;
-  transform: translateY(-2px);
-}
-
-/* Sections */
-.section {
-  padding: 8rem 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.sectionTitle {
-  font-size: 3rem;
-  text-align: center;
-  margin-bottom: 4rem;
+.servicesMainTitle {
+  font-family: var(--font-playfair), serif;
+  font-size: 4.5rem;
+  line-height: 1;
   font-weight: 400;
-  letter-spacing: -0.02em;
+  color: #AA8B55;
+  /* Muted Gold/Bronze accent valid for luxury without being gaudy */
+  color: #1a1a1a;
+  margin-bottom: 3rem;
 }
 
-/* Grid Layouts */
-.gridTwo {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: center;
+/* Stylized emphasis on "PRESTATIONS" */
+.servicesMainTitle span {
+  display: block;
+  font-style: italic;
+  font-size: 5rem;
+  margin-top: 0.5rem;
+  margin-left: 2rem;
 }
 
-.textBlock {
-  padding: 2rem;
-}
-
-.textBlock h3 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  font-weight: 400;
-}
-
-.textBlock p {
+.servicesDesc {
+  font-family: var(--font-inter);
   font-size: 1.1rem;
-  line-height: 1.7;
+  line-height: 1.8;
   color: #666;
-  margin-bottom: 2rem;
+  max-width: 450px;
+  margin-left: 4rem;
+  /* Indent description */
+  border-left: 1px solid #ddd;
+  padding-left: 2rem;
 }
 
-.link {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  font-weight: 500;
-}
-
-.imageBlock {
+.servicesHeaderImage {
   position: relative;
   height: 600px;
-  border-radius: 8px;
-  overflow: hidden;
+  width: 100%;
 }
 
-.featureImage {
+.serviceImage {
   object-fit: cover;
+}
+
+/* Service Grid items */
+.servicesGrid {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10rem;
+  /* Huge lavish spacing */
+}
+
+.serviceItem {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  /* Image larger */
+  gap: 5rem;
+  align-items: center;
+  position: relative;
+}
+
+/* Distinct layout for even items */
+.serviceItem:nth-child(even) {
+  grid-template-columns: 0.8fr 1.2fr;
+}
+
+.serviceItemImage {
+  position: relative;
+  height: 500px;
+  width: 100%;
+}
+
+/* Image overflowing line effect */
+.serviceItemImage::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ddd;
+  /* Thin decorative frame offset */
+  z-index: -1;
   transition: transform 0.5s ease;
 }
 
-.imageBlock:hover .featureImage {
-  transform: scale(1.03);
+.serviceItem:hover .serviceItemImage::after {
+  transform: translate(10px, 10px);
 }
 
-/* Animations */
+.serviceItemText {
+  text-align: left;
+  padding-left: 2rem;
+}
+
+.serviceItemTextRight {
+  text-align: right;
+  padding-right: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.serviceItem h3 {
+  font-family: var(--font-playfair);
+  font-size: 3rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.05em;
+  color: #111;
+}
+
+.discoverLink {
+  font-family: var(--font-playfair);
+  font-style: italic;
+  font-size: 1.5rem;
+  color: #888;
+  text-decoration: none;
+  position: relative;
+  padding-right: 40px;
+  /* Space for line */
+}
+
+.discoverLink::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 30px;
+  height: 1px;
+  background-color: #888;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.discoverLink:hover {
+  color: black;
+}
+
+.discoverLink:hover::after {
+  width: 50px;
+  background-color: black;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .discoverGrid {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+    gap: 4rem;
+  }
+
+  .sectionTitle {
+    font-size: 2.5rem;
+  }
+
+  .servicesHeader {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .servicesMainTitle {
+    font-size: 3.5rem;
+  }
+
+  .servicesMainTitle span {
+    font-size: 4rem;
+    margin-left: 0;
+  }
+
+  .servicesDesc {
+    margin-left: 0;
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .serviceItem,
+  .serviceItem:nth-child(even) {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .serviceItemText,
+  .serviceItemTextRight {
+    text-align: center;
+    align-items: center;
+    padding: 0;
+  }
+
+  .serviceItemImage {
+    order: -1;
+  }
+
+  .serviceItemImage::after {
+    display: none;
+    /* Remove offset border on mobile */
+  }
+
+  .title {
+    font-size: 3.5rem;
+  }
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
 
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes slowZoom {
-  from {
-    transform: scale(1);
-  }
-
-  to {
-    transform: scale(1.1);
-  }
-}
-
-@media (max-width: 900px) {
-  .heroContent {
-    padding: 0 1rem;
-  }
-
-  .title {
-    font-size: 3rem;
-  }
-
-  .subtitle {
-    font-size: 1.2rem;
-  }
-
-  .gridTwo {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-  }
-
-  .imageBlock {
-    height: 400px;
-  }
-
-  .section {
-    padding: 4rem 1.5rem;
   }
 }
