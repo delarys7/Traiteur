@@ -1,67 +1,163 @@
 .header {
-    width: 100%;
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 100;
-    background-color: rgba(255, 255, 255, 0.95);
+    left: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(10px);
+    z-index: 1000;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    padding: 1.5rem 0;
+    height: 120px;
+    display: flex;
+    align-items: center;
 }
 
 .container {
-    max-width: 1400px;
+    width: 100%;
+    max-width: 1800px;
     margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
+    padding: 0 3rem;
+    display: grid;
+    /* 
+       CRITICAL FIX: Force 3 columns. 
+       minmax(200px, 1fr) ensures the side columns don't collapse to zero.
+    */
+    grid-template-columns: minmax(300px, 1fr) auto minmax(300px, 1fr);
     align-items: center;
-    padding: 0 2rem;
 }
 
-.logo a {
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    font-weight: 600;
-    letter-spacing: -0.05em;
-    text-transform: uppercase;
-    color: var(--accent);
-}
-
-.nav {
+/* LEFT: NAVIGATION */
+.navLeft {
     display: flex;
-    gap: 2.5rem;
-}
-
-@media (max-width: 900px) {
-    .container {
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .nav {
-        gap: 1.5rem;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
+    gap: 2rem;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+    /* Prevent wrapping */
+    /* Ensure it takes space */
+    width: 100%;
 }
 
 .link {
-    font-size: 0.95rem;
-    color: var(--foreground);
-    transition: color 0.2s ease;
-    font-weight: 400;
+    text-decoration: none;
+    font-family: var(--font-inter), sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #111;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+    /* Force single line */
 }
 
 .link:hover {
-    color: #666;
+    opacity: 0.7;
 }
 
-.actions {
+/* CENTER: LOGO */
+.logoCenter {
     display: flex;
-    gap: 1.5rem;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.logoImage {
+    object-fit: contain;
+    width: auto;
+    height: 90px;
+}
+
+/* RIGHT: ACTIONS */
+.actionsRight {
+    display: flex;
+    gap: 2rem;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
 }
 
 .iconLink {
-    font-size: 0.95rem;
-    color: var(--foreground);
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.iconLink:hover {
+    transform: scale(1.1);
+}
+
+.cartIconWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.cartCount {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: black;
+    color: white;
+    font-size: 0.65rem;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* RESPONSIVE */
+
+/* Tablet Optimization: Reduce gap but maintain grid */
+@media (max-width: 1300px) {
+    .navLeft {
+        gap: 1.2rem;
+    }
+
+    .link {
+        font-size: 0.75rem;
+    }
+}
+
+/* Mobile: Switch to Stack only on SMALL screens */
+@media (max-width: 850px) {
+    .header {
+        height: auto;
+        padding: 0.5rem 0;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+
+    .logoCenter {
+        order: -1;
+        margin-bottom: 0px;
+    }
+
+    .logoImage {
+        height: 60px;
+    }
+
+    .navLeft {
+        justify-content: center;
+        flex-wrap: wrap;
+        width: 100%;
+        gap: 1rem;
+    }
+
+    .actionsRight {
+        justify-content: center;
+        width: 100%;
+        gap: 2rem;
+    }
 }
