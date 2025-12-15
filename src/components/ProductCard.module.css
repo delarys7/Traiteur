@@ -1,0 +1,83 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    /* Minimalist border/shadow */
+    transition: transform 0.3s ease;
+    height: 100%;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+.imageContainer {
+    width: 100%;
+    aspect-ratio: 1;
+    background-color: var(--gray-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.placeholderImage {
+    font-size: 3rem;
+    color: var(--gray-medium);
+    font-family: var(--font-heading);
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+}
+
+.name {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--accent);
+}
+
+.price {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #666;
+}
+
+.description {
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+.button {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: transparent;
+    border: 1px solid var(--gray-medium);
+    color: var(--accent);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.button:hover {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: white;
+}
