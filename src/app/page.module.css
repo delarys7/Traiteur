@@ -390,19 +390,19 @@
   color: #888;
   text-decoration: none;
   position: relative;
-  padding-right: 40px;
-  /* Space for line */
+  display: inline-block;
+  padding-bottom: 5px;
 }
 
 .discoverLink::after {
   content: '';
   position: absolute;
-  top: 50%;
-  right: 0;
-  width: 30px;
+  bottom: 0;
+  left: 0;
+  width: 0;
   height: 1px;
-  background-color: #888;
-  transition: width 0.3s ease, background-color 0.3s ease;
+  background-color: #000;
+  transition: width 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .discoverLink:hover {
