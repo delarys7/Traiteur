@@ -1,15 +1,10 @@
 .header {
-    position: fixed;
-    top: 0;
-    left: 0;
+    position: relative;
     width: 100%;
-    background-color: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(10px);
-    z-index: 1000;
+    background-color: #fff;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    height: 120px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
 }
 
 .container {
@@ -17,65 +12,72 @@
     max-width: 1800px;
     margin: 0 auto;
     padding: 0 3rem;
-    display: grid;
-    /* 
-       CRITICAL FIX: Force 3 columns. 
-       minmax(200px, 1fr) ensures the side columns don't collapse to zero.
-    */
-    grid-template-columns: minmax(300px, 1fr) auto minmax(300px, 1fr);
-    align-items: center;
+    display: flex;
+    flex-direction: column;
 }
 
-/* LEFT: NAVIGATION */
-.navLeft {
-    display: flex;
-    gap: 2rem;
-    justify-content: flex-start;
+.topRow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    flex-wrap: nowrap;
-    /* Prevent wrapping */
-    /* Ensure it takes space */
+    width: 100%;
+    padding-top: 1rem;
+}
+
+.spacerLeft {
     width: 100%;
 }
 
-.link {
-    text-decoration: none;
-    font-family: var(--font-inter), sans-serif;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: #111;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    transition: opacity 0.3s;
-    white-space: nowrap;
-    /* Force single line */
-}
-
-.link:hover {
-    opacity: 0.7;
-}
-
-/* CENTER: LOGO */
 .logoCenter {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 1rem;
 }
 
 .logoImage {
     object-fit: contain;
     width: auto;
-    height: 90px;
+    height: 110px;
+    /* Reduced from 180px */
+    transition: height 0.3s ease;
 }
 
-/* RIGHT: ACTIONS */
 .actionsRight {
     display: flex;
     gap: 2rem;
     justify-content: flex-end;
     align-items: center;
     width: 100%;
+}
+
+.bottomRow {
+    display: flex;
+    gap: 4.5rem;
+    /* Increased gap for premium feel */
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+    /* Reduced from 1.5rem */
+    padding-bottom: 1.2rem;
+    /* Reduced from 2rem */
+}
+
+.link {
+    text-decoration: none;
+    font-family: var(--font-inter), sans-serif;
+    font-size: 0.85rem;
+    /* Reduced from 0.95rem */
+    font-weight: 500;
+    color: #111;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    /* Luxury tracking */
+    transition: opacity 0.3s;
+    white-space: nowrap;
+}
+
+.link:hover {
+    opacity: 0.7;
 }
 
 .iconLink {
@@ -113,51 +115,37 @@
 }
 
 /* RESPONSIVE */
-
-/* Tablet Optimization: Reduce gap but maintain grid */
 @media (max-width: 1300px) {
-    .navLeft {
-        gap: 1.2rem;
-    }
-
-    .link {
-        font-size: 0.75rem;
+    .bottomRow {
+        gap: 3rem;
     }
 }
 
-/* Mobile: Switch to Stack only on SMALL screens */
 @media (max-width: 850px) {
-    .header {
-        height: auto;
-        padding: 0.5rem 0;
-    }
-
     .container {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        padding: 0 1rem;
+        padding: 0.5rem 1rem;
     }
 
-    .logoCenter {
-        order: -1;
-        margin-bottom: 0px;
+    .topRow {
+        grid-template-columns: 1fr auto;
+        gap: 1rem;
+    }
+
+    .spacerLeft {
+        display: none;
     }
 
     .logoImage {
-        height: 60px;
+        height: 100px;
     }
 
-    .navLeft {
-        justify-content: center;
+    .bottomRow {
         flex-wrap: wrap;
-        width: 100%;
-        gap: 1rem;
+        gap: 1.5rem;
+        padding: 1rem 0;
     }
 
     .actionsRight {
-        justify-content: center;
-        width: 100%;
-        gap: 2rem;
+        gap: 1.5rem;
     }
 }

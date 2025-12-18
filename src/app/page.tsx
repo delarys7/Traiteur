@@ -15,17 +15,8 @@ export default function Home() {
             playsInline
             className={styles.heroVideo}
           >
-            <source src="/videos/header_bg.mp4" type="video/mp4" />
+            <source src="/videos/9bc924c2-6c02-4374-815e-8e5620df9c90_watermarked.mp4" type="video/mp4" />
           </video>
-          <div className={styles.heroFallback}>
-            <Image
-              src="/images/hero.jpg"
-              alt="Hero Fallback"
-              fill
-              className={styles.heroImage}
-              priority
-            />
-          </div>
         </div>
 
         <div className={styles.heroOverlay} />
