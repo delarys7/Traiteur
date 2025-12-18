@@ -54,6 +54,41 @@
     color: #666;
 }
 
+.tagContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.tag {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-family: var(--font-inter);
+    border: 1px solid transparent;
+}
+
+.cuisineTag {
+    background-color: #f7f7f7;
+    color: #555;
+    border-color: #eee;
+}
+
+.dietaryTag {
+    background-color: #f0f7f0;
+    color: #2e7d32;
+    border-color: #e0f0e0;
+}
+
+.allergyTag {
+    background-color: #fff5f5;
+    color: #c62828;
+    border-color: #ffe0e0;
+}
+
 .description {
     font-size: 0.9rem;
     color: #888;
