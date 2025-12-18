@@ -5,129 +5,129 @@
   background-color: white;
 }
 
-/* 1. HERO VIDEO HEADER */
-.hero {
-  position: relative;
-  height: 90vh;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
+/* ===== 1. HERO VIDEO HEADER ===== */
 
-.videoBackground {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
+  /* Cadre qui contient toute la section */
+  .hero {
+    position: relative;          /* Référence pour les éléments internes : 'relative' => positionnement par rapport à ce cadre */
+    height: 90vh;                /* Hauteur de la section : 90% de la hauteur de la fenêtre */
+    width: 100%;                 /* Largeur de la section : 100% de la largeur de la fenêtre */
+    display: flex;               /* Affichage en flexbox */
+    align-items: center;         /* Alignement vertical des éléments : centré */
+    justify-content: center;     /* Alignement horizontal des éléments : centré */
+    overflow: hidden;            /* Masque les éléments qui sortent de la section */
+  }
+  /* Cadre qui contient la vidéo de fond */
+  .videoBackground {
+    position: absolute;          /* Positionnement absolu par rapport au cadre parent -> Prend toute sa place */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;                  /* Z-index : 0 -> Fond / tout en bas de la pile de calques */
+  }
+  /* Vidéo elle-même */
+  .heroVideo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;           /* Occupe tout l'espace accordé, sans être déformée */
+    position: absolute;          /* Positionnement absolu par rapport au cadre parent -> Prend toute sa place */
+    top: 0;
+    left: 0;
+    z-index: 1;                  /* Z-index : 1 -> Devant le fond */
+  }
+  /* Image de secours si chargement trop long ou utilisateur sur ancien téléphone */
+  .heroFallback {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;                  /* Z-index : 0 -> derrière la vidéo une fois celle-ci chargée */
+  }
 
-.heroVideo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
+  .heroImage {
+    object-fit: cover;
+  }
+  /* Le filtre sombre qui permet de mettre en avant le texte */
+  .heroOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);            /* voile noir transparent à 20% */
+    z-index: 2;                                  /* Z-index : 2 -> Devant la vidéo */
+  }
+  /* Le texte et le bouton */
+  .heroContent {
+    position: relative;
+    z-index: 10;                                             /* Z-index : 10 -> Calque le plus haut */
+    text-align: center;
+    color: white;
+    animation: fadeInUp 1.2s ease-out;                       /* Animation de fade in quand on arrive sur le site */
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);     /* Ligne fine et élégante sous le texte */
+  }
 
-.heroFallback {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
+  /* Polices 'luxueuses' */
+  .title {
+    font-family: var(--font-playfair), serif;     /* Serif for titles */
+    font-size: 5.5rem;
+    font-weight: 500;
+    font-style: italic;                           /* Touche d'élégance/luxe */
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  }
 
-.heroImage {
-  object-fit: cover;
-}
+  .subtitle {
+    font-family: var(--font-inter), sans-serif;
+    font-size: 1.2rem;
+    font-weight: 300;
+    margin-bottom: 3.5rem;
+    letter-spacing: 0.2em;
+    /* Wide tracking for modern luxury */
+    text-transform: uppercase;
+    opacity: 0.9;
+  }
 
-.heroOverlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.2);
-  z-index: 2;
-}
+  .primaryButton {
+    display: inline-block;
+    padding: 1.2rem 3.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.8rem;
+    transition: all 0.4s ease;
+    background: transparent;
+    position: relative;
+    overflow: hidden;          /* Masque les éléments qui sortent de la section (section suivante) */
+  }
+  /* Bloc tout blanc caché à l'extérieur à gauche du bouton + son animation */
+  .primaryButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transition: left 0.4s ease;
+    z-index: -1;
+  }
 
-.heroContent {
-  position: relative;
-  z-index: 10;
-  text-align: center;
-  color: white;
-  animation: fadeInUp 1.2s ease-out;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  /* Delicate line below hero text */
-}
+  .primaryButton:hover {
+    color: black;          /* Texte devient noir */
+  }
 
-/* Luxury Font Styles */
-.title {
-  font-family: var(--font-playfair), serif;
-  /* Serif for titles */
-  font-size: 5.5rem;
-  font-weight: 500;
-  font-style: italic;
-  /* Italian luxury touch */
-  letter-spacing: -0.02em;
-  margin-bottom: 1.5rem;
-  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
-}
+  .primaryButton:hover::before {
+    left: 0;               /* Bloc blanc apparaît */
+  }
 
-.subtitle {
-  font-family: var(--font-inter), sans-serif;
-  font-size: 1.2rem;
-  font-weight: 300;
-  margin-bottom: 3.5rem;
-  letter-spacing: 0.2em;
-  /* Wide tracking for modern luxury */
-  text-transform: uppercase;
-  opacity: 0.9;
-}
+/* ===== 2. DISCOVER SECTION ===== */
 
-.primaryButton {
-  display: inline-block;
-  padding: 1.2rem 3.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  color: white;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-size: 0.8rem;
-  transition: all 0.4s ease;
-  background: transparent;
-  position: relative;
-  overflow: hidden;
-}
-
-.primaryButton::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: white;
-  transition: left 0.4s ease;
-  z-index: -1;
-}
-
-.primaryButton:hover {
-  color: black;
-}
-
-.primaryButton:hover::before {
-  left: 0;
-}
-
-/* 2. DISCOVER SECTION */
 .discoverSection {
   padding: 8rem 4rem;
   background-color: white;
