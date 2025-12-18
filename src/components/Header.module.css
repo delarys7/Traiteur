@@ -67,7 +67,7 @@
     justify-content: center;
     align-items: center;
     margin-top: 0.5rem;
-    padding-bottom: 1.2rem;
+    padding-bottom: 0.5rem;
 }
 
 .navItem {
@@ -79,7 +79,7 @@
 
 .dropdown {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 15px); /* Added offset to clear the nav text and align below header */
     left: 50%;
     transform: translateX(-50%);
     background-color: #fff;
