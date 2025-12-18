@@ -73,56 +73,37 @@ function TraiteurContent() {
         fetchProducts();
     }, [activeTab, activeSubTab]);
 
+    const getTitle = () => {
+        switch (activeTab) {
+            case 'buffet': return 'Buffets & Banquets';
+            case 'plateau': return 'Plateaux Repas';
+            case 'cocktail':
+                const sub = activeSubTab.charAt(0).toUpperCase() + activeSubTab.slice(1);
+                return `Pièces Cocktails ${sub}`;
+            default: return 'Traiteur';
+        }
+    };
+
     return (
         <div className={styles.container}>
-            <header className={styles.header}>
-                <h1 className={styles.title}>La Carte Traiteur</h1>
-                <p className={styles.subtitle}>Une sélection d&apos;excellence pour vos convives.</p>
-            </header>
-
-            <div className={styles.tabs}>
-                <button
-                    className={`${styles.tab} ${activeTab === 'buffet' ? styles.activeTab : ''}`} // Fixed styles.active -> styles.activeTab
-                    onClick={() => handleTabChange('buffet')}
-                >
-                    Buffets / Banquets
-                </button>
-                <button
-                    className={`${styles.tab} ${activeTab === 'plateau' ? styles.activeTab : ''}`}
-                    onClick={() => handleTabChange('plateau')}
-                >
-                    Plateaux Repas
-                </button>
-                <button
-                    className={`${styles.tab} ${activeTab === 'cocktail' ? styles.activeTab : ''}`}
-                    onClick={() => handleTabChange('cocktail')}
-                >
-                    Pièces Cocktails
-                </button>
-            </div>
-
-            {activeTab === 'cocktail' && (
-                <div className={styles.subTabs}>
-                    <button
-                        className={`${styles.subTab} ${activeSubTab === 'standard' ? styles.activeSubTab : ''}`} // Fixed activeSub -> activeSubTab
-                        onClick={() => handleSubTabChange('standard')}
-                    >
-                        Standard
-                    </button>
-                    <button
-                        className={`${styles.subTab} ${activeSubTab === 'premium' ? styles.activeSubTab : ''}`}
-                        onClick={() => handleSubTabChange('premium')}
-                    >
-                        Premium
-                    </button>
-                    <button
-                        className={`${styles.subTab} ${activeSubTab === 'deluxe' ? styles.activeSubTab : ''}`}
-                        onClick={() => handleSubTabChange('deluxe')}
-                    >
-                        Deluxe
-                    </button>
+            <div className={styles.pageHeader}>
+                <div className={styles.titleGroup}>
+                    <h1 className={styles.pageTitle}>{getTitle()}</h1>
+                    <span className={styles.resultCount}>({products.length} résultats)</span>
                 </div>
-            )}
+                
+                <div className={styles.filterBar}>
+                    {/* Placeholder for future filters */}
+                    <div className={styles.filterPlaceholder}>
+                        <span className={styles.filterLabel}>Filtrer par :</span>
+                        <div className={styles.dummyFilters}>
+                            <div className={styles.dummyFilter}>Prix</div>
+                            <div className={styles.dummyFilter}>Type</div>
+                            <div className={styles.dummyFilter}>Régime</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             {loading ? (
                 <div className={styles.loading}>Chargement des mets d&apos;exception...</div>

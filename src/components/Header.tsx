@@ -55,7 +55,14 @@ export default function Header() {
                 {/* BOTTOM ROW: Navigation */}
                 <nav className={styles.bottomRow}>
                     <Link href="/" className={styles.link}>Accueil</Link>
-                    <Link href="/traiteur" className={styles.link}>Traiteur</Link>
+                    <div className={styles.navItem}>
+                        <Link href="/traiteur" className={styles.link}>Traiteur</Link>
+                        <div className={styles.dropdown}>
+                            <Link href="/traiteur?category=buffet" className={styles.dropdownLink}>Buffets</Link>
+                            <Link href="/traiteur?category=plateau" className={styles.dropdownLink}>Plateaux repas</Link>
+                            <Link href="/traiteur?category=cocktail" className={styles.dropdownLink}>Pièces cocktails</Link>
+                        </div>
+                    </div>
                     <Link href="/chef-a-domicile" className={styles.link}>Chef à domicile</Link>
                     <Link href="/consultant" className={styles.link}>Consultant</Link>
                     <Link href="/a-propos" className={styles.link}>À propos</Link>
