@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './Header.module.css';
@@ -7,17 +8,63 @@ import { useCart } from '@/context/CartContext';
 
 export default function Header() {
     const { count } = useCart();
+    const [isLogoHidden, setIsLogoHidden] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
+    const lastScrollYRef = useRef(0);
+    const ticking = useRef(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+        const updateHeader = () => {
+            const currentScrollY = window.scrollY;
+            
+            // 1. Shadow logic
+            setIsScrolled(currentScrollY > 20);
+
+            // 2. Smart Sticky logic (Hide logo on scroll down, show on scroll up)
+            if (currentScrollY < 50) {
+                setIsLogoHidden(false);
+            } else {
+                const delta = currentScrollY - lastScrollYRef.current;
+                
+                if (delta > 20) {
+                    // Scrolling down significantly
+                    setIsLogoHidden(true);
+                } else if (delta < -10) {
+                    // Scrolling up significantly
+                    setIsLogoHidden(false);
+                }
+            }
+            
+            lastScrollYRef.current = currentScrollY;
+            ticking.current = false;
+        };
+
+        const onScroll = () => {
+            if (!ticking.current) {
+                window.requestAnimationFrame(updateHeader);
+                ticking.current = true;
+            }
+        };
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
+
+    if (!isMounted) return <div style={{ height: '195px' }} />;
 
     return (
-        <header className={styles.header}>
+        <header className={`
+            ${styles.header} 
+            ${isScrolled ? styles.headerScrolled : ''} 
+            ${isLogoHidden ? styles.headerHidden : ''}
+        `}>
             <div className={styles.container}>
 
-                {/* TOP ROW: Logo & Icons */}
+                {/* TOP ROW: Logo & Icons (138px height) */}
                 <div className={styles.topRow}>
-                    {/* Left Spacer to balance grid */}
                     <div className={styles.spacerLeft}></div>
-
-                    {/* Center: Logo */}
                     <div className={styles.logoCenter}>
                         <Link href="/">
                             <Image
@@ -30,8 +77,6 @@ export default function Header() {
                             />
                         </Link>
                     </div>
-
-                    {/* Right: Actions */}
                     <div className={styles.actionsRight}>
                         <Link href="/compte" className={styles.iconLink} aria-label="Mon Compte">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -52,7 +97,7 @@ export default function Header() {
                     </div>
                 </div>
 
-                {/* BOTTOM ROW: Navigation */}
+                {/* BOTTOM ROW: Navigation (55px approximate height) */}
                 <nav className={styles.bottomRow}>
                     <Link href="/" className={styles.link}>Accueil</Link>
                     <div className={styles.navItem}>
