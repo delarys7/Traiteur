@@ -79,7 +79,7 @@
 
 .dropdown {
     position: absolute;
-    top: calc(100% + 15px); /* Added offset to clear the nav text and align below header */
+    top: calc(100%); /* Added offset to clear the nav text and align below header */
     left: 50%;
     transform: translateX(-50%);
     background-color: #fff;
