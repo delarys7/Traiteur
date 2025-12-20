@@ -111,7 +111,14 @@ export default function Header() {
                     <Link href="/chef-a-domicile" className={styles.link}>Chef à domicile</Link>
                     <Link href="/consultant" className={styles.link}>Consultant</Link>
                     <div className={styles.navItem}>
-                        <Link href="/a-propos" className={styles.link}>À propos</Link>
+                        <a 
+                            href="#" 
+                            className={styles.link} 
+                            onClick={(e) => e.preventDefault()}
+                            style={{ cursor: 'default' }}
+                        >
+                            À propos
+                        </a>
                         <div className={styles.dropdown}>
                             <Link href="/a-propos/histoire" className={styles.dropdownLink}>Notre Histoire</Link>
                             <Link href="/a-propos/equipe" className={styles.dropdownLink}>L&apos;Équipe</Link>

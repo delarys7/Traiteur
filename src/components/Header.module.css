@@ -190,14 +190,15 @@
     }
 
     .topRow {
-        grid-template-columns: 1fr auto;
+        grid-template-columns: 1fr auto 1fr;
         gap: 1rem;
         height: auto;
         min-height: 80px;
     }
 
     .spacerLeft {
-        display: none;
+        display: block;
+        width: 100%;
     }
 
     .logoImage {
