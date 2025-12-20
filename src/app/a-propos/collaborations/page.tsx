@@ -39,16 +39,16 @@ const collaborations = [
 ];
 
 const partnerLogos = [
-    { name: "Chanel", src: "/images/Logos collaborations/Chanel-logo-svg.svg" },
-    { name: "Aston Martin", src: "/images/Logos collaborations/aston-martin-logo-svg.svg" },
-    { name: "Audemars Piguet", src: "/images/Logos collaborations/audemars-piguet-logo-svg.svg" },
-    { name: "Cartier", src: "/images/Logos collaborations/cartier-logo-svg.svg" },
-    { name: "Dior", src: "/images/Logos collaborations/dior-logo-svg.svg" },
-    { name: "Dolce & Gabbana", src: "/images/Logos collaborations/dolce-gabbana-logo-svg.svg" },
-    { name: "Hermès", src: "/images/Logos collaborations/hermes-logo-svg.webp" },
-    { name: "LVMH", src: "/images/Logos collaborations/lvmh-logo-svg.svg" },
-    { name: "Rituals", src: "/images/Logos collaborations/rituals-logo-svg.svg" },
-    { name: "Tag Heuer", src: "/images/Logos collaborations/tag-heuer-logo-svg.svg" }
+    { name: "Chanel", src: "/images/Logos collaborations/Chanel-logo-svg.jpg", type: "crop" },
+    { name: "Aston Martin", src: "/images/Logos collaborations/aston-martin-logo-svg.jpg", type: "square" },
+    { name: "AP", src: "/images/Logos collaborations/audemars-piguet-logo-svg.jpg", type: "square" }, // SVG remains best for this one if not replaced
+    { name: "Cartier", src: "/images/Logos collaborations/cartier-logo-svg.jpg", type: "crop" },
+    { name: "Dior", src: "/images/Logos collaborations/dior-logo-svg.jpg", type: "square" },
+    { name: "D&G", src: "/images/Logos collaborations/dolce-gabbana-logo-svg.jpg", type: "square" },
+    { name: "Hermès", src: "/images/Logos collaborations/hermes-logo-svg.jpg", type: "crop" },
+    { name: "LVMH", src: "/images/Logos collaborations/lvmh-logo-svg.jpg", type: "square" }, // Directory showed .jpg exists
+    { name: "Rituals", src: "/images/Logos collaborations/rituals-logo-svg.svg", type: "rituals" },
+    { name: "Tag Heuer", src: "/images/Logos collaborations/tag-heuer-logo-svg.jpg", type: "square" }
 ];
 
 const locations = [
