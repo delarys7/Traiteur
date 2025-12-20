@@ -51,7 +51,7 @@
 
 /* PARTNER STRIP - INFINITE MARQUEE */
 .partnerStrip {
-    padding: 6rem 0;
+    padding: 3rem 0; /* Réduit pour moins d'espace blanc */
     border-top: 1px solid #f0f0f0;
     border-bottom: 1px solid #f0f0f0;
     margin-bottom: 8rem;
@@ -73,13 +73,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 40px;
-    opacity: 0.3;
-    transition: opacity 0.4s ease;
+    height: 80px; /* Plus grand */
+    opacity: 1; /* Brut, pas grisé */
+    transition: transform 0.4s ease;
 }
 
 .logoItem:hover {
-    opacity: 1;
+    transform: scale(1.05);
 }
 
 .logoItem svg {
@@ -271,14 +271,11 @@
 }
 
 .partnerLogoImg {
-    max-height: 40px;
+    max-height: 80px; /* Plus grand */
     width: auto;
     object-fit: contain;
+    filter: none !important; /* Force brut */
     transition: all 0.4s ease;
-}
-
-.logoItem:hover .partnerLogoImg {
-    transform: scale(1.1);
 }
 
 .mapLoading {
