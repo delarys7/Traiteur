@@ -1,0 +1,207 @@
+.container {
+    width: 100%;
+    background-color: #fff;
+    overflow-x: hidden;
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* HERO */
+.hero {
+    position: relative;
+    height: 70vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.heroImage {
+    object-fit: cover;
+}
+
+.heroOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1;
+}
+
+.heroContent {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    color: white;
+}
+
+.label {
+    font-family: var(--font-inter);
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    font-size: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.title {
+    font-family: var(--font-playfair);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-style: italic;
+    font-weight: 300;
+}
+
+/* GENESIS */
+.genesis {
+    padding: 10rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8rem;
+    align-items: center;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.sectionTitle {
+    font-family: var(--font-playfair);
+    font-size: 3.5rem;
+    font-weight: 400;
+    margin-bottom: 3rem;
+    color: #111;
+}
+
+.text {
+    font-family: var(--font-inter);
+    font-size: 1.1rem;
+    line-height: 2;
+    color: #555;
+    max-width: 550px;
+}
+
+.text span {
+    color: #111;
+    font-weight: 600;
+    font-family: var(--font-playfair);
+    font-style: italic;
+}
+
+.sideImage {
+    position: relative;
+    height: 600px;
+    width: 100%;
+}
+
+.coverImage {
+    object-fit: cover;
+}
+
+/* VISION */
+.vision {
+    padding: 8rem 4rem;
+    background-color: #f9f9f9;
+}
+
+.visionGrid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15rem;
+}
+
+.visionCard {
+    background-color: #fff;
+    padding: 6rem 4rem;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.03);
+}
+
+.visionCard h3 {
+    font-family: var(--font-playfair);
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #111;
+}
+
+.visionCard p {
+    font-family: var(--font-inter);
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #777;
+}
+
+.offset {
+    margin-top: 10rem;
+}
+
+/* PHILOSOPHY */
+.philosophy {
+    padding: 15rem 4rem;
+    background-image: url('/images/buffet_hero.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+.philosophy::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+}
+
+.philosophyOverlay {
+    position: relative;
+    z-index: 10;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.philoTitle {
+    font-family: var(--font-playfair);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-style: italic;
+    margin-bottom: 3rem;
+}
+
+.philoDesc {
+    font-family: var(--font-inter);
+    font-size: 1.2rem;
+    line-height: 1.8;
+    opacity: 0.8;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    .genesis {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+        padding: 6rem 2rem;
+    }
+    
+    .visionGrid {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+    }
+    
+    .offset {
+        margin-top: 0;
+    }
+    
+    .vision {
+        padding: 4rem 2rem;
+    }
+    
+    .visionCard {
+        padding: 4rem 2rem;
+    }
+}

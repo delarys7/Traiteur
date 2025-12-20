@@ -1,0 +1,293 @@
+.container {
+    width: 100%;
+    background-color: #fff;
+    padding-bottom: 10rem;
+    overflow-x: hidden;
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* HEADER */
+.header {
+    padding: 12rem 4rem 6rem;
+    text-align: center;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.label {
+    font-family: var(--font-inter);
+    text-transform: uppercase;
+    letter-spacing: 0.5em;
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 2rem;
+}
+
+.title {
+    font-family: var(--font-playfair);
+    font-size: clamp(3rem, 7vw, 5rem);
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 3rem;
+}
+
+.intro {
+    font-family: var(--font-inter);
+    font-size: 1.15rem;
+    line-height: 2;
+    color: #555;
+    opacity: 0.8;
+}
+
+/* PARTNER STRIP */
+.partnerStrip {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 6rem 4rem;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 8rem;
+    flex-wrap: wrap;
+    gap: 3rem;
+}
+
+.logoItem {
+    font-family: var(--font-playfair);
+    font-size: 1.6rem;
+    letter-spacing: 0.3em;
+    color: #bbb;
+    font-weight: 300;
+    transition: color 0.4s ease;
+    cursor: default;
+}
+
+.logoItem:hover {
+    color: #111;
+}
+
+/* CASE STUDIES */
+.caseStudies {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 12rem;
+}
+
+.caseCard {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 6rem;
+    align-items: center;
+}
+
+.caseCard:nth-child(even) {
+    grid-template-columns: 0.8fr 1.2fr;
+}
+
+.caseCard:nth-child(even) .caseImageWrapper {
+    order: 2;
+}
+
+.caseImageWrapper {
+    position: relative;
+    height: 600px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.caseImage {
+    object-fit: cover;
+    transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.caseCard:hover .caseImage {
+    transform: scale(1.05);
+}
+
+.caseInfo {
+    padding-right: 4rem;
+}
+
+.caseCard:nth-child(even) .caseInfo {
+    padding-right: 0;
+    padding-left: 4rem;
+    text-align: right;
+}
+
+.collabType {
+    font-family: var(--font-inter);
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-size: 0.75rem;
+    color: #AA8B55;
+    display: block;
+    margin-bottom: 1.5rem;
+}
+
+.partnerName {
+    font-family: var(--font-playfair);
+    font-size: 3.5rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    color: #111;
+}
+
+.caseTitle {
+    font-family: var(--font-playfair);
+    font-style: italic;
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: #666;
+    margin-bottom: 2.5rem;
+}
+
+.caseDesc {
+    font-family: var(--font-inter);
+    font-size: 1.05rem;
+    line-height: 2;
+    color: #777;
+}
+
+/* MAP SECTION */
+.mapSection {
+    margin-top: 15rem;
+    padding: 0 4rem;
+}
+
+.mapHeader {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 6rem;
+}
+
+.mapTitle {
+    font-family: var(--font-playfair);
+    font-size: 3.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.mapDesc {
+    font-family: var(--font-inter);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #666;
+}
+
+.mapContainer {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #f7f7f7;
+    aspect-ratio: 16/9;
+}
+
+.stylizedMap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle at center, #eee 1px, transparent 1px);
+    background-size: 30px 30px;
+    border: 1px solid #eee;
+}
+
+.mapPin {
+    position: absolute;
+    transform: translate(-50%, -100%);
+}
+
+.pinDot {
+    width: 12px;
+    height: 12px;
+    background-color: #111;
+    border-radius: 50%;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.pinDot::after {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    border: 1px solid #111;
+    border-radius: 50%;
+    opacity: 0.3;
+    animation: pulse 2s infinite;
+}
+
+.pinLabel {
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: white;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.4s ease;
+    pointer-events: none;
+}
+
+.mapPin:hover .pinLabel {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.pinLabel strong {
+    display: block;
+    font-family: var(--font-playfair);
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+}
+
+.pinLabel span {
+    font-family: var(--font-inter);
+    font-size: 0.75rem;
+    color: #999;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.5; }
+    100% { transform: scale(3); opacity: 0; }
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    .caseCard, .caseCard:nth-child(even) {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    
+    .caseImageWrapper {
+        order: -1 !important;
+        height: 400px;
+    }
+    
+    .caseInfo {
+        padding: 0 !important;
+        text-align: center !important;
+    }
+    
+    .partnerName {
+        font-size: 2.5rem;
+    }
+    
+    .mapContainer {
+        aspect-ratio: 1/1;
+    }
+}

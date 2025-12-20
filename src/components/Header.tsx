@@ -110,7 +110,14 @@ export default function Header() {
                     </div>
                     <Link href="/chef-a-domicile" className={styles.link}>Chef à domicile</Link>
                     <Link href="/consultant" className={styles.link}>Consultant</Link>
-                    <Link href="/a-propos" className={styles.link}>À propos</Link>
+                    <div className={styles.navItem}>
+                        <Link href="/a-propos" className={styles.link}>À propos</Link>
+                        <div className={styles.dropdown}>
+                            <Link href="/a-propos/histoire" className={styles.dropdownLink}>Notre Histoire</Link>
+                            <Link href="/a-propos/equipe" className={styles.dropdownLink}>L&apos;Équipe</Link>
+                            <Link href="/a-propos/collaborations" className={styles.dropdownLink}>Collaborations</Link>
+                        </div>
+                    </div>
                 </nav>
 
             </div>
