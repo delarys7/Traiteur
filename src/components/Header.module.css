@@ -158,12 +158,13 @@
     position: relative;
     display: flex;
     align-items: center;
+    padding-right: 2px; /* Buffer for badge */
 }
 
 .cartCount {
     position: absolute;
     top: -8px;
-    right: -8px;
+    right: -2px; /* Adjusted to prevent clipping against viewport edge/scrollbar */
     background-color: black;
     color: white;
     font-size: 0.65rem;

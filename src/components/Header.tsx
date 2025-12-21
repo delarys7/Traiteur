@@ -28,10 +28,10 @@ export default function Header() {
             } else {
                 const delta = currentScrollY - lastScrollYRef.current;
                 
-                if (delta > 20) {
+                if (delta > 5) {
                     // Scrolling down significantly
                     setIsLogoHidden(true);
-                } else if (delta < -10) {
+                } else if (delta < -5) {
                     // Scrolling up significantly
                     setIsLogoHidden(false);
                 }
