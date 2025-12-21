@@ -10,28 +10,28 @@ const team = [
         role: "Chef Fondateur",
         career: "Ex-Second de cuisine en Palace étoilé",
         bio: "Visionnaire et passionné par le terroir français, Alexandre insuffle l'âme créative de la maison. Son parcours dans les plus grandes cuisines parisiennes définit l'exigence de chaque assiette.",
-        image: "/images/chef_hero.jpg"
+        image: "/images/L'équipe/Chef.png"
     },
     {
-        name: "Émilie Laurent",
+        name: "Sarah Fredaht",
         role: "Directrice de Création",
         career: "Designer culinaire & Scénographe",
-        bio: "Émilie transforme chaque réception en une œuvre visuelle. Pour elle, le plaisir commence par l'œil, orchestrant des décors où chaque détail dialogue avec la gastronomie.",
-        image: "/images/dessert_hero.jpg"
+        bio: "Sarah transforme chaque réception en une œuvre visuelle. Pour elle, le plaisir commence par l'œil, orchestrant des décors où chaque détail dialogue avec la gastronomie.",
+        image: "/images/L'équipe/Directrice création.png"
     },
     {
         name: "Marc-Antoine Rossi",
         role: "Responsable Sommellerie",
         career: "Maître Sommelier international",
         bio: "Gardien de notre cave, Marc-Antoine sélectionne des pépites rares et des domaines de prestige pour créer des accords mets-vins qui subliment vos expériences.",
-        image: "/images/cocktail_hero.jpg"
+        image: "/images/L'équipe/Sommelier.png"
     },
     {
         name: "Sophie Martin",
         role: "Coordinatrice Événementielle",
         career: "Master en Management du Luxe",
         bio: "Cheffe d'orchestre de vos projets, Sophie assure une exécution millimétrée. Son sens du service et sa discrétion font d'elle le pilier logistique de vos réceptions.",
-        image: "/images/hero.jpg"
+        image: "/images/L'équipe/Coordinatrice évenementielle.png"
     }
 ];
 
