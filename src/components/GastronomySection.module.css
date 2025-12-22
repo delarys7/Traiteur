@@ -7,7 +7,7 @@
 }
 
 .intro {
-    margin-bottom: 4rem; /* Reduced margin */
+    margin-bottom: 5vw; /* Fluid margin */
     position: relative;
     display: flex;
     flex-direction: column;
@@ -19,8 +19,8 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    margin-bottom: 3rem;
+    gap: 2vw; /* Fluid gap */
+    margin-bottom: 3vw;
     position: relative;
 }
 
@@ -29,7 +29,8 @@
     align-items: center;
     width: 100%;
     position: relative;
-    height: 80px; /* Taller for larger font */
+    height: 6vw; /* Fluid height */
+    min-height: 40px;
 }
 
 .rowLeft {
@@ -51,37 +52,22 @@
     transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.lineLeft {
-    transform-origin: left;
-    left: 0;
-    margin-right: 150px; /* Space for text center */
-}
-
-/* The line for "Haute" is on the left, so it should anchor left. 
-   Wait, the reference image has: Line ------- H A U T E 
-   And: G a s t r o n o m i e -------- Line
-*/
-/* Correction based on reference logic:
-   Row 1: Line (from left edge) -> Text (Center-ish)
-   Row 2: Text (Center-ish) -> Line (to right edge)
-*/
-
 .rowLeft .line {
     left: 0;
     right: auto;
-    width: calc(50% - 100px); /* Stop before center */
+    width: calc(50% - 8vw); /* Fluid offset */
     transform-origin: left;
 }
 
 .rowRight .line {
     right: 0;
     left: auto;
-    width: calc(50% - 160px); /* Stop before center */
+    width: calc(50% - 12vw); /* Fluid offset */
     transform-origin: right;
 }
 
 .text {
-    font-size: 4.5rem; /* Larger */
+    font-size: 5vw; /* Fluid font size */
     font-family: var(--font-cormorant); /* Unified Font */
     font-style: italic;
     font-weight: 300;
@@ -98,26 +84,16 @@
 
 .textHaute {
     transform: translateX(-30px);
-    margin-left: 100px; /* Offset from center slightly right */
+    margin-left: 8vw; /* Fluid margin */
 }
 
 .textGastronomy {
-    text-transform: none; /* Keep lowercase style for contrast if desired, or make strictly uppercase if user wants EXACTLY same. User said "police... doit être la même". Let's use standard capitalization for "Gastronomie" but keeps typographic style same. */
-    text-transform: uppercase; /* Reference image shows "HAUTE" uppercase. "Gastronomie" lowercase italic? User said "font must be the same". Let's match the reference visual: HAUTE (uppercase), Gastronomie (Italic Capitalized or lowercase). Reference 1 shows HAUTE uppercase, Gastronomie italic lowercase. */
     text-transform: none; 
     transform: translateX(30px);
-    margin-right: 100px;
-}
-
-/* Specific overwrite to match reference strictly */
-.textHaute {
-    letter-spacing: 0.15em;
-}
-.textGastronomy {
-    font-size: 5rem; /* Slightly larger script feel */
+    margin-right: 8vw; /* Fluid margin */
+    font-size: 5.5vw; /* Slightly larger */
     letter-spacing: 0.05em;
 }
-
 
 /* Animation States */
 .visible .line {
@@ -137,18 +113,17 @@
     transition-delay: 0.4s;
 }
 
-/* Mosaic Layout - Preserved on Mobile */
+/* Mosaic Layout - Fully Elastic */
 .mosaicContainer {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(12, 4vw); /* Responsive row height based on viewport width! */
+    /* The key change: rows are purely proportional to viewport width */
+    grid-template-rows: repeat(12, 4vw); 
     gap: 0;
-    margin-top: 2rem;
+    margin-top: 0rem;
     position: relative;
-    max-width: 1400px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 1rem;
+    max-width: 100%; /* Full width container to control scaling via grid */
+    padding: 0 4vw; /* Fluid padding */
 }
 
 .imageBox {
@@ -157,6 +132,9 @@
     opacity: 0;
     transform: translateY(60px);
     transition: opacity 1s ease, transform 1s cubic-bezier(0.19, 1, 0.22, 1);
+    /* No Aspect Ratio needed, grid defines shape */
+    height: 100%; 
+    width: 100%;
 }
 
 .imageBoxVisible {
@@ -168,21 +146,18 @@
     grid-column: 4 / 10;
     grid-row: 1 / 10;
     z-index: 1;
-    aspect-ratio: 4/3;
 }
 
 .sideImageLeft {
     grid-column: 1 / 5;
     grid-row: 6 / 11;
     z-index: 2;
-    aspect-ratio: 4/3;
 }
 
 .sideImageRight {
     grid-column: 9 / 13;
     grid-row: 3 / 8;
     z-index: 3;
-    aspect-ratio: 4/5;
 }
 
 .img {
@@ -195,18 +170,18 @@
 }
 
 .descriptionBox {
-    grid-column: 4 / 10;
+    grid-column: 2 / 12;
     grid-row: 11 / 13;
-    padding: 3rem 0;
+    padding: 4vw 0; /* Fluid padding */
     text-align: center;
 }
 
 .descText {
-    font-size: 1.1rem;
+    font-size: clamp(0.9rem, 1.2vw, 1.5rem); /* Scalable font with min bounds */
     line-height: 1.8;
     color: #444;
     font-family: var(--font-inter);
-    max-width: 600px;
+    max-width: 80%;
     margin: 0 auto;
     opacity: 0;
     transform: translateY(20px);
@@ -224,40 +199,36 @@
         padding: 4rem 0;
     }
     
+    /* Increase font size relative to viewport on mobile so it's legible */
     .text {
-        font-size: 2.5rem;
+        font-size: 9vw;
     }
     .textGastronomy {
-        font-size: 3rem;
+        font-size: 10vw;
     }
     
     .row {
-        height: 50px;
+        height: 10vw;
     }
     
     .rowLeft .line {
-        width: 15vw; /* Shorten lines on mobile so text fits */
-    }
-    
-    .rowRight .line {
-        width: 15vw;
-    }
-    
-    .textHaute {
-        margin-left: 0;
-    }
-    .textGastronomy {
+        width: 10vw;
         margin-right: 0;
     }
     
-    /* KEEP MOSAIC LAYOUT but scale rows */
-    .mosaicContainer {
-        grid-template-rows: repeat(12, 6vw); /* Smaller rows on mobile */
-        padding: 0 0.5rem;
+    .rowRight .line {
+        width: 10vw;
+        margin-left: 0;
     }
     
+    /* Simply scale grid rows up slightly on mobile if needed, but keep proportion */
+    .mosaicContainer {
+        grid-template-rows: repeat(12, 6vw);
+        padding: 0 2vw;
+    }
+
     .descText {
-        font-size: 0.95rem;
-        padding: 0 1rem;
+        font-size: 0.9rem; /* Fallback for very small screens */
+        max-width: 95%;
     }
 }
