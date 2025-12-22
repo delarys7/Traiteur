@@ -39,7 +39,7 @@ export default function ProductCard({ product }: { product: Product }) {
             setTimeout(() => {
                 setAddedStatus('idle');
                 setQuantity(1);
-            }, 3000);
+            }, 2000);
         }, 1000);
     };
 

@@ -99,8 +99,8 @@
 
 .button {
     flex: 1;
-    background-color: #111; /* Soft Black */
-    border: 1px solid #111;
+    background-color: #1c1c1c; /* Soft Black */
+    border: 1px solid #1c1c1c;
     color: #fff;
     font-family: var(--font-inter);
     font-size: 0.7rem;
@@ -128,7 +128,6 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding-right: 30px; /* Space for quantity column */
 }
 
 .buttonText {
@@ -143,6 +142,8 @@
     transform: scale(0.5);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     color: white;
+    left: 50%;
+    margin-left: -8px;
 }
 
 .addedLabelWrapper {
@@ -152,7 +153,6 @@
     align-items: center;
     justify-content: center;
     pointer-events: none;
-    padding-right: 30px;
 }
 
 .addedLabel {
@@ -200,8 +200,8 @@
     width: 32px;
     display: flex;
     flex-direction: column;
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.05);
+    border-left: 1px solid #1c1c1c;
+    background: #1c1c1c;
     z-index: 5;
 }
 
