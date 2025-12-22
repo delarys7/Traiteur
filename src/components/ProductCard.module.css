@@ -35,7 +35,7 @@
     flex-grow: 1;
 }
 
-.header {
+.cardHeader {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
@@ -92,27 +92,204 @@
 .description {
     font-size: 0.9rem;
     color: #888;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     line-height: 1.5;
     flex-grow: 1;
 }
 
-.button {
-    width: 100%;
-    padding: 0.8rem;
-    background-color: transparent;
-    border: 1px solid var(--gray-medium);
-    color: var(--accent);
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+.actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+    height: 48px;
+    position: relative;
+    margin-top: auto;
 }
 
-.button:hover {
-    background-color: var(--accent);
-    border-color: var(--accent);
+.button {
+    flex: 1;
+    background-color: #fff;
+    border: 1px solid #111;
+    color: #111;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    min-height: 48px;
+}
+
+.button:hover:not(:disabled) {
+    background-color: rgba(0, 0, 0, 0.85);
+    border-color: #111;
+    color: #fff!important;
+    transform: scale(1.1);
+    z-index: 10;
+}
+
+.buttonContent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+}
+
+.buttonText {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.checkIcon {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     color: white;
+}
+
+.addedLabel {
+    opacity: 0;
+    font-size: 0.75rem;
+    color: white;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    white-space: nowrap;
+    pointer-events: none;
+    text-transform: none;
+    letter-spacing: 0.5px;
+}
+
+/* Animation States */
+.buttonConfirming {
+    background-color: #2e7d32 !important;
+    border-color: #2e7d32 !important;
+}
+
+.buttonConfirming .buttonText {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.buttonConfirming .checkIcon {
+    opacity: 1;
+    transform: scale(1);
+    left: 45%;
+    margin-left: -10px; /* Center it */
+}
+
+/* State 2: Show text, hide check */
+.buttonAdded {
+    background-color: #2e7d32 !important;
+    border-color: #2e7d32 !important;
+}
+
+.buttonAdded .buttonText {
+    opacity: 0;
+}
+
+.buttonAdded .checkIcon {
+    opacity: 0;
+    transform: scale(0.8);
+    left: 45%;
+    margin-left: -10px;
+    transition: all 0.3s ease;
+}
+
+.addedLabelWrapper {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.addedLabel {
+    font-size: 0.8rem;
+    color: white;
+    text-transform: none;
+    letter-spacing: 0.5px;
+    opacity: 0;
+    transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    clip-path: inset(0 100% 0 0); /* Hidden left-to-right */
+}
+
+.buttonAdded .addedLabel {
+    opacity: 1;
+    clip-path: inset(0 0 0 0); /* Revealed */
+}
+
+/* Quantity Selector - Nested on the right */
+.quantitySelector {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    border-left: 1px solid #111;
+    background: inherit;
+    min-width: 50px;
+    transition: all 0.4s ease;
+    z-index: 5;
+}
+
+.quantityValue {
+    flex: 1;
+    text-align: center;
+    font-family: var(--font-inter);
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0 0.5rem;
+}
+
+.quantityButtons {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-left: 1px solid #111;
+    width: 20px;
+}
+
+.qBtn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    color: inherit;
+    padding: 0;
+}
+
+.qBtn:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.qBtn:first-child {
+    border-bottom: 1px solid #111;
+}
+
+.button:hover .quantitySelector,
+.button:hover .quantityButtons,
+.button:hover .qBtn:first-child {
+    border-color: #444; 
+}
+
+/* Hidden during animation */
+.quantityHidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(100%);
 }
