@@ -2,7 +2,7 @@
 .container {
   min-height: 100vh;
   background-color: white;
-  padding: 4rem 3rem 6rem;
+  padding: 4rem 1.5rem 6rem; /* Reduced horizontal padding */
 }
 
 .pageHeader {
@@ -147,7 +147,7 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 3rem;
+  gap: 1.5rem; /* Reduced gap for denser look */
   max-width: 1800px;
   margin: 0 auto;
 }
@@ -186,15 +186,16 @@
 }
 
 /* Responsive */
-@media (max-width: 1400px) {
+@media (max-width: 1200px) {
   .grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
   .grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr); /* 2 per row for mobile/tablet */
+    gap: 1rem;
   }
 
   .filtersLeft {
@@ -209,12 +210,12 @@
 
 @media (max-width: 600px) {
   .container {
-    padding: 2rem 1rem;
+    padding: 2rem 0.75rem;
   }
 
   .grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    grid-template-columns: repeat(2, 1fr); /* Force 2 on small screens */
+    gap: 0.75rem;
   }
 
   .titleGroup {

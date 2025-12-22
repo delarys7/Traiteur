@@ -2,7 +2,6 @@
     display: flex;
     flex-direction: column;
     background-color: white;
-    /* Minimalist border/shadow */
     transition: transform 0.3s ease;
     height: 100%;
 }
@@ -13,19 +12,19 @@
 
 .imageContainer {
     width: 100%;
-    aspect-ratio: 1;
-    background-color: var(--gray-light);
+    aspect-ratio: 1.1; /* Slightly wider images */
+    background-color: #f7f7f7;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1.5rem;
-    border-radius: 4px;
+    margin-bottom: 1rem;
+    border-radius: 2px;
     overflow: hidden;
 }
 
 .placeholderImage {
-    font-size: 3rem;
-    color: var(--gray-medium);
+    font-size: 2.5rem;
+    color: #ddd;
     font-family: var(--font-heading);
 }
 
@@ -39,98 +38,88 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
 }
 
 .name {
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: var(--accent);
+    font-size: 0.95rem; /* Smaller, more elegant */
+    font-weight: 700;
+    color: #1a1a1a;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
 }
 
 .price {
-    font-size: 1rem;
-    font-weight: 400;
-    color: #666;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1a1a1a;
 }
 
 .tagContainer {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
 }
 
 .tag {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    padding: 0.2rem 0.6rem;
-    border-radius: 20px;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
     font-family: var(--font-inter);
-    border: 1px solid transparent;
+    background-color: #f4f4f4; /* Unified Grey */
+    color: #777;
+    border: 1px solid #eee;
 }
 
-.cuisineTag {
-    background-color: #f7f7f7;
-    color: #555;
+/* Override specific tags to be unified grey as requested */
+.cuisineTag, .dietaryTag, .allergyTag {
+    background-color: #f4f4f4;
+    color: #777;
     border-color: #eee;
 }
 
-.dietaryTag {
-    background-color: #f0f7f0;
-    color: #2e7d32;
-    border-color: #e0f0e0;
-}
-
-.allergyTag {
-    background-color: #fff5f5;
-    color: #c62828;
-    border-color: #ffe0e0;
-}
-
 .description {
-    font-size: 0.9rem;
-    color: #888;
-    margin-bottom: 2rem;
-    line-height: 1.5;
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
     flex-grow: 1;
 }
 
 .actions {
     display: flex;
-    gap: 0.5rem;
     align-items: stretch;
-    height: 48px;
+    height: 38px; /* Slightly shorter buttons */
     position: relative;
     margin-top: auto;
 }
 
 .button {
     flex: 1;
-    background-color: #fff;
+    background-color: #111; /* Soft Black */
     border: 1px solid #111;
-    color: #111;
-    font-family: var(--font-body);
-    font-size: 0.85rem;
+    color: #fff;
+    font-family: var(--font-inter);
+    font-size: 0.7rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.1em;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     overflow: hidden;
-    border-radius: 4px;
-    min-height: 48px;
+    border-radius: 0px; /* Sharp corners like luxury brands */
 }
 
 .button:hover:not(:disabled) {
-    background-color: rgba(0, 0, 0, 0.85);
-    border-color: #111;
-    color: #fff!important;
-    transform: scale(1.1);
+    background-color: #222;
+    transform: scale(1.02);
     z-index: 10;
 }
 
@@ -138,32 +127,40 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.4s ease;
+    width: 100%;
+    padding-right: 30px; /* Space for quantity column */
 }
 
 .buttonText {
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.3s ease;
 }
 
 .checkIcon {
     position: absolute;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     opacity: 0;
     transform: scale(0.5);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     color: white;
 }
 
-.addedLabel {
-    opacity: 0;
-    font-size: 0.75rem;
-    color: white;
-    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-    white-space: nowrap;
+.addedLabelWrapper {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     pointer-events: none;
-    text-transform: none;
-    letter-spacing: 0.5px;
+    padding-right: 30px;
+}
+
+.addedLabel {
+    font-size: 0.7rem;
+    color: white;
+    font-weight: 700;
+    opacity: 0;
+    transition: all 0.5s ease;
 }
 
 /* Animation States */
@@ -174,117 +171,73 @@
 
 .buttonConfirming .buttonText {
     opacity: 0;
-    transform: translateY(-10px);
 }
 
 .buttonConfirming .checkIcon {
     opacity: 1;
     transform: scale(1);
-    left: 45%;
-    margin-left: -10px; /* Center it */
 }
 
-/* State 2: Show text, hide check */
 .buttonAdded {
     background-color: #2e7d32 !important;
     border-color: #2e7d32 !important;
 }
 
-.buttonAdded .buttonText {
+.buttonAdded .buttonText, .buttonAdded .checkIcon {
     opacity: 0;
-}
-
-.buttonAdded .checkIcon {
-    opacity: 0;
-    transform: scale(0.8);
-    left: 45%;
-    margin-left: -10px;
-    transition: all 0.3s ease;
-}
-
-.addedLabelWrapper {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-    overflow: hidden;
-}
-
-.addedLabel {
-    font-size: 0.8rem;
-    color: white;
-    text-transform: none;
-    letter-spacing: 0.5px;
-    opacity: 0;
-    transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-    clip-path: inset(0 100% 0 0); /* Hidden left-to-right */
 }
 
 .buttonAdded .addedLabel {
     opacity: 1;
-    clip-path: inset(0 0 0 0); /* Revealed */
 }
 
-/* Quantity Selector - Nested on the right */
+/* Quantity Selector - Vertical Column on the right */
 .quantitySelector {
     position: absolute;
     right: 0;
     top: 0;
     bottom: 0;
+    width: 32px;
     display: flex;
-    align-items: center;
-    border-left: 1px solid #111;
-    background: inherit;
-    min-width: 50px;
-    transition: all 0.4s ease;
+    flex-direction: column;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     z-index: 5;
 }
 
 .quantityValue {
     flex: 1;
-    text-align: center;
-    font-family: var(--font-inter);
-    font-size: 0.85rem;
-    font-weight: 500;
-    padding: 0 0.5rem;
-}
-
-.quantityButtons {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    border-left: 1px solid #111;
-    width: 20px;
-}
-
-.qBtn {
-    flex: 1;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-size: 0.7rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
-    color: inherit;
+    font-family: var(--font-inter);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    background: transparent;
+    line-height: 1;
+}
+
+.qBtn {
+    height: 12px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
     padding: 0;
+    transition: background 0.2s;
 }
 
 .qBtn:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-.qBtn:first-child {
-    border-bottom: 1px solid #111;
-}
-
-.button:hover .quantitySelector,
-.button:hover .quantityButtons,
-.button:hover .qBtn:first-child {
-    border-color: #444; 
+.button:hover .quantitySelector {
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Hidden during animation */

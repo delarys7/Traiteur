@@ -83,7 +83,7 @@ export default function ProductCard({ product }: { product: Product }) {
                         disabled={addedStatus !== 'idle'}
                     >
                         <div className={styles.buttonContent}>
-                            <span className={styles.buttonText}>Ajouter</span>
+                            <span className={styles.buttonText}>Ajouter au panier</span>
                             <div className={styles.checkIcon}>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                     <polyline points="20 6 9 17 4 12"></polyline>
@@ -91,24 +91,22 @@ export default function ProductCard({ product }: { product: Product }) {
                             </div>
                         </div>
                         <div className={styles.addedLabelWrapper}>
-                            <span className={styles.addedLabel}>Ajouté au panier</span>
+                            <span className={styles.addedLabel}>Ajouté au panier !</span>
                         </div>
                         
-                        {/* Nested Quantity Selector visually on the right */}
+                        {/* Vertical Quantity Selector */}
                         <div className={`${styles.quantitySelector} ${addedStatus !== 'idle' ? styles.quantityHidden : ''}`} onClick={(e) => e.stopPropagation()}>
+                            <button 
+                                className={styles.qBtn} 
+                                onClick={(e) => { e.stopPropagation(); updateQuantity(1); }} 
+                                type="button"
+                            >+</button>
                             <span className={styles.quantityValue}>{quantity}</span>
-                            <div className={styles.quantityButtons}>
-                                <button 
-                                    className={styles.qBtn} 
-                                    onClick={(e) => { e.stopPropagation(); updateQuantity(1); }} 
-                                    type="button"
-                                >+</button>
-                                <button 
-                                    className={styles.qBtn} 
-                                    onClick={(e) => { e.stopPropagation(); updateQuantity(-1); }} 
-                                    type="button"
-                                >-</button>
-                            </div>
+                            <button 
+                                className={styles.qBtn} 
+                                onClick={(e) => { e.stopPropagation(); updateQuantity(-1); }} 
+                                type="button"
+                            >-</button>
                         </div>
                     </button>
                 </div>
