@@ -6,6 +6,15 @@
   --gray-medium: #d2d2d7;
   --font-heading: 'Inter', sans-serif;
   --font-body: 'Inter', sans-serif;
+  --font-aston: 'Aston Script', cursive;
+}
+
+@font-face {
+  font-family: 'Aston Script';
+  src: url('/fonts/Aston Script.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 * {
