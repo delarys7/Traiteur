@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './page.module.css';
+import GastronomySection from '@/components/GastronomySection';
 
 export default function Home() {
   return (
@@ -87,6 +88,9 @@ export default function Home() {
 
         </div>
       </section>
+
+      {/* 3. Maison de Haute Gastronomie (New luxury section) */}
+      <GastronomySection />
 
       {/* 3. Nos Prestations */}
       <section className={styles.servicesSection}>

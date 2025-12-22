@@ -1,5 +1,4 @@
-import type { Metadata } from 'next'
-import { Inter, Playfair_Display } from 'next/font/google'
+import { Inter, Playfair_Display, Cormorant_Garamond } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -8,6 +7,12 @@ import { AuthProvider } from '@/context/AuthContext'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' })
+const cormorant = Cormorant_Garamond({ 
+  subsets: ['latin'], 
+  variable: '--font-cormorant',
+  weight: ['300', '400', '500', '600', '700'],
+  style: ['italic', 'normal']
+})
 
 export const metadata: Metadata = {
   title: 'Traiteur - Excellence & Luxe',
@@ -21,7 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className={`${inter.variable} ${playfair.variable}`}>
+      <body className={`${inter.variable} ${playfair.variable} ${cormorant.variable}`}>
         <AuthProvider>
           <CartProvider>
             <Header />

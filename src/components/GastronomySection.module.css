@@ -1,0 +1,263 @@
+.section {
+    padding: 8rem 0; /* Remove horizontal padding to allow full width lines */
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+}
+
+.intro {
+    margin-bottom: 4rem; /* Reduced margin */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.lineWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    height: 80px; /* Taller for larger font */
+}
+
+.rowLeft {
+    justify-content: center;
+}
+
+.rowRight {
+    justify-content: center;
+}
+
+/* Full Width Lines */
+.line {
+    height: 1px;
+    background-color: #1a1a1a;
+    position: absolute;
+    top: 50%;
+    width: 50vw; /* Half screen width */
+    transform: scaleX(0);
+    transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.lineLeft {
+    transform-origin: left;
+    left: 0;
+    margin-right: 150px; /* Space for text center */
+}
+
+/* The line for "Haute" is on the left, so it should anchor left. 
+   Wait, the reference image has: Line ------- H A U T E 
+   And: G a s t r o n o m i e -------- Line
+*/
+/* Correction based on reference logic:
+   Row 1: Line (from left edge) -> Text (Center-ish)
+   Row 2: Text (Center-ish) -> Line (to right edge)
+*/
+
+.rowLeft .line {
+    left: 0;
+    right: auto;
+    width: calc(50% - 100px); /* Stop before center */
+    transform-origin: left;
+}
+
+.rowRight .line {
+    right: 0;
+    left: auto;
+    width: calc(50% - 160px); /* Stop before center */
+    transform-origin: right;
+}
+
+.text {
+    font-size: 4.5rem; /* Larger */
+    font-family: var(--font-cormorant); /* Unified Font */
+    font-style: italic;
+    font-weight: 300;
+    text-transform: uppercase; 
+    letter-spacing: 0.15em;
+    color: #1a1a1a;
+    opacity: 0;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    padding: 0 1rem;
+    white-space: nowrap;
+    position: relative;
+    z-index: 2;
+}
+
+.textHaute {
+    transform: translateX(-30px);
+    margin-left: 100px; /* Offset from center slightly right */
+}
+
+.textGastronomy {
+    text-transform: none; /* Keep lowercase style for contrast if desired, or make strictly uppercase if user wants EXACTLY same. User said "police... doit être la même". Let's use standard capitalization for "Gastronomie" but keeps typographic style same. */
+    text-transform: uppercase; /* Reference image shows "HAUTE" uppercase. "Gastronomie" lowercase italic? User said "font must be the same". Let's match the reference visual: HAUTE (uppercase), Gastronomie (Italic Capitalized or lowercase). Reference 1 shows HAUTE uppercase, Gastronomie italic lowercase. */
+    text-transform: none; 
+    transform: translateX(30px);
+    margin-right: 100px;
+}
+
+/* Specific overwrite to match reference strictly */
+.textHaute {
+    letter-spacing: 0.15em;
+}
+.textGastronomy {
+    font-size: 5rem; /* Slightly larger script feel */
+    letter-spacing: 0.05em;
+}
+
+
+/* Animation States */
+.visible .line {
+    transform: scaleX(1);
+}
+
+.visible .text {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.visible .textHaute {
+    transition-delay: 0.4s;
+}
+
+.visible .textGastronomy {
+    transition-delay: 0.4s;
+}
+
+/* Mosaic Layout - Preserved on Mobile */
+.mosaicContainer {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(12, 4vw); /* Responsive row height based on viewport width! */
+    gap: 0;
+    margin-top: 2rem;
+    position: relative;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 1rem;
+}
+
+.imageBox {
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(60px);
+    transition: opacity 1s ease, transform 1s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.imageBoxVisible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.mainImage {
+    grid-column: 4 / 10;
+    grid-row: 1 / 10;
+    z-index: 1;
+    aspect-ratio: 4/3;
+}
+
+.sideImageLeft {
+    grid-column: 1 / 5;
+    grid-row: 6 / 11;
+    z-index: 2;
+    aspect-ratio: 4/3;
+}
+
+.sideImageRight {
+    grid-column: 9 / 13;
+    grid-row: 3 / 8;
+    z-index: 3;
+    aspect-ratio: 4/5;
+}
+
+.img {
+    object-fit: cover;
+    transition: transform 1.5s ease;
+}
+
+.imageBox:hover .img {
+    transform: scale(1.05);
+}
+
+.descriptionBox {
+    grid-column: 4 / 10;
+    grid-row: 11 / 13;
+    padding: 3rem 0;
+    text-align: center;
+}
+
+.descText {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #444;
+    font-family: var(--font-inter);
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 1s ease;
+}
+
+.descVisible {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.8s;
+}
+
+@media (max-width: 900px) {
+    .section {
+        padding: 4rem 0;
+    }
+    
+    .text {
+        font-size: 2.5rem;
+    }
+    .textGastronomy {
+        font-size: 3rem;
+    }
+    
+    .row {
+        height: 50px;
+    }
+    
+    .rowLeft .line {
+        width: 15vw; /* Shorten lines on mobile so text fits */
+    }
+    
+    .rowRight .line {
+        width: 15vw;
+    }
+    
+    .textHaute {
+        margin-left: 0;
+    }
+    .textGastronomy {
+        margin-right: 0;
+    }
+    
+    /* KEEP MOSAIC LAYOUT but scale rows */
+    .mosaicContainer {
+        grid-template-rows: repeat(12, 6vw); /* Smaller rows on mobile */
+        padding: 0 0.5rem;
+    }
+    
+    .descText {
+        font-size: 0.95rem;
+        padding: 0 1rem;
+    }
+}

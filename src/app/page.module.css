@@ -129,7 +129,7 @@
 /* ===== 2. DISCOVER SECTION ===== */
 
 .discoverSection {
-  padding: 8rem 4rem;
+  padding: 8rem 2rem;
   background-color: white;
   text-align: center;
 }
@@ -237,7 +237,7 @@
 
 /* 3. NOS PRESTATIONS SECTION */
 .servicesSection {
-  padding: 8rem 4rem;
+  padding: 8rem 2rem;
   background-color: #FDFDFD;
   border-top: 1px solid #eee;
 }
