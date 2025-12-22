@@ -221,19 +221,19 @@
 
 .stackItemBackground {
     width: 40%;
-    height: 70%;
+    height: 30%;
     position: absolute;
-    bottom: -10%;
-    left: 5%;
+    bottom: -13%;
+    left: 10%;
     z-index: 1;
     background-color: #f7f7f7;
     display: flex;
     align-items: flex-end;
-    padding: 4rem;
+    padding: 2rem;
 }
 
 .stackInfo {
-    max-width: 300px;
+    max-width: 500px;
 }
 
 .stackInfo h4 {
