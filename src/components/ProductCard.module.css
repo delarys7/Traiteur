@@ -115,6 +115,27 @@
     position: relative;
     overflow: hidden;
     border-radius: 0px; /* Sharp corners like luxury brands */
+    z-index: 1;
+}
+
+/* The Green/Sweep Layer */
+.button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: #2e7d32;
+    z-index: -1;
+    clip-path: inset(0 100% 0 0); /* Hidden left */
+    transition: clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.buttonConfirming::after, .buttonAdded::after {
+    clip-path: inset(0 0 0 0); /* Full visible */
+}
+
+.buttonExiting::after {
+    clip-path: inset(0 0 0 100%); /* Sweep to right */
+    transition: clip-path 0.2s ease-in;
 }
 
 .button:hover:not(:disabled) {
@@ -160,15 +181,10 @@
     color: white;
     font-weight: 700;
     opacity: 0;
-    transition: all 0.5s ease;
+    transition: opacity 0.3s ease;
 }
 
-/* Animation States */
-.buttonConfirming {
-    background-color: #2e7d32 !important;
-    border-color: #2e7d32 !important;
-}
-
+/* Animation State Mappings */
 .buttonConfirming .buttonText {
     opacity: 0;
 }
@@ -178,17 +194,17 @@
     transform: scale(1);
 }
 
-.buttonAdded {
-    background-color: #2e7d32 !important;
-    border-color: #2e7d32 !important;
-}
-
 .buttonAdded .buttonText, .buttonAdded .checkIcon {
     opacity: 0;
 }
 
 .buttonAdded .addedLabel {
     opacity: 1;
+}
+
+/* On Exit */
+.buttonExiting .addedLabel {
+    opacity: 0;
 }
 
 /* Quantity Selector - Vertical Column on the right */

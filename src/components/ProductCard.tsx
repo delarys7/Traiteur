@@ -18,7 +18,7 @@ interface Product {
 export default function ProductCard({ product }: { product: Product }) {
     const { addToCart } = useCart();
     const [quantity, setQuantity] = useState(1);
-    const [addedStatus, setAddedStatus] = useState<'idle' | 'confirming' | 'added'>('idle');
+    const [addedStatus, setAddedStatus] = useState<'idle' | 'confirming' | 'added' | 'exiting'>('idle');
 
     const handleAdd = () => {
         if (addedStatus !== 'idle') return;
@@ -37,8 +37,13 @@ export default function ProductCard({ product }: { product: Product }) {
             
             // Phase 3: Reset after some time
             setTimeout(() => {
-                setAddedStatus('idle');
-                setQuantity(1);
+                setAddedStatus('exiting');
+                
+                // Phase 4: Final reset after sweep duration (1s)
+                setTimeout(() => {
+                    setAddedStatus('idle');
+                    setQuantity(1);
+                }, 200); 
             }, 2000);
         }, 1000);
     };
@@ -78,6 +83,7 @@ export default function ProductCard({ product }: { product: Product }) {
                             ${styles.button} 
                             ${addedStatus === 'confirming' ? styles.buttonConfirming : ''}
                             ${addedStatus === 'added' ? styles.buttonAdded : ''}
+                            ${addedStatus === 'exiting' ? styles.buttonExiting : ''}
                         `} 
                         onClick={handleAdd}
                         disabled={addedStatus !== 'idle'}
