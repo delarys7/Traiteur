@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { Inter, Playfair_Display, Cormorant_Garamond } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/Header'

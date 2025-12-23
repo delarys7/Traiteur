@@ -1,5 +1,5 @@
 .section {
-    padding: 2vw 0; /* Remove horizontal padding to allow full width lines */
+    padding: 4rem 0 6rem 0; /* Fixed standard padding bottom, 0 top (relying on prev section margin/padding) for consistency */
     max-width: 100%;
     margin-top: 0;
     overflow: hidden;
@@ -7,7 +7,7 @@
 }
 
 .intro {
-    margin-bottom: 5vw; /* Fluid margin */
+    margin-bottom: 3rem; /* Fixed margin instead of fluid 5vw */
     position: relative;
     display: flex;
     flex-direction: column;
@@ -38,7 +38,7 @@
     flex-direction: column;
     align-items: center;
     position: relative;
-    padding: 2vw 0;
+    padding: 1rem 0; /* Fixed padding instead of 2vw */
 }
 
 /* The horizontal lines are now siblings of the text container logic-wise, 
@@ -182,7 +182,7 @@
 
 @media (max-width: 900px) {
     .section {
-        padding: 4rem 0;
+        padding: 0 0 4rem 0; /* Consistent bottom padding on mobile */
     }
     
     /* Increase font size relative to viewport on mobile so it's legible */
