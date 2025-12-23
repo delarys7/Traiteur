@@ -129,7 +129,7 @@
 /* ===== 2. DISCOVER SECTION ===== */
 
 .discoverSection {
-  padding: 8rem 2rem;
+  padding: 4rem 2rem; /* Reduced from 8rem 2rem */
   background-color: white;
   text-align: center;
 }
@@ -160,8 +160,10 @@
 .discoverGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 3rem;
-  max-width: 1600px;
+  gap: 3vw;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 4vw;
   margin: 0 auto;
 }
 
@@ -216,7 +218,8 @@
 
 .cardTitle {
   font-family: var(--font-playfair), serif;
-  font-size: 1.8rem;
+  /* Fluid font size to ensure single line: approx 1.8rem on desktop, scaling down */
+  font-size: clamp(0.5rem, 1.6vw, 1.8rem); 
   font-weight: 400;
   font-style: italic;
   color: #111;
@@ -227,6 +230,10 @@
   padding-left: 1rem;
   border-left: 1px solid transparent;
   transition: all 0.4s ease;
+  white-space: nowrap; /* Force single line */
+  width: 100%; /* Ensure it takes available width */
+  text-align: left; /* Align text left */
+  overflow: visible; /* Or hidden if we strictly don't want overflow, but fluid size should prevent it */
 }
 
 /* Line appearing on hover next to title */
@@ -417,9 +424,8 @@
 /* RESPONSIVE */
 @media (max-width: 1024px) {
   .discoverGrid {
-    grid-template-columns: 1fr;
-    max-width: 600px;
-    gap: 4rem;
+    /* Keep 3 columns but maybe ensure gap is smaller if needed, purely fluid now */
+    gap: 2vw;
   }
 
   .sectionTitle {
