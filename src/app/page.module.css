@@ -129,7 +129,7 @@
 /* ===== 2. DISCOVER SECTION ===== */
 
 .discoverSection {
-  padding: 4rem 2rem; /* Reduced from 8rem 2rem */
+  padding: 4rem 0rem; /* Reduced from 8rem 2rem */
   background-color: white;
   text-align: center;
 }
@@ -138,7 +138,7 @@
   font-family: var(--font-playfair), serif;
   font-size: 3.5rem;
   font-weight: 400;
-  margin-bottom: 5rem;
+  margin-bottom: 3rem;
   color: #111;
   position: relative;
   display: inline-block;
@@ -163,7 +163,7 @@
   gap: 3vw;
   width: 100%;
   max-width: 100%;
-  padding: 0 4vw;
+  padding: 0 2vw;
   margin: 0 auto;
 }
 
@@ -181,7 +181,7 @@
   aspect-ratio: 4/5;
   /* Taller portrait */
   overflow: hidden;
-  margin-bottom: 2rem;
+  margin-bottom: 0rem;
   /* Dalloyau / Luxury style: subtle border or frame effect possible, keeping it clean for now */
 }
 
@@ -219,7 +219,7 @@
 .cardTitle {
   font-family: var(--font-playfair), serif;
   /* Fluid font size to ensure single line: approx 1.8rem on desktop, scaling down */
-  font-size: clamp(0.5rem, 1.6vw, 1.8rem); 
+  font-size: clamp(0.8rem, 1.6vw, 1.8rem); 
   font-weight: 400;
   font-style: italic;
   color: #111;
@@ -227,7 +227,7 @@
   position: relative;
   align-self: flex-start;
   /* Left align title */
-  padding-left: 1rem;
+  padding-left: 1vw;
   border-left: 1px solid transparent;
   transition: all 0.4s ease;
   white-space: nowrap; /* Force single line */
