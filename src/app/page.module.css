@@ -244,9 +244,8 @@
 
 /* 3. NOS PRESTATIONS SECTION */
 .servicesSection {
-  padding: 8rem 2rem;
+  padding: 6rem 2rem;
   background-color: #FDFDFD;
-  border-top: 1px solid #eee;
 }
 
 .servicesHeader {

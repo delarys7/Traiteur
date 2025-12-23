@@ -1,7 +1,7 @@
 .section {
-    padding: 8rem 0; /* Remove horizontal padding to allow full width lines */
+    padding: 2vw 0; /* Remove horizontal padding to allow full width lines */
     max-width: 100%;
-    margin: 0 auto;
+    margin-top: 0;
     overflow: hidden;
     position: relative;
 }
