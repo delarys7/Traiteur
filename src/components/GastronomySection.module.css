@@ -19,7 +19,7 @@
 
 .text {
     font-size: 8vw; /* Large size */
-    font-family: var(--font-cormorant); /* Revert to Cormorant */
+    font-family: 'Distant Stroke'; /* Revert to Cormorant */
     font-weight: 300;
     font-style: italic;
     color: #1a1a1a;

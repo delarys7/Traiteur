@@ -17,6 +17,46 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Aniyah';
+  src: url('/fonts/Aniyah Personal Use Only.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Asmelina Harley';
+  src: url('/fonts/AsmelinaHarley.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Distant Stroke Medium';
+  src: url('/fonts/Distant_Stroke_Medium.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Distant Stroke';
+  src: url('/fonts/Distant_Stroke.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Thank You';
+  src: url('/fonts/Thank you.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
