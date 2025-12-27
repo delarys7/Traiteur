@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styles from './page.module.css';
 import GastronomySection from '@/components/GastronomySection';
+import HomeInviteSection from '@/components/HomeInviteSection';
 
 export default function Home() {
   return (
@@ -92,52 +93,45 @@ export default function Home() {
       {/* 3. Maison de Haute Gastronomie (New luxury section) */}
       <GastronomySection />
 
-      {/* 3. Nos Prestations */}
-      <section className={styles.servicesSection}>
-        <div className={styles.servicesHeader}>
-          <div className={styles.servicesTitleBlock}>
-            <h2 className={styles.servicesMainTitle}>
-              Héritage & <br /> <span>Savoir-Faire</span>
-            </h2>
-            <p className={styles.servicesDesc}>
-              Chaque événement est une page blanche que nous écrivons avec vous.
-              De l&apos;intime au grandiose, nos équipes orchestrent une symphonie de saveurs
-              et d&apos;élégance pour sublimer vos instants précieux.
-            </p>
-          </div>
-          <div className={styles.servicesHeaderImage}>
-            <Image
-              src="/images/buffet_hero.jpg"
-              alt="Réception grandiose"
-              fill
-              className={styles.serviceImage}
-            />
-          </div>
-        </div>
+      {/* 4. Athéna Event s'invite chez vous */}
+      <HomeInviteSection />
 
+      {/* 5. Nos Prestations */}
+      <section className={styles.servicesSection}>
         <div className={styles.servicesGrid}>
           {/* Grands Événements */}
           <div className={styles.serviceItem}>
+            <div className={styles.serviceItemTextRight}>
+              <h3>Grands Événements</h3>
+              <div className={styles.desktopOnly}>
+                <p className={styles.servicesDesc}>
+                  Chaque événement est une page blanche que nous écrivons avec vous.
+                  De l&apos;intime au grandiose, nos équipes orchestrent une symphonie de saveurs
+                  et d&apos;élégance pour sublimer vos instants précieux.
+                </p>
+                <Link href="/contact" className={styles.discoverLink}>Découvrir</Link>
+              </div>
+            </div>
             <div className={styles.serviceItemImage}>
               <Image
-                src="/images/hero.jpg"
+                src="/images/buffet_hero.jpg"
                 alt="Grands Événements"
                 fill
                 className={styles.serviceImage}
               />
-            </div>
-            <div className={styles.serviceItemText}>
-              <h3>Grands Événements</h3>
-              <Link href="/contact" className={styles.discoverLink}>Découvrir</Link>
+              <div className={styles.mobileOverlay}>
+                <Link href="/contact" className={styles.mobileDiscoverButton}>Découvrir</Link>
+                <p className={styles.mobileDesc}>
+                  Chaque événement est une page blanche que nous écrivons avec vous.
+                  De l&apos;intime au grandiose, nos équipes orchestrent une symphonie de saveurs
+                  et d&apos;élégance pour sublimer vos instants précieux.
+                </p>
+              </div>
             </div>
           </div>
 
           {/* Réceptions d'Entreprise */}
           <div className={styles.serviceItem}>
-            <div className={styles.serviceItemTextRight}>
-              <h3>Réceptions Corporate</h3>
-              <Link href="/contact" className={styles.discoverLink}>Découvrir</Link>
-            </div>
             <div className={styles.serviceItemImage}>
               <Image
                 src="/images/dessert_hero.jpg"
@@ -146,10 +140,18 @@ export default function Home() {
                 className={styles.serviceImage}
               />
             </div>
+            <div className={styles.serviceItemText}>
+              <h3>Réceptions Corporate</h3>
+              <Link href="/contact" className={styles.discoverLink}>Découvrir</Link>
+            </div>
           </div>
 
-          {/* Gastronomie */}
+          {/* Gastronomique */}
           <div className={styles.serviceItem}>
+            <div className={styles.serviceItemTextRight}>
+              <h3>Haute Gastronomie</h3>
+              <Link href="/traiteur" className={styles.discoverLink}>Découvrir</Link>
+            </div>
             <div className={styles.serviceItemImage}>
               <Image
                 src="/images/chef_hero.jpg"
@@ -157,10 +159,6 @@ export default function Home() {
                 fill
                 className={styles.serviceImage}
               />
-            </div>
-            <div className={styles.serviceItemText}>
-              <h3>Haute Gastronomie</h3>
-              <Link href="/traiteur" className={styles.discoverLink}>Découvrir</Link>
             </div>
           </div>
 

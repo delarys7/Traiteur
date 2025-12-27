@@ -302,10 +302,7 @@
   line-height: 1.8;
   color: #666;
   max-width: 450px;
-  margin-left: 4rem;
-  /* Indent description */
-  border-left: 1px solid #ddd;
-  padding-left: 2rem;
+  margin-top: 1rem;
 }
 
 .servicesHeaderImage {
@@ -316,6 +313,14 @@
 
 .serviceImage {
   object-fit: cover;
+}
+
+.desktopOnly {
+  display: block;
+}
+
+.mobileOverlay {
+  display: none;
 }
 
 /* Service Grid items */
@@ -330,16 +335,15 @@
 
 .serviceItem {
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  /* Image larger */
+  grid-template-columns: 0.8fr 1.2fr; /* Standard: Text 0.8, Image 1.2 */
   gap: 5rem;
   align-items: center;
   position: relative;
 }
 
-/* Distinct layout for even items */
+/* Reverse layout for even items */
 .serviceItem:nth-child(even) {
-  grid-template-columns: 0.8fr 1.2fr;
+  grid-template-columns: 1.2fr 0.8fr; /* Standard: Image 1.2, Text 0.8 */
 }
 
 .serviceItemImage {
@@ -476,6 +480,71 @@
 
   .title {
     font-size: 3.5rem;
+  }
+
+  .desktopOnly {
+    display: none;
+  }
+
+  .mobileOverlay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 5;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .mobileDiscoverButton {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: all 0.4s ease;
+    background: transparent;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mobileDiscoverButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transition: left 0.4s ease;
+    z-index: -1;
+  }
+
+  .mobileDiscoverButton:hover {
+    color: black;
+  }
+
+  .mobileDiscoverButton:hover::before {
+    left: 0;
+  }
+
+  .mobileDesc {
+    color: white;
+    font-family: var(--font-inter);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    max-width: 90%;
+    margin-top: 2rem;
+    opacity: 0.9;
   }
 }
 
