@@ -132,6 +132,17 @@ export default function Home() {
 
           {/* Réceptions d'Entreprise */}
           <div className={styles.serviceItem}>
+            <div className={styles.serviceItemText}>
+              <h3>Réceptions Corporate</h3>
+              <div className={styles.desktopOnly}>
+                <p className={styles.servicesDesc}>
+                  Une expertise dédiée à votre image de marque. De la pause-café au gala prestigieux, 
+                  notre Maison sublime vos événements professionnels avec une rigueur absolue 
+                  et une créativité sans cesse renouvelée.
+                </p>
+                <Link href="/contact" className={styles.discoverLink}>Découvrir</Link>
+              </div>
+            </div>
             <div className={styles.serviceItemImage}>
               <Image
                 src="/images/dessert_hero.jpg"
@@ -139,18 +150,28 @@ export default function Home() {
                 fill
                 className={styles.serviceImage}
               />
-            </div>
-            <div className={styles.serviceItemText}>
-              <h3>Réceptions Corporate</h3>
-              <Link href="/contact" className={styles.discoverLink}>Découvrir</Link>
+              <div className={styles.mobileOverlay}>
+                <Link href="/contact" className={styles.mobileDiscoverButton}>Découvrir</Link>
+                <p className={styles.mobileDesc}>
+                  Une expertise dédiée à votre image de marque. De la pause-café au gala prestigieux, 
+                  notre Maison sublime vos événements professionnels.
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Gastronomique */}
+          {/* Gastronmique */}
           <div className={styles.serviceItem}>
             <div className={styles.serviceItemTextRight}>
               <h3>Haute Gastronomie</h3>
-              <Link href="/traiteur" className={styles.discoverLink}>Découvrir</Link>
+              <div className={styles.desktopOnly}>
+                <p className={styles.servicesDesc}>
+                  L&apos;excellence culinaire portée à son paroxysme. Nos chefs sélectionnent les produits 
+                  les plus rares pour composer une symphonie de saveurs qui marquera durablement 
+                  l&apos;esprit de vos convives.
+                </p>
+                <Link href="/traiteur" className={styles.discoverLink}>Découvrir</Link>
+              </div>
             </div>
             <div className={styles.serviceItemImage}>
               <Image
@@ -159,6 +180,13 @@ export default function Home() {
                 fill
                 className={styles.serviceImage}
               />
+              <div className={styles.mobileOverlay}>
+                <Link href="/traiteur" className={styles.mobileDiscoverButton}>Découvrir</Link>
+                <p className={styles.mobileDesc}>
+                  L&apos;excellence culinaire portée à son paroxysme. Nos chefs sélectionnent les produits 
+                  les plus rares pour une symphonie de saveurs.
+                </p>
+              </div>
             </div>
           </div>
 

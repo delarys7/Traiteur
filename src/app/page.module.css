@@ -246,6 +246,7 @@
 .servicesSection {
   padding: 6rem 2rem;
   background-color: #FDFDFD;
+  width: 100%;
 }
 
 .servicesHeader {
@@ -302,7 +303,8 @@
   line-height: 1.8;
   color: #666;
   max-width: 450px;
-  margin-top: 1rem;
+  margin-top: 0.8rem;
+  margin-bottom: 2.5rem; /* More space before 'Découvrir' button */
 }
 
 .servicesHeaderImage {
@@ -335,15 +337,26 @@
 
 .serviceItem {
   display: grid;
-  grid-template-columns: 0.8fr 1.2fr; /* Standard: Text 0.8, Image 1.2 */
+  grid-template-columns: 0.8fr 1.2fr; /* Standard: Text 0.8 / Image 1.2 */
   gap: 5rem;
   align-items: center;
   position: relative;
 }
 
-/* Reverse layout for even items */
-.serviceItem:nth-child(even) {
-  grid-template-columns: 1.2fr 0.8fr; /* Standard: Image 1.2, Text 0.8 */
+/* On Desktop, handle alternating layout while keeping Text first in JSX */
+@media (min-width: 801px) {
+  .serviceItem:nth-child(even) {
+    grid-template-columns: 1.2fr 0.8fr; /* Image 1.2 / Text 0.8 */
+  }
+
+  /* Force Image to Column 1 and Text to Column 2 for even items */
+  .serviceItem:nth-child(even) .serviceItemImage {
+    grid-column: 1;
+  }
+  .serviceItem:nth-child(even) .serviceItemText,
+  .serviceItem:nth-child(even) .serviceItemTextRight {
+    grid-column: 2;
+  }
 }
 
 .serviceItemImage {
@@ -388,7 +401,7 @@
   font-size: 3rem;
   font-weight: 400;
   text-transform: uppercase;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.8rem; /* Reduced space between title and text */
   letter-spacing: 0.05em;
   color: #111;
 }
@@ -425,10 +438,15 @@
 }
 
 /* RESPONSIVE */
-@media (max-width: 1024px) {
+@media (max-width: 800px) { /* Changed from 1024px to be closer to actual mobile */
+  .servicesSection {
+    padding: 4rem 0; /* Remove side padding on mobile for full width image */
+  }
+
   .discoverGrid {
     /* Keep 3 columns but maybe ensure gap is smaller if needed, purely fluid now */
     gap: 2vw;
+    padding: 0 1rem;
   }
 
   .sectionTitle {
@@ -438,6 +456,7 @@
   .servicesHeader {
     grid-template-columns: 1fr;
     gap: 3rem;
+    padding: 0 1.5rem;
   }
 
   .servicesMainTitle {
@@ -451,6 +470,7 @@
 
   .servicesDesc {
     margin-left: 0;
+    margin-bottom: 1.5rem;
     border-left: none;
     padding-left: 0;
   }
@@ -466,11 +486,12 @@
   .serviceItemTextRight {
     text-align: center;
     align-items: center;
-    padding: 0;
+    padding: 0 1.5rem; /* Added padding for text as section padding is gone */
   }
 
   .serviceItemImage {
-    order: -1;
+    /* order: -1; Removed so title comes first */
+    height: 450px;
   }
 
   .serviceItemImage::after {
