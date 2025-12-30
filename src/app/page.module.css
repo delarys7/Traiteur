@@ -329,7 +329,7 @@
 
 .prestationName {
   font-family: var(--font-playfair), serif;
-  font-size: clamp(1rem, 2.2vw, 2.5rem); /* Fluid font-size scales linearly */
+  font-size: 2.2vw; /* PC Default */
   font-weight: 400;
   text-transform: uppercase;
   color: #111;
@@ -403,6 +403,10 @@
     margin-right: auto;
     transform: translateX(-10%); /* Centered but shifted left as requested */
   }
+
+  .prestationName {
+    font-size: 3vw; /* Tablette */
+  }
 }
 
 @media (max-width: 750px) {
@@ -416,6 +420,10 @@
     width: 100% !important;
     transform: none !important;
     grid-column: auto !important;
+  }
+
+  .prestationName {
+    font-size: 4vw; /* Mobile */
   }
 }
 

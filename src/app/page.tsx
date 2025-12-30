@@ -106,7 +106,7 @@ export default function Home() {
           <Link href="/traiteur" className={styles.prestationItem}>
             <div className={styles.prestationImageWrapper}>
               <Image
-                src="/images/buffet_hero.jpg"
+                src="/images/buffet_hero.png"
                 alt="Grands Événements"
                 fill
                 className={styles.prestationImage}
@@ -122,7 +122,7 @@ export default function Home() {
           <Link href="/traiteur" className={styles.prestationItem}>
             <div className={styles.prestationImageWrapper}>
               <Image
-                src="/images/dessert_hero.jpg"
+                src="/images/dessert_hero.png"
                 alt="Réception Corporate"
                 fill
                 className={styles.prestationImage}
@@ -138,7 +138,7 @@ export default function Home() {
           <Link href="/traiteur" className={styles.prestationItem}>
             <div className={styles.prestationImageWrapper}>
               <Image
-                src="/images/cocktail_hero.jpg"
+                src="/images/cocktail_hero.png"
                 alt="Réceptions Privées"
                 fill
                 className={styles.prestationImage}
