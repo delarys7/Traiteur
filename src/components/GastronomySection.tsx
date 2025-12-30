@@ -45,12 +45,16 @@ export default function GastronomySection() {
     return (
         <section className={styles.section} ref={sectionRef}>
             <div className={`${styles.intro} ${isVisible ? styles.visible : ''}`}>
-                <div className={`${styles.line} ${styles.lineTop}`} />
-                <div className={styles.textContainer}>
+                <div className={`${styles.lineRow} ${styles.lineRowLeft}`}>
+                    <div className={styles.line} />
                     <span className={`${styles.text} ${styles.textHaute}`}>Haute</span>
-                    <span className={`${styles.text} ${styles.textGastronomy}`}>Gastronomie</span>
+                    <div className={styles.spacer} />
                 </div>
-                <div className={`${styles.line} ${styles.lineBottom}`} />
+                <div className={`${styles.lineRow} ${styles.lineRowRight}`}>
+                    <div className={styles.spacer} />
+                    <span className={`${styles.text} ${styles.textGastronomy}`}>Gastronomie</span>
+                    <div className={styles.line} />
+                </div>
             </div>
 
             <div className={styles.mosaicContainer}>
