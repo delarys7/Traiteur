@@ -17,7 +17,7 @@ const team = [
         role: "Directrice de Création",
         career: "Designer culinaire & Scénographe",
         bio: "Sarah transforme chaque réception en une œuvre visuelle. Pour elle, le plaisir commence par l'œil, orchestrant des décors où chaque détail dialogue avec la gastronomie.",
-        image: "/images/L'équipe/Directrice création.png"
+        image: "/images/L'équipe/Directrice_création.png"
     },
     {
         name: "Marc-Antoine Rossi",
@@ -31,7 +31,7 @@ const team = [
         role: "Coordinatrice Événementielle",
         career: "Master en Management du Luxe",
         bio: "Cheffe d'orchestre de vos projets, Sophie assure une exécution millimétrée. Son sens du service et sa discrétion font d'elle le pilier logistique de vos réceptions.",
-        image: "/images/L'équipe/Coordinatrice évenementielle.png"
+        image: "/images/L'équipe/Coordinatrice_évenementielle.png"
     }
 ];
 
