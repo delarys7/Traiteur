@@ -242,199 +242,170 @@
   padding-left: 1.5rem;
 }
 
-/* 3. NOS PRESTATIONS SECTION */
-.servicesSection {
-  padding: 6rem 2rem;
-  background-color: #FDFDFD;
+/* ===== 3. NOS PRESTATIONS SECTION ===== */
+.prestationsSection {
+  padding: 3rem 0;
+  background-color: #e9e9e9; /* Light gray background as requested */
   width: 100%;
 }
 
-.servicesHeader {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 6rem;
-  align-items: center;
-  margin-bottom: 8rem;
-  max-width: 1500px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.servicesTitleBlock {
-  padding-top: 2rem;
-  position: relative;
-}
-
-/* The vertical line extending above title */
-.servicesTitleBlock::before {
-  content: '';
-  position: absolute;
-  top: -3rem;
-  left: 0;
-  width: 1px;
-  height: 60px;
-  background-color: #333;
-  /* Dark accents */
-}
-
-.servicesMainTitle {
+.prestationsTitle {
   font-family: var(--font-playfair), serif;
-  font-size: 4.5rem;
-  line-height: 1;
+  font-size: 3.5rem;
   font-weight: 400;
-  color: #AA8B55;
-  /* Muted Gold/Bronze accent valid for luxury without being gaudy */
-  color: #1a1a1a;
   margin-bottom: 3rem;
-}
-
-/* Stylized emphasis on "PRESTATIONS" */
-.servicesMainTitle span {
-  display: block;
-  font-style: italic;
-  font-size: 5rem;
-  margin-top: 0.5rem;
-  margin-left: 2rem;
-}
-
-.servicesDesc {
-  font-family: var(--font-inter);
-  font-size: 1.1rem;
-  line-height: 1.8;
-  color: #666;
-  max-width: 450px;
-  margin-top: 0.8rem;
-  margin-bottom: 2.5rem; /* More space before 'Découvrir' button */
-}
-
-.servicesHeaderImage {
-  position: relative;
-  height: 600px;
-  width: 100%;
-}
-
-.serviceImage {
-  object-fit: cover;
-}
-
-.desktopOnly {
-  display: block;
-}
-
-.mobileOverlay {
-  display: none;
-}
-
-/* Service Grid items */
-.servicesGrid {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10rem;
-  /* Huge lavish spacing */
-}
-
-.serviceItem {
-  display: grid;
-  grid-template-columns: 0.8fr 1.2fr; /* Standard: Text 0.8 / Image 1.2 */
-  gap: 5rem;
-  align-items: center;
-  position: relative;
-}
-
-/* On Desktop, handle alternating layout while keeping Text first in JSX */
-@media (min-width: 801px) {
-  .serviceItem:nth-child(even) {
-    grid-template-columns: 1.2fr 0.8fr; /* Image 1.2 / Text 0.8 */
-  }
-
-  /* Force Image to Column 1 and Text to Column 2 for even items */
-  .serviceItem:nth-child(even) .serviceItemImage {
-    grid-column: 1;
-  }
-  .serviceItem:nth-child(even) .serviceItemText,
-  .serviceItem:nth-child(even) .serviceItemTextRight {
-    grid-column: 2;
-  }
-}
-
-.serviceItemImage {
-  position: relative;
-  height: 500px;
-  width: 100%;
-}
-
-/* Image overflowing line effect */
-.serviceItemImage::after {
-  content: '';
-  position: absolute;
-  bottom: -20px;
-  right: -20px;
-  width: 100%;
-  height: 100%;
-  border: 1px solid #ddd;
-  /* Thin decorative frame offset */
-  z-index: -1;
-  transition: transform 0.5s ease;
-}
-
-.serviceItem:hover .serviceItemImage::after {
-  transform: translate(10px, 10px);
-}
-
-.serviceItemText {
-  text-align: left;
-  padding-left: 2rem;
-}
-
-.serviceItemTextRight {
-  text-align: right;
-  padding-right: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-
-.serviceItem h3 {
-  font-family: var(--font-playfair);
-  font-size: 3rem;
-  font-weight: 400;
-  text-transform: uppercase;
-  margin-bottom: 0.8rem; /* Reduced space between title and text */
-  letter-spacing: 0.05em;
   color: #111;
-}
-
-.discoverLink {
-  font-family: var(--font-playfair);
-  font-style: italic;
-  font-size: 1.5rem;
-  color: #888;
-  text-decoration: none;
+  text-align: center;
   position: relative;
-  display: inline-block;
-  padding-bottom: 5px;
+  padding-bottom: 2rem;
 }
 
-.discoverLink::after {
+.prestationsTitle::after {
   content: '';
   position: absolute;
   bottom: 0;
-  left: 0;
-  width: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
   height: 1px;
   background-color: #000;
-  transition: width 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.discoverLink:hover {
-  color: black;
+.prestationsGrid {
+  max-width: 1600px;
+  margin: 4rem auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4rem;
+  padding: 0 3rem;
+  align-items: flex-start;
 }
 
-.discoverLink:hover::after {
-  width: 50px;
-  background-color: black;
+.prestationItem {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.4s ease;
+}
+
+/* Vertical staggering as per user request */
+.prestationItem:nth-child(1) {
+  margin-top: 0;
+}
+
+.prestationItem:nth-child(2) {
+  margin-top: 10rem; /* Middle item shifted down */
+}
+
+.prestationItem:nth-child(3) {
+  margin-top: 3rem; /* Right item shifted down */
+}
+
+.prestationImageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.prestationImage {
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+.prestationItem:hover .prestationImage {
+  transform: scale(1.05);
+}
+
+.prestationContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center; /* Centered content */
+}
+
+.prestationName {
+  font-family: var(--font-playfair), serif;
+  font-size: 2.2rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: #111;
+  margin: 0;
+  line-height: 1.2;
+  text-align: center; /* Centered title */
+}
+
+.prestationLink {
+  font-family: var(--font-playfair), serif;
+  font-style: italic;
+  font-size: 1.2rem;
+  color: #888;
+  transition: color 0.3s ease;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 4px;
+}
+
+.prestationLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 100%;
+  height: 1px;
+  background-color: #000;
+  transform: translateX(-50%) scaleX(0);
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transform-origin: center;
+}
+
+.prestationItem:hover .prestationLink {
+  color: #000;
+}
+
+.prestationItem:hover .prestationLink::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* RESPONSIVE */
+@media (max-width: 1000px) {
+  .prestationsSection {
+    padding: 4rem 0;
+  }
+
+  .prestationsTitle {
+    font-size: 2.5rem;
+  }
+
+  .prestationsGrid {
+    grid-template-columns: 1fr 1fr;
+    padding: 0 2rem;
+    gap: 4rem;
+  }
+
+  .prestationItem:nth-child(1) {
+    margin-top: 0 !important;
+  }
+
+  .prestationItem:nth-child(2) {
+    margin-top: 8rem !important; /* Right item in the row of 2 is shifted down */
+  }
+
+  .prestationItem:nth-child(3) {
+    grid-column: 1 / span 2;
+    margin-top: 0rem !important; /* Row of 1 below */
+    /* Uniform scaling: width should match one column of the grid (50% - half the gap) */
+    width: calc(50% - 2rem); 
+    margin-left: auto;
+    margin-right: auto;
+    transform: translateX(-10%); /* Centered but shifted left as requested */
+  }
+
+  .prestationName {
+    font-size: 1.8rem;
+  }
 }
 
 /* RESPONSIVE */

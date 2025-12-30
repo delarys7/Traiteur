@@ -3,38 +3,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 6rem 0 0 0; /* No bottom padding as image is full width and follows */
+  padding: 0; /* Removed top padding as requested by moving title inside */
   background-color: #fff;
-}
-
-.title {
-  font-family: var(--font-playfair), serif;
-  font-size: 3.5rem;
-  font-weight: 400;
-  margin-bottom: 4rem;
-  color: #111;
-  text-align: center;
-  position: relative;
-  padding-bottom: 2rem;
-}
-
-/* Decorative line centered below title - matching other sections */
-.title::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 1px;
-  background-color: #000;
 }
 
 .imageBanner {
   position: relative;
   width: 100%;
-  height: 60vh;
-  min-height: 400px;
+  height: 75vh; /* Increased vertical height as requested */
+  min-height: 500px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -50,19 +27,38 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.4); /* Slightly darker for better text legibility */
   z-index: 1;
 }
 
-.buttonContainer {
+.content {
   position: relative;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.title {
+  font-family: var(--font-playfair), serif;
+  font-size: 4rem; /* Slightly larger */
+  font-weight: 400;
+  color: #fff; /* Changed to white for image overlay */
+  margin: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.buttonContainer {
   display: flex;
   gap: 2rem;
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 0 1rem;
 }
 
 .button {
@@ -80,7 +76,7 @@
   overflow: hidden;
   text-decoration: none;
   text-align: center;
-  min-width: 200px;
+  min-width: 220px;
 }
 
 .button::before {
@@ -103,33 +99,41 @@
   left: 0;
 }
 
-/* Ensure buttons stay side by side on mobile */
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .title {
+    font-size: 3rem;
+  }
+}
+
 @media (max-width: 768px) {
+  .imageBanner {
+    height: 60vh;
+  }
+
   .title {
     font-size: 2.2rem;
-    padding: 0 1.5rem 2rem 1.5rem;
+    padding: 0 1rem;
   }
   
-  .imageBanner {
-    height: 50vh;
+  .content {
+    gap: 2rem;
   }
 
   .buttonContainer {
+    flex-direction: column;
     gap: 1rem;
   }
 
   .button {
-    padding: 1rem 1.2rem;
-    min-width: 140px;
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
+    padding: 1rem 1.5rem;
+    min-width: 200px;
+    font-size: 0.8rem;
   }
 }
 
 @media (max-width: 480px) {
-  .button {
-    min-width: 120px;
-    padding: 0.8rem 1rem;
-    font-size: 0.7rem;
+  .title {
+    font-size: 1.8rem;
   }
 }

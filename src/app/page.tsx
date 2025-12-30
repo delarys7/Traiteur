@@ -93,72 +93,62 @@ export default function Home() {
       {/* 3. Maison de Haute Gastronomie (New luxury section) */}
       <GastronomySection />
 
-      {/* 4. Athéna Event s'invite chez vous */}
-      <HomeInviteSection />
+      {/* 4. Nos Prestations */}
+      <section className={styles.prestationsSection}>
+        <h2 className={styles.prestationsTitle}>Nos Prestations</h2>
+        
+        {/* Full width Banner */}
+        <HomeInviteSection />
 
-      {/* 5. Nos Prestations */}
-      <section className={styles.servicesSection}>
-        <div className={styles.servicesGrid}>
+        {/* 3 Column Grid */}
+        <div className={styles.prestationsGrid}>
           {/* Grands Événements */}
-          <div className={styles.serviceItem}>
-            <div className={styles.serviceItemTextRight}>
-              <h3>Grands Événements</h3>
-              <div className={styles.desktopOnly}>
-                <p className={styles.servicesDesc}>
-                  Chaque événement est une page blanche que nous écrivons avec vous.
-                  De l&apos;intime au grandiose, nos équipes orchestrent une symphonie de saveurs
-                  et d&apos;élégance pour sublimer vos instants précieux.
-                </p>
-                <Link href="/contact" className={styles.discoverLink}>Découvrir</Link>
-              </div>
-            </div>
-            <div className={styles.serviceItemImage}>
+          <Link href="/traiteur" className={styles.prestationItem}>
+            <div className={styles.prestationImageWrapper}>
               <Image
                 src="/images/buffet_hero.jpg"
                 alt="Grands Événements"
                 fill
-                className={styles.serviceImage}
+                className={styles.prestationImage}
               />
-              <div className={styles.mobileOverlay}>
-                <Link href="/contact" className={styles.mobileDiscoverButton}>Découvrir</Link>
-                <p className={styles.mobileDesc}>
-                  Chaque événement est une page blanche que nous écrivons avec vous.
-                  De l&apos;intime au grandiose, nos équipes orchestrent une symphonie de saveurs
-                  et d&apos;élégance pour sublimer vos instants précieux.
-                </p>
-              </div>
             </div>
-          </div>
+            <div className={styles.prestationContent}>
+              <h3 className={styles.prestationName}>Grands événements</h3>
+              <span className={styles.prestationLink}>Découvrir</span>
+            </div>
+          </Link>
 
-          {/* Réceptions d'Entreprise */}
-          <div className={styles.serviceItem}>
-            <div className={styles.serviceItemText}>
-              <h3>Réceptions Corporate</h3>
-              <div className={styles.desktopOnly}>
-                <p className={styles.servicesDesc}>
-                  Une expertise dédiée à votre image de marque. De la pause-café au gala prestigieux, 
-                  notre Maison sublime vos événements professionnels avec une rigueur absolue 
-                  et une créativité sans cesse renouvelée.
-                </p>
-                <Link href="/contact" className={styles.discoverLink}>Découvrir</Link>
-              </div>
-            </div>
-            <div className={styles.serviceItemImage}>
+          {/* Réception Corporate */}
+          <Link href="/traiteur" className={styles.prestationItem}>
+            <div className={styles.prestationImageWrapper}>
               <Image
                 src="/images/dessert_hero.jpg"
-                alt="Réceptions d'Entreprise"
+                alt="Réception Corporate"
                 fill
-                className={styles.serviceImage}
+                className={styles.prestationImage}
               />
-              <div className={styles.mobileOverlay}>
-                <Link href="/contact" className={styles.mobileDiscoverButton}>Découvrir</Link>
-                <p className={styles.mobileDesc}>
-                  Une expertise dédiée à votre image de marque. De la pause-café au gala prestigieux, 
-                  notre Maison sublime vos événements professionnels.
-                </p>
-              </div>
             </div>
-          </div>
+            <div className={styles.prestationContent}>
+              <h3 className={styles.prestationName}>Réceptions d&apos;entreprise</h3>
+              <span className={styles.prestationLink}>Découvrir</span>
+            </div>
+          </Link>
+
+          {/* Réceptions Privées */}
+          <Link href="/traiteur" className={styles.prestationItem}>
+            <div className={styles.prestationImageWrapper}>
+              <Image
+                src="/images/cocktail_hero.jpg"
+                alt="Réceptions Privées"
+                fill
+                className={styles.prestationImage}
+              />
+            </div>
+            <div className={styles.prestationContent}>
+              <h3 className={styles.prestationName}>Réceptions privées</h3>
+              <span className={styles.prestationLink}>Découvrir</span>
+            </div>
+          </Link>
         </div>
       </section>
 
