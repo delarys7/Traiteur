@@ -3,6 +3,7 @@ import Image from 'next/image';
 import styles from './page.module.css';
 import GastronomySection from '@/components/GastronomySection';
 import HomeInviteSection from '@/components/HomeInviteSection';
+import FadeIn from '@/components/FadeIn';
 
 export default function Home() {
   return (
@@ -98,57 +99,65 @@ export default function Home() {
         <h2 className={styles.prestationsTitle}>Nos Prestations</h2>
         
         {/* Full width Banner */}
-        <HomeInviteSection />
+        <FadeIn>
+          <HomeInviteSection />
+        </FadeIn>
 
         {/* 3 Column Grid */}
         <div className={styles.prestationsGrid}>
           {/* Grands Événements */}
-          <Link href="/traiteur" className={styles.prestationItem}>
-            <div className={styles.prestationImageWrapper}>
-              <Image
-                src="/images/buffet_hero.png"
-                alt="Grands Événements"
-                fill
-                className={styles.prestationImage}
-              />
-            </div>
-            <div className={styles.prestationContent}>
-              <h3 className={styles.prestationName}>Grands événements</h3>
-              <span className={styles.prestationLink}>Découvrir</span>
-            </div>
-          </Link>
+          <FadeIn className={styles.prestationWrapper} delay={0.1}>
+            <Link href="/traiteur" className={styles.prestationItem}>
+              <div className={styles.prestationImageWrapper}>
+                <Image
+                  src="/images/buffet_hero.png"
+                  alt="Grands Événements"
+                  fill
+                  className={styles.prestationImage}
+                />
+              </div>
+              <div className={styles.prestationContent}>
+                <h3 className={styles.prestationName}>Grands événements</h3>
+                <span className={styles.prestationLink}>Découvrir</span>
+              </div>
+            </Link>
+          </FadeIn>
 
           {/* Réception Corporate */}
-          <Link href="/traiteur" className={styles.prestationItem}>
-            <div className={styles.prestationImageWrapper}>
-              <Image
-                src="/images/dessert_hero.png"
-                alt="Réception Corporate"
-                fill
-                className={styles.prestationImage}
-              />
-            </div>
-            <div className={styles.prestationContent}>
-              <h3 className={styles.prestationName}>Réceptions d&apos;entreprise</h3>
-              <span className={styles.prestationLink}>Découvrir</span>
-            </div>
-          </Link>
+          <FadeIn className={styles.prestationWrapper} delay={0.2}>
+            <Link href="/traiteur" className={styles.prestationItem}>
+              <div className={styles.prestationImageWrapper}>
+                <Image
+                  src="/images/dessert_hero.png"
+                  alt="Réception Corporate"
+                  fill
+                  className={styles.prestationImage}
+                />
+              </div>
+              <div className={styles.prestationContent}>
+                <h3 className={styles.prestationName}>Réceptions d&apos;entreprise</h3>
+                <span className={styles.prestationLink}>Découvrir</span>
+              </div>
+            </Link>
+          </FadeIn>
 
           {/* Réceptions Privées */}
-          <Link href="/traiteur" className={styles.prestationItem}>
-            <div className={styles.prestationImageWrapper}>
-              <Image
-                src="/images/cocktail_hero.png"
-                alt="Réceptions Privées"
-                fill
-                className={styles.prestationImage}
-              />
-            </div>
-            <div className={styles.prestationContent}>
-              <h3 className={styles.prestationName}>Réceptions privées</h3>
-              <span className={styles.prestationLink}>Découvrir</span>
-            </div>
-          </Link>
+          <FadeIn className={styles.prestationWrapper} delay={0.3}>
+            <Link href="/traiteur" className={styles.prestationItem}>
+              <div className={styles.prestationImageWrapper}>
+                <Image
+                  src="/images/cocktail_hero.png"
+                  alt="Réceptions Privées"
+                  fill
+                  className={styles.prestationImage}
+                />
+              </div>
+              <div className={styles.prestationContent}>
+                <h3 className={styles.prestationName}>Réceptions privées</h3>
+                <span className={styles.prestationLink}>Découvrir</span>
+              </div>
+            </Link>
+          </FadeIn>
         </div>
       </section>
 

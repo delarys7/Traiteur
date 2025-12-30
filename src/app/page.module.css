@@ -281,25 +281,32 @@
   align-items: flex-start;
 }
 
+.prestationWrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: 280px; /* Minimum size independent of window */
+}
+
 .prestationItem {
   display: flex;
   flex-direction: column;
   text-decoration: none;
   color: inherit;
   transition: transform 0.4s ease;
-  min-width: 280px; /* Minimum size independent of window */
+  height: 100%; /* Ensure it fills wrapper */
 }
 
 /* Vertical staggering as per user request */
-.prestationItem:nth-child(1) {
+/* Vertical staggering as per user request */
+.prestationWrapper:nth-child(1) {
   margin-top: 0;
 }
 
-.prestationItem:nth-child(2) {
+.prestationWrapper:nth-child(2) {
   margin-top: 10rem; /* Middle item shifted down */
 }
 
-.prestationItem:nth-child(3) {
+.prestationWrapper:nth-child(3) {
   margin-top: 3rem; /* Right item shifted down */
 }
 
@@ -386,15 +393,15 @@
     gap: 4rem;
   }
 
-  .prestationItem:nth-child(1) {
+  .prestationWrapper:nth-child(1) {
     margin-top: 0 !important;
   }
 
-  .prestationItem:nth-child(2) {
+  .prestationWrapper:nth-child(2) {
     margin-top: 8rem !important; /* Right item in the row of 2 is shifted down */
   }
 
-  .prestationItem:nth-child(3) {
+  .prestationWrapper:nth-child(3) {
     grid-column: 1 / span 2;
     margin-top: -2rem !important; /* Negative margin to overlap with the item above */
     /* Uniform scaling: width should match one column of the grid (50% - half the gap) */
@@ -415,7 +422,7 @@
     gap: 4rem;
   }
 
-  .prestationItem:nth-child(n) {
+  .prestationWrapper:nth-child(n) {
     margin-top: 0 !important;
     width: 100% !important;
     transform: none !important;
