@@ -232,7 +232,7 @@
     background-color: #fff;
     z-index: 2000;
     transition: right 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    padding: 100px 40px 40px;
+    padding: 65px 40px 40px;
     box-sizing: border-box;
     overflow-y: auto;
 }
@@ -247,7 +247,7 @@
 
 .closeButton {
     position: absolute;
-    top: -65px; /* Offset to align with header height when menu is open */
+    top: -50px; /* Offset to align with header height when menu is open */
     right: -15px;
     background: none;
     border: none;

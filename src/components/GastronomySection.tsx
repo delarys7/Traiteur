@@ -56,7 +56,7 @@ export default function GastronomySection() {
             <div className={styles.mosaicContainer}>
                 <div className={`${styles.imageBox} ${styles.mainImage} ${imagesVisible ? styles.imageBoxVisible : ''}`}>
                     <Image 
-                        src="/images/gastronomy_main.png" 
+                        src="/images/chef_hero.jpg" 
                         alt="Art de la table" 
                         fill 
                         className={styles.img}

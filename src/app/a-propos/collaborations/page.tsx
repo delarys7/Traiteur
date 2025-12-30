@@ -20,21 +20,21 @@ const collaborations = [
         type: "Haute Joaillerie",
         caseStudy: "Dîner de Gala - Lancement de Collection",
         description: "Scénographie culinaire sur le thème de la flore exotique. 150 convives dans les jardins de l'Hôtel Particulier.",
-        image: "/images/hero_v2.jpg"
+        image: "/images/collaborations/cartier.png"
     },
     {
         name: "Galerie Perrotin",
         type: "Art Contemporain",
         caseStudy: "Vernissage - Exposition Exclusive",
         description: "Création de pièces cocktails monochromes et minimalistes en accord avec les œuvres exposées.",
-        image: "/images/cocktail_hero.jpg"
+        image: "/images/collaborations/perrotin.png"
     },
     {
         name: "LVMH Group",
         type: "Luxe & Art de vivre",
         caseStudy: "Séminaire de Direction - Sommet Annuel",
         description: "Service de conciergerie gastronomique complet sur trois jours. Chef privé et sommellerie dédiée.",
-        image: "/images/buffet_hero.jpg"
+        image: "/images/collaborations/lvmh.png"
     }
 ];
 
