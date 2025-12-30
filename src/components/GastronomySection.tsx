@@ -81,12 +81,12 @@ export default function GastronomySection() {
                         sizes="(max-width: 900px) 100vw, 30vw"
                     />
                 </div>
-                
-                <div className={styles.descriptionBox}>
-                    <p className={`${styles.descText} ${imagesVisible ? styles.descVisible : ''}`}>
-                        L&apos;excellence n&apos;est pas une option, c&apos;est notre héritage. Chaque ingrédient est sélectionné avec une rigueur absolue, chaque geste est une quête de perfection pour transformer vos réceptions en moments de pur enchantement.
-                    </p>
-                </div>
+            </div>
+
+            <div className={styles.descriptionBox}>
+                <p className={`${styles.descText} ${imagesVisible ? styles.descVisible : ''}`}>
+                    L&apos;excellence n&apos;est pas une option, c&apos;est notre héritage. Chaque ingrédient est sélectionné avec une rigueur absolue, chaque geste est une quête de perfection pour transformer vos réceptions en moments de pur enchantement.
+                </p>
             </div>
         </section>
     );
