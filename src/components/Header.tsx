@@ -172,6 +172,17 @@ export default function Header() {
             {/* MOBILE MENU OVERLAY */}
             <div className={`${styles.mobileMenu} ${isMenuOpen ? styles.mobileMenuOpen : ''}`}>
                 <div className={styles.mobileMenuContainer}>
+                    <button 
+                        className={styles.closeButton} 
+                        onClick={() => setIsMenuOpen(false)}
+                        aria-label="Fermer le menu"
+                    >
+                        <div className={`${styles.burgerIcon} ${styles.burgerActive}`}>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </button>
                     <nav className={styles.mobileNav}>
                         <Link href="/" className={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>Accueil</Link>
                         
