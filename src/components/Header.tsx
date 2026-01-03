@@ -148,8 +148,22 @@ export default function Header() {
                                 <Link href="/traiteur?category=cocktail" className={styles.dropdownLink}>Pièces cocktails</Link>
                             </div>
                         </div>
-                        <Link href="/chef-a-domicile" className={styles.link}>Chef à domicile</Link>
-                        <Link href="/consultant" className={styles.link}>Consultant</Link>
+                        <div className={styles.navItem}>
+                            <a 
+                                href="#" 
+                                className={styles.link} 
+                                onClick={(e) => e.preventDefault()}
+                                style={{ cursor: 'default' }}
+                            >
+                                Prestations
+                            </a>
+                            <div className={styles.dropdown}>
+                                <Link href="/prestations/grands-evenements" className={styles.dropdownLink}>Grands événements</Link>
+                                <Link href="/prestations/reception-entreprise" className={styles.dropdownLink}>Réception d&apos;entreprise</Link>
+                                <Link href="/prestations/consulting" className={styles.dropdownLink}>Consulting</Link>
+                                <Link href="/prestations/chef-a-domicile" className={styles.dropdownLink}>Chef à domicile</Link>
+                            </div>
+                        </div>
                         <div className={styles.navItem}>
                             <a 
                                 href="#" 
@@ -165,6 +179,7 @@ export default function Header() {
                                 <Link href="/a-propos/collaborations" className={styles.dropdownLink}>Collaborations</Link>
                             </div>
                         </div>
+                        <Link href="/contact" className={styles.link}>Contact</Link>
                     </nav>
                 </div>
             </header>
@@ -193,8 +208,13 @@ export default function Header() {
                             <Link href="/traiteur?category=cocktail" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Pièces cocktails</Link>
                         </div>
 
-                        <Link href="/chef-a-domicile" className={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>Chef à domicile</Link>
-                        <Link href="/consultant" className={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>Consultant</Link>
+                        <div className={styles.mobileCategory}>
+                            <div className={styles.mobileCategoryTitle}>Prestations</div>
+                            <Link href="/prestations/grands-evenements" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Grands événements</Link>
+                            <Link href="/prestations/reception-entreprise" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Réception d&apos;entreprise</Link>
+                            <Link href="/prestations/consulting" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Consulting</Link>
+                            <Link href="/prestations/chef-a-domicile" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Chef à domicile</Link>
+                        </div>
                         
                         <div className={styles.mobileCategory}>
                             <div className={styles.mobileCategoryTitle}>À propos</div>
@@ -202,6 +222,8 @@ export default function Header() {
                             <Link href="/a-propos/equipe" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>L&apos;Équipe</Link>
                             <Link href="/a-propos/collaborations" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Collaborations</Link>
                         </div>
+
+                        <Link href="/contact" className={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>Contact</Link>
                         
                         <div className={styles.mobileDivider}></div>
                         

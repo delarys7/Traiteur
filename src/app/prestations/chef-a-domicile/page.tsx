@@ -29,6 +29,7 @@ export default function ChefADomicile() {
         <div className={styles.container}>
             {/* 1. HERO SECTION */}
             <section className={styles.hero}>
+                {/* Image can be replaced by <video> if available */}
                 <Image
                     src="/images/chef_hero.jpg"
                     alt="Chef Gastronomique à domicile"
@@ -42,6 +43,59 @@ export default function ChefADomicile() {
                     <h1 className={styles.heroTitle}>L&apos;Excellence s&apos;invite dans votre Demeure</h1>
                     <div className={styles.scrollIndicator}>
                         <div className={styles.scrollLine} />
+                    </div>
+                </div>
+            </section>
+
+            {/* NEW: MENUS SECTION */}
+            <section 
+                className={`${styles.menusSection} ${styles.reveal}`}
+                ref={el => { sectionRefs.current[4] = el; }}
+            >
+                <div className={styles.sectionHeader}>
+                    <span className={styles.manifestoLabel}>Sélections du Chef</span>
+                    <h2 className={styles.experienceTitle}>Menus déjà préparés</h2>
+                </div>
+                <div className={styles.menusGrid}>
+                    <div className={styles.menuCard}>
+                        <h3>Menu Signature</h3>
+                        <p>Une immersion dans l&apos;univers créatif du Chef.</p>
+                        <span className={styles.menuPrice}>À partir de 95€ / pers</span>
+                    </div>
+                    <div className={styles.menuCard}>
+                        <h3>Menu Dégustation</h3>
+                        <p>7 étapes gastronomiques pour les gourmets exigeants.</p>
+                        <span className={styles.menuPrice}>À partir de 135€ / pers</span>
+                    </div>
+                    <div className={styles.menuCard}>
+                        <h3>Menu Saison</h3>
+                        <p>Le meilleur du terroir à l&apos;instant présent.</p>
+                        <span className={styles.menuPrice}>À partir de 85€ / pers</span>
+                    </div>
+                </div>
+            </section>
+
+            {/* NEW: GALLERY SECTION */}
+            <section 
+                className={`${styles.gallerySection} ${styles.reveal}`}
+                ref={el => { sectionRefs.current[5] = el; }}
+            >
+                <div className={styles.sectionHeader}>
+                    <span className={styles.manifestoLabel}>Immersion</span>
+                    <h2 className={styles.experienceTitle}>Galerie Photos</h2>
+                </div>
+                <div className={styles.galleryGrid}>
+                    <div className={styles.galleryItem}>
+                        <Image src="/images/hero.jpg" alt="Galerie 1" fill className={styles.galleryImage} />
+                    </div>
+                    <div className={styles.galleryItem}>
+                        <Image src="/images/main_hero.jpg" alt="Galerie 2" fill className={styles.galleryImage} />
+                    </div>
+                    <div className={styles.galleryItem}>
+                        <Image src="/images/dessert_hero.jpg" alt="Galerie 3" fill className={styles.galleryImage} />
+                    </div>
+                    <div className={styles.galleryItem}>
+                        <Image src="/images/cocktail_hero.jpg" alt="Galerie 4" fill className={styles.galleryImage} />
                     </div>
                 </div>
             </section>

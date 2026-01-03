@@ -337,6 +337,91 @@
     100% { transform: scaleY(0); transform-origin: bottom; }
 }
 
+/* --- MENUS SECTION --- */
+.menusSection {
+    padding: 10rem 4rem;
+    background-color: #fff;
+}
+
+.sectionHeader {
+    text-align: center;
+    margin-bottom: 6rem;
+}
+
+.menusGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.menuCard {
+    padding: 4rem 3rem;
+    background-color: #fcfcfc;
+    border: 1px solid #eee;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.menuCard:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    border-color: #AA8B55;
+}
+
+.menuCard h3 {
+    font-family: var(--font-playfair);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: #111;
+}
+
+.menuCard p {
+    font-family: var(--font-inter);
+    color: #666;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.menuPrice {
+    font-family: var(--font-inter);
+    font-weight: 500;
+    color: #AA8B55;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.9rem;
+}
+
+/* --- GALLERY SECTION --- */
+.gallerySection {
+    padding: 10rem 4rem;
+    background-color: #fcfcfc;
+}
+
+.galleryGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 400px;
+    gap: 1.5rem;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.galleryItem {
+    position: relative;
+    overflow: hidden;
+}
+
+.galleryImage {
+    object-fit: cover;
+    transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.galleryItem:hover .galleryImage {
+    transform: scale(1.1);
+}
+
 /* --- RESPONSIVE --- */
 @media (max-width: 1024px) {
     .experienceGrid {
@@ -367,5 +452,19 @@
 
     .manifesto {
         padding: 8rem 2rem;
+    }
+
+    .galleryGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .galleryGrid {
+        grid-template-columns: 1fr;
+    }
+    
+    .menusSection, .gallerySection {
+        padding: 6rem 2rem;
     }
 }
