@@ -1,64 +1,63 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
+import { useSession, signOut } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 
 interface User {
-    id: number;
-    name: string;
+    id: string;
     email: string;
+    name: string;
+    image?: string | null;
+    firstName?: string;
+    lastName?: string;
+    type?: string;
+    raisonSociale?: string;
+    phone?: string;
 }
 
 interface AuthContextType {
     user: User | null;
+    isLoading: boolean;
     login: (user: User) => void;
     logout: () => void;
-    isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-    const [user, setUser] = useState<User | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+    const { data: session, isPending: isLoading } = useSession();
     const router = useRouter();
 
-    useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            try {
-                // eslint-disable-next-line react-hooks/set-state-in-effect
-                setUser(JSON.parse(storedUser));
-            } catch (e) {
-                console.error('Failed to parse user', e);
-            }
-        }
-        setIsLoading(false);
-    }, []);
-
     const login = (userData: User) => {
-        setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
+        // With better-auth, login is handled by the client hooks (signIn)
+        // This function is kept for compatibility if needed, but the session 
+        // will be automatically updated by useSession()
         router.push('/compte');
     };
 
-    const logout = () => {
-        setUser(null);
-        localStorage.removeItem('user');
+    const logout = async () => {
+        await signOut();
         router.push('/');
     };
 
+    // Transform session data to match our User interface
+    const user = session?.user ? {
+        ...session.user,
+        // Ensure id is treated as string as better-auth does
+    } as User : null;
+
     return (
-        <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+        <AuthContext.Provider value={{ user, isLoading, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
-}
+};
 
-export function useAuth() {
+export const useAuth = () => {
     const context = useContext(AuthContext);
     if (context === undefined) {
         throw new Error('useAuth must be used within an AuthProvider');
     }
     return context;
-}
+};
