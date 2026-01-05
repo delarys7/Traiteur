@@ -29,7 +29,6 @@ export default function AccountPage() {
         phone: ''
     });
     const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isResending, setIsResending] = useState(false);
     const [showResend, setShowResend] = useState(false);
@@ -52,6 +51,8 @@ export default function AccountPage() {
     });
     const [isLoadingAddresses, setIsLoadingAddresses] = useState(false);
     const [isSavingAddress, setIsSavingAddress] = useState(false);
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -188,11 +189,13 @@ export default function AccountPage() {
             }
             
             setIsEditing(false);
-            setSuccessMessage('Profil mis à jour avec succès');
-            setTimeout(() => setSuccessMessage(''), 3000);
-            
-            // Recharger la page pour afficher les nouvelles données
-            window.location.reload();
+            setToastMessage('Informations modifiées !');
+            setShowToast(true);
+            setTimeout(() => {
+                setShowToast(false);
+                // Recharger la page après l'animation
+                setTimeout(() => window.location.reload(), 300);
+            }, 3000);
         } catch (err: any) {
             setError(err.message || 'Erreur lors de la mise à jour');
         } finally {
@@ -221,8 +224,9 @@ export default function AccountPage() {
             setAddresses([...addresses, data.address]);
             setAddressFormData({ name: '', address: '', postalCode: '', city: '' });
             setShowAddressModal(false);
-            setSuccessMessage('Adresse ajoutée avec succès');
-            setTimeout(() => setSuccessMessage(''), 3000);
+            setToastMessage('Adresse ajoutée !');
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3000);
         } catch (err: any) {
             setError(err.message || 'Erreur lors de l\'ajout de l\'adresse');
         } finally {
@@ -244,8 +248,9 @@ export default function AccountPage() {
             }
             
             setAddresses(addresses.filter(addr => addr.id !== addressId));
-            setSuccessMessage('Adresse supprimée avec succès');
-            setTimeout(() => setSuccessMessage(''), 3000);
+            setToastMessage('Adresse supprimée !');
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3000);
         } catch (err: any) {
             setError(err.message || 'Erreur lors de la suppression');
         }
@@ -255,7 +260,6 @@ export default function AccountPage() {
         return (
             <div className={styles.container}>
                 <div className={styles.dashboard}>
-                    {successMessage && <div className={styles.success}>{successMessage}</div>}
                     {error && <div className={styles.error}>{error}</div>}
 
                     <div className={styles.dashboardGrid}>
@@ -437,6 +441,13 @@ export default function AccountPage() {
                     <button onClick={logout} className={styles.logoutButton}>Se déconnecter</button>
                 </div>
 
+                {/* Toast Notification */}
+                {showToast && (
+                    <div className={styles.toast}>
+                        {toastMessage}
+                    </div>
+                )}
+
                 {/* Modal Ajout d'adresse */}
                 {showAddressModal && (
                     <div className={styles.modalOverlay} onClick={() => setShowAddressModal(false)}>
@@ -565,7 +576,6 @@ export default function AccountPage() {
                         )}
                     </div>
                 )}
-                {successMessage && <div className={styles.success}>{successMessage}</div>}
 
                 <form onSubmit={handleSubmit} className={styles.form}>
                     {!isLoginView && (
