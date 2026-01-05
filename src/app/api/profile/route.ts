@@ -16,6 +16,8 @@ export async function PUT(request: NextRequest) {
         const body = await request.json();
         const { firstName, lastName, phone, raisonSociale } = body;
 
+        console.log('[API] Mise à jour profil:', { userId: session.user.id, body });
+
         // Mettre à jour les champs dans la base de données
         const updateFields: string[] = [];
         const updateValues: any[] = [];
@@ -51,10 +53,12 @@ export async function PUT(request: NextRequest) {
             WHERE id = ?
         `;
 
-        db.prepare(updateQuery).run(...updateValues);
+        const result = db.prepare(updateQuery).run(...updateValues);
+        console.log('[API] Résultat mise à jour:', result);
 
         // Récupérer l'utilisateur mis à jour
         const updatedUser = db.prepare('SELECT * FROM user WHERE id = ?').get(session.user.id);
+        console.log('[API] Utilisateur mis à jour:', updatedUser);
 
         return NextResponse.json({ 
             success: true, 

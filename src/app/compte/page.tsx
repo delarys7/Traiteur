@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { signUp, signIn, authClient } from '@/lib/auth-client';
 import styles from './page.module.css';
@@ -17,6 +18,9 @@ interface Address {
 
 export default function AccountPage() {
     const { user, logout } = useAuth();
+    const router = useRouter();
+    // État local pour l'affichage des données utilisateur (mis à jour immédiatement)
+    const [displayUser, setDisplayUser] = useState(user || null);
     const [isLoginView, setIsLoginView] = useState(true);
     const [accountType, setAccountType] = useState<'particulier' | 'entreprise'>('particulier');
     const [formData, setFormData] = useState({ 
@@ -141,20 +145,28 @@ export default function AccountPage() {
         }
     };
 
+    // Synchroniser displayUser avec user du contexte
+    useEffect(() => {
+        if (user) {
+            setDisplayUser(user);
+        }
+    }, [user]);
+
     // Charger les adresses au montage
     useEffect(() => {
         if (user) {
             loadAddresses();
             if (!isEditing) {
+                const currentUser = displayUser || user;
                 setEditFormData({
-                    firstName: user.firstName || '',
-                    lastName: user.lastName || '',
-                    phone: user.phone || '',
-                    raisonSociale: user.raisonSociale || ''
+                    firstName: currentUser.firstName || '',
+                    lastName: currentUser.lastName || '',
+                    phone: currentUser.phone || '',
+                    raisonSociale: currentUser.raisonSociale || ''
                 });
             }
         }
-    }, [user]);
+    }, [user, displayUser]);
 
     const loadAddresses = async () => {
         setIsLoadingAddresses(true);
@@ -168,6 +180,18 @@ export default function AccountPage() {
             console.error('Erreur lors du chargement des adresses:', error);
         } finally {
             setIsLoadingAddresses(false);
+        }
+    };
+
+    const resetEditForm = () => {
+        const currentUser = displayUser || user;
+        if (currentUser) {
+            setEditFormData({
+                firstName: currentUser.firstName || '',
+                lastName: currentUser.lastName || '',
+                phone: currentUser.phone || '',
+                raisonSociale: currentUser.raisonSociale || ''
+            });
         }
     };
 
@@ -188,13 +212,36 @@ export default function AccountPage() {
                 throw new Error(data.error || 'Erreur lors de la mise à jour');
             }
             
+            const data = await response.json();
+            console.log('[Client] Profil mis à jour:', data);
+            
+            // Mettre à jour immédiatement l'affichage avec les nouvelles données
+            if (data.user) {
+                const currentUser = displayUser || user;
+                if (currentUser) {
+                    setDisplayUser({
+                        ...currentUser,
+                        firstName: data.user.firstName !== undefined ? data.user.firstName : currentUser.firstName,
+                        lastName: data.user.lastName !== undefined ? data.user.lastName : currentUser.lastName,
+                        phone: data.user.phone !== undefined ? data.user.phone : currentUser.phone,
+                        raisonSociale: data.user.raisonSociale !== undefined ? data.user.raisonSociale : currentUser.raisonSociale
+                    });
+                }
+            }
+            
+            // Mettre à jour editFormData avec les nouvelles valeurs
+            setEditFormData({
+                firstName: data.user?.firstName || editFormData.firstName,
+                lastName: data.user?.lastName || editFormData.lastName,
+                phone: data.user?.phone || editFormData.phone,
+                raisonSociale: data.user?.raisonSociale || editFormData.raisonSociale
+            });
+            
             setIsEditing(false);
             setToastMessage('Informations modifiées !');
             setShowToast(true);
             setTimeout(() => {
                 setShowToast(false);
-                // Recharger la page après l'animation
-                setTimeout(() => window.location.reload(), 300);
             }, 3000);
         } catch (err: any) {
             setError(err.message || 'Erreur lors de la mise à jour');
@@ -304,7 +351,7 @@ export default function AccountPage() {
                                         <label>Email</label>
                                         <input
                                             type="email"
-                                            value={user.email}
+                                            value={displayUser?.email || user?.email || ''}
                                             disabled
                                             className={styles.editInput}
                                         />
@@ -322,7 +369,7 @@ export default function AccountPage() {
                                         />
                                     </div>
                                     
-                                    {user.type === 'entreprise' && (
+                                    {(displayUser?.type || user?.type) === 'entreprise' && (
                                         <div className={styles.inputGroup}>
                                             <label>Raison Sociale</label>
                                             <input
@@ -337,7 +384,10 @@ export default function AccountPage() {
                                     <div className={styles.formActions}>
                                         <button 
                                             type="button" 
-                                            onClick={() => setIsEditing(false)}
+                                            onClick={() => {
+                                                resetEditForm();
+                                                setIsEditing(false);
+                                            }}
                                             className={styles.cancelButton}
                                         >
                                             Annuler
@@ -356,31 +406,31 @@ export default function AccountPage() {
                                     <div className={styles.infoRow}>
                                         <span className={styles.infoLabel}>Type de compte</span>
                                         <span className={styles.infoValue}>
-                                            {user.type === 'entreprise' ? 'Professionnel' : 'Particulier'}
+                                            {(displayUser?.type || user?.type) === 'entreprise' ? 'Professionnel' : 'Particulier'}
                                         </span>
                                     </div>
-                                    {user.type === 'entreprise' && user.raisonSociale && (
+                                    {(displayUser?.type || user?.type) === 'entreprise' && (displayUser?.raisonSociale || user?.raisonSociale) && (
                                         <div className={styles.infoRow}>
                                             <span className={styles.infoLabel}>Raison Sociale</span>
-                                            <span className={styles.infoValue}>{user.raisonSociale}</span>
+                                            <span className={styles.infoValue}>{displayUser?.raisonSociale || user?.raisonSociale}</span>
                                         </div>
                                     )}
                                     <div className={styles.infoRow}>
                                         <span className={styles.infoLabel}>Nom complet</span>
                                         <span className={styles.infoValue}>
-                                            {user.firstName && user.lastName 
-                                                ? `${user.firstName} ${user.lastName}`
-                                                : user.name}
+                                            {(displayUser?.firstName || user?.firstName) && (displayUser?.lastName || user?.lastName)
+                                                ? `${displayUser?.firstName || user?.firstName} ${displayUser?.lastName || user?.lastName}`
+                                                : displayUser?.name || user?.name}
                                         </span>
                                     </div>
                                     <div className={styles.infoRow}>
                                         <span className={styles.infoLabel}>Email</span>
-                                        <span className={styles.infoValue}>{user.email}</span>
+                                        <span className={styles.infoValue}>{displayUser?.email || user?.email}</span>
                                     </div>
-                                    {user.phone && (
+                                    {(displayUser?.phone || user?.phone) && (
                                         <div className={styles.infoRow}>
                                             <span className={styles.infoLabel}>Téléphone</span>
-                                            <span className={styles.infoValue}>{user.phone}</span>
+                                            <span className={styles.infoValue}>{displayUser?.phone || user?.phone}</span>
                                         </div>
                                     )}
                                 </div>
