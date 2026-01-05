@@ -295,6 +295,24 @@
     .dashboardGrid {
         grid-template-columns: 1fr;
     }
+    
+    .dashboard {
+        padding: 0 1.5rem;
+    }
+    
+    .sectionHeader::after {
+        display: none; /* Cache le masque en responsive, la ligne va jusqu'au bout */
+    }
+    
+    .infoRow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .infoValue {
+        text-align: left;
+    }
 }
 
 /* Section Informations personnelles - Sans encadré */
@@ -308,6 +326,19 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    position: relative;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.sectionHeader::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    right: 0;
+    width: 200px; /* Largeur approximative du bouton + espace */
+    height: 1px;
+    background: white; /* Cache la ligne sous le bouton */
 }
 
 .sectionTitle {
