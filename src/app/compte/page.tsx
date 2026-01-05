@@ -19,11 +19,13 @@ export default function AccountPage() {
         phone: ''
     });
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        setSuccessMessage('');
         setIsSubmitting(true);
 
         try {
@@ -50,7 +52,7 @@ export default function AccountPage() {
                 if (signUpError) throw new Error(signUpError.message || 'Erreur d\'inscription');
                 
                 setIsLoginView(true);
-                setError('Compte créé avec succès. Veuillez vous connecter.');
+                setSuccessMessage('Compte créé ! Veuillez vérifier vos emails pour valider votre compte avant de vous connecter.');
             }
         } catch (err: any) {
             setError(err.message || 'Une erreur est survenue');
@@ -113,6 +115,7 @@ export default function AccountPage() {
                 )}
 
                 {error && <div className={styles.error}>{error}</div>}
+                {successMessage && <div className={styles.success}>{successMessage}</div>}
 
                 <form onSubmit={handleSubmit} className={styles.form}>
                     {!isLoginView && (
