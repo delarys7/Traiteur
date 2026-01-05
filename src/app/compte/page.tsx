@@ -48,11 +48,11 @@ export default function AccountPage() {
                     throw new Error(signInError.message || 'Erreur de connexion');
                 }
             } else {
-                const name = accountType === 'entreprise' ? formData.name : `${formData.firstName} ${formData.lastName}`;
+                const fullName = `${formData.firstName} ${formData.lastName}`;
                 const { error: signUpError } = await signUp.email({
                     email: formData.email,
                     password: formData.password,
-                    name: name,
+                    name: fullName,
                     firstName: formData.firstName,
                     lastName: formData.lastName,
                     type: accountType,
@@ -168,80 +168,95 @@ export default function AccountPage() {
 
                 <form onSubmit={handleSubmit} className={styles.form}>
                     {!isLoginView && (
-                        <>
-                            {accountType === 'particulier' ? (
-                                <>
-                                    <div className={styles.inputGroup}>
-                                        <input
-                                            type="text"
-                                            required
-                                            placeholder="Nom"
-                                            value={formData.lastName}
-                                            onChange={e => setFormData({ ...formData, lastName: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className={styles.inputGroup}>
-                                        <input
-                                            type="text"
-                                            required
-                                            placeholder="Prénom"
-                                            value={formData.firstName}
-                                            onChange={e => setFormData({ ...formData, firstName: e.target.value })}
-                                        />
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <div className={styles.inputGroup}>
-                                        <input
-                                            type="text"
-                                            required
-                                            placeholder="Nom d'entreprise"
-                                            value={formData.raisonSociale}
-                                            onChange={e => setFormData({ ...formData, raisonSociale: e.target.value })}
-                                        />
-                                    </div>
-                                    <div className={styles.inputGroup}>
-                                        <input
-                                            type="text"
-                                            required
-                                            placeholder="NOM Prénom (Responsable)"
-                                            value={formData.name}
-                                            onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                        />
-                                    </div>
-                                </>
+                        <div className={styles.formFields}>
+                            {accountType === 'entreprise' && (
+                                <div className={styles.inputGroup}>
+                                    <input
+                                        type="text"
+                                        required
+                                        placeholder="Nom d'entreprise"
+                                        value={formData.raisonSociale}
+                                        onChange={e => setFormData({ ...formData, raisonSociale: e.target.value })}
+                                    />
+                                </div>
                             )}
+
+                            <div className={styles.formRow}>
+                                <div className={styles.inputGroup}>
+                                    <input
+                                        type="text"
+                                        required
+                                        placeholder={accountType === 'entreprise' ? "Nom (Responsable)" : "Nom"}
+                                        value={formData.lastName}
+                                        onChange={e => setFormData({ ...formData, lastName: e.target.value })}
+                                    />
+                                </div>
+                                <div className={styles.inputGroup}>
+                                    <input
+                                        type="text"
+                                        required
+                                        placeholder={accountType === 'entreprise' ? "Prénom (Responsable)" : "Prénom"}
+                                        value={formData.firstName}
+                                        onChange={e => setFormData({ ...formData, firstName: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className={styles.formRow}>
+                                <div className={styles.inputGroup}>
+                                    <input
+                                        type="email"
+                                        required
+                                        placeholder="Email"
+                                        value={formData.email}
+                                        onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                    />
+                                </div>
+                                <div className={styles.inputGroup}>
+                                    <input
+                                        type="tel"
+                                        placeholder="Téléphone (Optionnel)"
+                                        value={formData.phone}
+                                        onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+
                             <div className={styles.inputGroup}>
                                 <input
-                                    type="tel"
-                                    placeholder="Téléphone (Optionnel)"
-                                    value={formData.phone}
-                                    onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                                    type="password"
+                                    required
+                                    placeholder="Mot de passe"
+                                    value={formData.password}
+                                    onChange={e => setFormData({ ...formData, password: e.target.value })}
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    {isLoginView && (
+                        <>
+                            <div className={styles.inputGroup}>
+                                <input
+                                    type="email"
+                                    required
+                                    placeholder="Email"
+                                    value={formData.email}
+                                    onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                />
+                            </div>
+
+                            <div className={styles.inputGroup}>
+                                <input
+                                    type="password"
+                                    required
+                                    placeholder="Mot de passe"
+                                    value={formData.password}
+                                    onChange={e => setFormData({ ...formData, password: e.target.value })}
                                 />
                             </div>
                         </>
                     )}
-
-                    <div className={styles.inputGroup}>
-                        <input
-                            type="email"
-                            required
-                            placeholder="Email"
-                            value={formData.email}
-                            onChange={e => setFormData({ ...formData, email: e.target.value })}
-                        />
-                    </div>
-
-                    <div className={styles.inputGroup}>
-                        <input
-                            type="password"
-                            required
-                            placeholder="Mot de passe"
-                            value={formData.password}
-                            onChange={e => setFormData({ ...formData, password: e.target.value })}
-                        />
-                    </div>
 
                     <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
                         {isSubmitting ? 'Chargement...' : (isLoginView ? 'Se connecter' : "S'inscrire")}
