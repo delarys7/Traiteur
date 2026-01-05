@@ -32,24 +32,33 @@ export default function AccountPage() {
 
         try {
             if (isLoginView) {
-                const { error: signInError } = await signIn.email({
+                console.log('[Client] Tentative de connexion avec:', formData.email);
+                const result = await signIn.email({
                     email: formData.email,
                     password: formData.password,
                     callbackURL: "/compte"
                 });
-                if (signInError) {
-                    if (signInError.message?.includes('Email not verified')) {
+                
+                console.log('[Client] Résultat signIn:', result);
+                
+                if (result.error) {
+                    console.error('[Client] Erreur signIn:', result.error);
+                    const errorMsg = result.error.message || JSON.stringify(result.error);
+                    
+                    if (errorMsg.includes('Email not verified') || errorMsg.includes('email not verified')) {
                         setShowResend(true);
                         throw new Error('Email non vérifié, veuillez consulter votre boîte mail');
                     }
-                    if (signInError.message?.includes('Invalid email or password')) {
+                    if (errorMsg.includes('Invalid email or password') || errorMsg.includes('invalid')) {
                         throw new Error('Email ou mot de passe invalide');
                     }
-                    throw new Error(signInError.message || 'Erreur de connexion');
+                    throw new Error(errorMsg || 'Erreur de connexion');
                 }
             } else {
                 const fullName = `${formData.firstName} ${formData.lastName}`;
-                const { error: signUpError } = await signUp.email({
+                console.log('[Client] Tentative d\'inscription avec:', formData.email, 'Type:', accountType);
+                
+                const result = await signUp.email({
                     email: formData.email,
                     password: formData.password,
                     name: fullName,
@@ -60,17 +69,24 @@ export default function AccountPage() {
                     phone: formData.phone,
                     callbackURL: "/compte"
                 } as any);
-                if (signUpError) {
-                    if (signUpError.message?.includes('User already exists')) {
+                
+                console.log('[Client] Résultat signUp:', result);
+                
+                if (result.error) {
+                    console.error('[Client] Erreur signUp:', result.error);
+                    const errorMsg = result.error.message || JSON.stringify(result.error);
+                    
+                    if (errorMsg.includes('User already exists') || errorMsg.includes('already exists')) {
                         throw new Error('Cet email est déjà utilisé');
                     }
-                    throw new Error(signUpError.message || 'Erreur d\'inscription');
+                    throw new Error(errorMsg || 'Erreur d\'inscription');
                 }
                 
                 setIsLoginView(true);
                 setSuccessMessage('Compte créé ! Veuillez vérifier vos emails pour valider votre compte avant de vous connecter.');
             }
         } catch (err: any) {
+            console.error('[Client] Exception capturée:', err);
             setError(err.message || 'Une erreur est survenue');
         } finally {
             setIsSubmitting(false);
@@ -168,7 +184,7 @@ export default function AccountPage() {
 
                 <form onSubmit={handleSubmit} className={styles.form}>
                     {!isLoginView && (
-                        <div className={styles.formFields}>
+                        <>
                             {accountType === 'entreprise' && (
                                 <div className={styles.inputGroup}>
                                     <input
@@ -231,7 +247,7 @@ export default function AccountPage() {
                                     onChange={e => setFormData({ ...formData, password: e.target.value })}
                                 />
                             </div>
-                        </div>
+                        </>
                     )}
 
                     {isLoginView && (
