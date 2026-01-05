@@ -3,17 +3,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4rem 2rem;
-    background-color: var(--gray-light);
+    padding: 6rem 2rem;
+    background-color: white;
 }
 
 .authBox {
-    background: white;
-    padding: 3rem;
-    border-radius: 12px;
+    background: transparent;
+    padding: 0;
     width: 100%;
     max-width: 450px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .authTitle {
@@ -36,43 +34,56 @@
 }
 
 .inputGroup label {
-    font-size: 0.9rem;
-    color: #666;
+    display: none;
 }
 
 .inputGroup input {
-    padding: 0.8rem;
-    border: 1px solid var(--gray-medium);
-    border-radius: 6px;
+    padding: 1rem;
+    border: 1px solid #d1d1d1;
+    border-radius: 4px;
     font-size: 1rem;
     outline: none;
-    transition: border-color 0.2s;
+    transition: all 0.2s;
+    background-color: white;
+    color: #333;
 }
 
 .inputGroup input:focus {
-    border-color: var(--accent);
+    border-color: #111;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+}
+
+.inputGroup input::placeholder {
+    color: #999;
 }
 
 .submitButton {
-    padding: 1rem;
-    background-color: var(--accent);
+    padding: 1.2rem;
+    background-color: #111;
     color: white;
     border: none;
-    border-radius: 6px;
-    font-size: 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
     cursor: pointer;
-    margin-top: 1rem;
-    transition: opacity 0.2s;
+    margin-top: 1.5rem;
+    transition: all 0.2s;
 }
 
 .submitButton:hover {
-    opacity: 0.9;
+    background-color: #333;
+}
+
+.submitButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .typeToggle {
     display: flex;
     gap: 1.5rem;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     justify-content: center;
 }
 
@@ -127,11 +138,36 @@
 .error {
     background-color: #fee2e2;
     color: #dc2626;
-    padding: 0.75rem;
+    padding: 1rem;
     border-radius: 6px;
     margin-bottom: 1.5rem;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     text-align: center;
+    line-height: 1.5;
+}
+
+.resendWrapper {
+    margin-top: 0.5rem;
+}
+
+.resendLink {
+    background: none;
+    border: none;
+    color: #dc2626;
+    text-decoration: underline;
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0;
+    font-family: inherit;
+}
+
+.resendLink:hover {
+    color: #b91c1c;
+}
+
+.resendLink:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .success {
@@ -191,12 +227,24 @@
     left: 0;
 }
 
-.typeButton:hover:not(.typeButtonActive) {
-    color: white;
+.toggle {
+    margin-top: 2rem;
+    text-align: center;
 }
 
-.typeButton:hover:not(.typeButtonActive)::before {
-    left: 0;
+.toggleLink {
+    background: none;
+    border: none;
+    color: #111;
+    text-decoration: underline;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.2s;
+}
+
+.toggleLink:hover {
+    opacity: 0.7;
 }
 
 .grid {

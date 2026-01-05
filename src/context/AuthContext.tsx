@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const logout = async () => {
         await signOut();
-        router.push('/');
+        router.push('/compte');
     };
 
     // Transform session data to match our User interface

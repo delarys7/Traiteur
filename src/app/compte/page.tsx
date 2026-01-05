@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { signUp, signIn } from '@/lib/auth-client';
+import { signUp, signIn, authClient } from '@/lib/auth-client';
 import styles from './page.module.css';
 
 export default function AccountPage() {
@@ -21,6 +21,8 @@ export default function AccountPage() {
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isResending, setIsResending] = useState(false);
+    const [showResend, setShowResend] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -35,7 +37,16 @@ export default function AccountPage() {
                     password: formData.password,
                     callbackURL: "/compte"
                 });
-                if (signInError) throw new Error(signInError.message || 'Erreur de connexion');
+                if (signInError) {
+                    if (signInError.message?.includes('Email not verified')) {
+                        setShowResend(true);
+                        throw new Error('Email non vérifié, veuillez consulter votre boîte mail');
+                    }
+                    if (signInError.message?.includes('Invalid email or password')) {
+                        throw new Error('Email ou mot de passe invalide');
+                    }
+                    throw new Error(signInError.message || 'Erreur de connexion');
+                }
             } else {
                 const name = accountType === 'entreprise' ? formData.name : `${formData.firstName} ${formData.lastName}`;
                 const { error: signUpError } = await signUp.email({
@@ -49,7 +60,12 @@ export default function AccountPage() {
                     phone: formData.phone,
                     callbackURL: "/compte"
                 } as any);
-                if (signUpError) throw new Error(signUpError.message || 'Erreur d\'inscription');
+                if (signUpError) {
+                    if (signUpError.message?.includes('User already exists')) {
+                        throw new Error('Cet email est déjà utilisé');
+                    }
+                    throw new Error(signUpError.message || 'Erreur d\'inscription');
+                }
                 
                 setIsLoginView(true);
                 setSuccessMessage('Compte créé ! Veuillez vérifier vos emails pour valider votre compte avant de vous connecter.');
@@ -58,6 +74,24 @@ export default function AccountPage() {
             setError(err.message || 'Une erreur est survenue');
         } finally {
             setIsSubmitting(false);
+        }
+    };
+
+    const handleResendEmail = async () => {
+        setIsResending(true);
+        setError('');
+        try {
+            const { error: resendError } = await authClient.sendVerificationEmail({
+                email: formData.email,
+                callbackURL: "/compte"
+            });
+            if (resendError) throw new Error(resendError.message || "Erreur lors de l'envoi");
+            setSuccessMessage('Email de vérification renvoyé !');
+            setShowResend(false);
+        } catch (err: any) {
+            setError(err.message || "Impossible de renvoyer l'email");
+        } finally {
+            setIsResending(false);
         }
     };
 
@@ -114,7 +148,22 @@ export default function AccountPage() {
                     </div>
                 )}
 
-                {error && <div className={styles.error}>{error}</div>}
+                {error && (
+                    <div className={styles.error}>
+                        {error}
+                        {showResend && (
+                            <div className={styles.resendWrapper}>
+                                <button 
+                                    onClick={handleResendEmail} 
+                                    className={styles.resendLink}
+                                    disabled={isResending}
+                                >
+                                    {isResending ? 'Envoi...' : 'Renvoyer le mail ?'}
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
                 {successMessage && <div className={styles.success}>{successMessage}</div>}
 
                 <form onSubmit={handleSubmit} className={styles.form}>
@@ -123,19 +172,19 @@ export default function AccountPage() {
                             {accountType === 'particulier' ? (
                                 <>
                                     <div className={styles.inputGroup}>
-                                        <label>Nom</label>
                                         <input
                                             type="text"
                                             required
+                                            placeholder="Nom"
                                             value={formData.lastName}
                                             onChange={e => setFormData({ ...formData, lastName: e.target.value })}
                                         />
                                     </div>
                                     <div className={styles.inputGroup}>
-                                        <label>Prénom</label>
                                         <input
                                             type="text"
                                             required
+                                            placeholder="Prénom"
                                             value={formData.firstName}
                                             onChange={e => setFormData({ ...formData, firstName: e.target.value })}
                                         />
@@ -144,19 +193,19 @@ export default function AccountPage() {
                             ) : (
                                 <>
                                     <div className={styles.inputGroup}>
-                                        <label>Nom d&apos;entreprise</label>
                                         <input
                                             type="text"
                                             required
+                                            placeholder="Nom d'entreprise"
                                             value={formData.raisonSociale}
                                             onChange={e => setFormData({ ...formData, raisonSociale: e.target.value })}
                                         />
                                     </div>
                                     <div className={styles.inputGroup}>
-                                        <label>NOM Prénom (Responsable)</label>
                                         <input
                                             type="text"
                                             required
+                                            placeholder="NOM Prénom (Responsable)"
                                             value={formData.name}
                                             onChange={e => setFormData({ ...formData, name: e.target.value })}
                                         />
@@ -164,9 +213,9 @@ export default function AccountPage() {
                                 </>
                             )}
                             <div className={styles.inputGroup}>
-                                <label>Téléphone (Optionnel)</label>
                                 <input
                                     type="tel"
+                                    placeholder="Téléphone (Optionnel)"
                                     value={formData.phone}
                                     onChange={e => setFormData({ ...formData, phone: e.target.value })}
                                 />
@@ -175,20 +224,20 @@ export default function AccountPage() {
                     )}
 
                     <div className={styles.inputGroup}>
-                        <label>Email</label>
                         <input
                             type="email"
                             required
+                            placeholder="Email"
                             value={formData.email}
                             onChange={e => setFormData({ ...formData, email: e.target.value })}
                         />
                     </div>
 
                     <div className={styles.inputGroup}>
-                        <label>Mot de passe</label>
                         <input
                             type="password"
                             required
+                            placeholder="Mot de passe"
                             value={formData.password}
                             onChange={e => setFormData({ ...formData, password: e.target.value })}
                         />
@@ -200,7 +249,16 @@ export default function AccountPage() {
                 </form>
 
                 <div className={styles.toggle}>
-                    <button onClick={() => setIsLoginView(!isLoginView)}>
+                    <button 
+                        type="button" 
+                        onClick={() => {
+                            setIsLoginView(!isLoginView);
+                            setError('');
+                            setSuccessMessage('');
+                            setShowResend(false);
+                        }}
+                        className={styles.toggleLink}
+                    >
                         {isLoginView ? "Besoin d'un compte ? S'inscrire" : "Déjà membre ? Se connecter"}
                     </button>
                 </div>
