@@ -1,8 +1,22 @@
 import { betterAuth } from "better-auth";
 import db from "./db";
 import { Resend } from "resend";
+import fs from "fs";
+import path from "path";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Charger le logo en base64 au démarrage
+let logoBase64: string | null = null;
+try {
+    const logoPath = path.join(process.cwd(), 'public', 'images', 'Logo-NoBG-rogne.png');
+    const imageBuffer = fs.readFileSync(logoPath);
+    logoBase64 = `data:image/png;base64,${imageBuffer.toString('base64')}`;
+    console.log('[Better-Auth] Logo chargé en base64 avec succès');
+} catch (error: any) {
+    console.error('[Better-Auth] Impossible de charger le logo:', error.message);
+    console.error('[Better-Auth] Chemin tenté:', path.join(process.cwd(), 'public', 'images', 'Logo-NoBG-rogne.png'));
+}
 
 // Vérifier que la base de données est bien connectée
 try {
@@ -45,11 +59,15 @@ export const auth = betterAuth({
         sendVerificationEmail: async ({ user, url, token }, request) => {
             console.log(`[Better-Auth] Envoi d'email de vérification à: ${user.email}`);
             
-            // Construire l'URL absolue du logo
+            // Utiliser une URL publique pour le logo (solution la plus fiable pour les emails)
+            // Priorité : NEXT_PUBLIC_APP_URL > VERCEL_URL > URL par défaut
             const baseURL = process.env.NEXT_PUBLIC_APP_URL || 
                 (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) || 
-                "http://localhost:3000";
-            const logoURL = `${baseURL}/images/Logo-NoBG-rogné.png`;
+                process.env.NEXT_PUBLIC_LOGO_URL || // Option pour une URL de logo personnalisée
+                "https://votre-domaine.com"; // ⚠️ À REMPLACER par votre URL de production
+            
+            const logoURL = `${baseURL}/images/Logo-NoBG-rogne.png`;
+            console.log(`[Better-Auth] Utilisation du logo via URL publique: ${logoURL}`);
             
             // Si pas de clé API Resend, on log juste l'URL pour le développement
             if (!process.env.RESEND_API_KEY) {
@@ -88,7 +106,7 @@ export const auth = betterAuth({
         <table class="main">
             <tr>
                 <td class="logo">
-                    <img src="${logoURL}" alt="Athéna Event Paris">
+                    <img src="${logoURL}" alt="Athéna Event Paris" style="display: block; max-width: 180px; height: auto; margin: 0 auto;">
                 </td>
             </tr>
             <tr>

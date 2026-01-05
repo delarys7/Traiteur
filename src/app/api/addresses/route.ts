@@ -1,0 +1,103 @@
+import { NextRequest, NextResponse } from 'next/server';
+import db from '@/lib/db';
+import { auth } from '@/lib/auth';
+import { randomBytes } from 'crypto';
+
+// GET - Récupérer les adresses de l'utilisateur
+export async function GET(request: NextRequest) {
+    try {
+        const session = await auth.api.getSession({
+            headers: request.headers
+        });
+
+        if (!session?.user) {
+            return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+        }
+
+        const addresses = db.prepare(`
+            SELECT id, name, address, postalCode, city, createdAt, updatedAt
+            FROM addresses
+            WHERE userId = ?
+            ORDER BY createdAt DESC
+        `).all(session.user.id);
+
+        return NextResponse.json({ addresses });
+    } catch (error: any) {
+        console.error('[API] Erreur GET addresses:', error);
+        return NextResponse.json({ error: error.message || 'Erreur serveur' }, { status: 500 });
+    }
+}
+
+// POST - Ajouter une nouvelle adresse
+export async function POST(request: NextRequest) {
+    try {
+        const session = await auth.api.getSession({
+            headers: request.headers
+        });
+
+        if (!session?.user) {
+            return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+        }
+
+        const body = await request.json();
+        const { name, address, postalCode, city } = body;
+
+        if (!name || !address || !postalCode || !city) {
+            return NextResponse.json({ error: 'Tous les champs sont requis' }, { status: 400 });
+        }
+
+        const id = randomBytes(16).toString('hex');
+        const now = new Date().toISOString();
+
+        db.prepare(`
+            INSERT INTO addresses (id, userId, name, address, postalCode, city, createdAt, updatedAt)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `).run(id, session.user.id, name, address, postalCode, city, now, now);
+
+        return NextResponse.json({ 
+            success: true, 
+            address: { id, name, address, postalCode, city, createdAt: now, updatedAt: now }
+        });
+    } catch (error: any) {
+        console.error('[API] Erreur POST addresses:', error);
+        return NextResponse.json({ error: error.message || 'Erreur serveur' }, { status: 500 });
+    }
+}
+
+// DELETE - Supprimer une adresse
+export async function DELETE(request: NextRequest) {
+    try {
+        const session = await auth.api.getSession({
+            headers: request.headers
+        });
+
+        if (!session?.user) {
+            return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+        }
+
+        const { searchParams } = new URL(request.url);
+        const addressId = searchParams.get('id');
+
+        if (!addressId) {
+            return NextResponse.json({ error: 'ID d\'adresse requis' }, { status: 400 });
+        }
+
+        // Vérifier que l'adresse appartient à l'utilisateur
+        const address = db.prepare('SELECT userId FROM addresses WHERE id = ?').get(addressId);
+        
+        if (!address) {
+            return NextResponse.json({ error: 'Adresse non trouvée' }, { status: 404 });
+        }
+
+        if (address.userId !== session.user.id) {
+            return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
+        }
+
+        db.prepare('DELETE FROM addresses WHERE id = ?').run(addressId);
+
+        return NextResponse.json({ success: true });
+    } catch (error: any) {
+        console.error('[API] Erreur DELETE addresses:', error);
+        return NextResponse.json({ error: error.message || 'Erreur serveur' }, { status: 500 });
+    }
+}
