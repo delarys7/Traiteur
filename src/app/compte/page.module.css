@@ -336,7 +336,7 @@
     position: absolute;
     bottom: -1px;
     right: 0;
-    width: 200px; /* Largeur approximative du bouton + espace */
+    width: 110px; /* Largeur du bouton "Modifier" (padding 0.6rem 1.5rem + texte) */
     height: 1px;
     background: white; /* Cache la ligne sous le bouton */
 }
