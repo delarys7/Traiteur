@@ -542,6 +542,34 @@
     margin: 0;
 }
 
+.addressActions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.editAddressButton {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    line-height: 1;
+    transition: all 0.2s;
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.editAddressButton:hover {
+    background: #1a1a1a;
+    color: white;
+}
+
 .deleteAddressButton {
     background: none;
     border: none;

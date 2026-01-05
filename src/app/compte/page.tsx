@@ -47,6 +47,7 @@ export default function AccountPage() {
     });
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [showAddressModal, setShowAddressModal] = useState(false);
+    const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
     const [addressFormData, setAddressFormData] = useState({
         name: '',
         address: '',
@@ -250,32 +251,60 @@ export default function AccountPage() {
         }
     };
 
-    const handleAddAddress = async (e: React.FormEvent) => {
+    const handleEditAddress = (address: Address) => {
+        setEditingAddressId(address.id);
+        setAddressFormData({
+            name: address.name,
+            address: address.address,
+            postalCode: address.postalCode,
+            city: address.city
+        });
+        setShowAddressModal(true);
+    };
+
+    const handleSaveAddress = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSavingAddress(true);
         setError('');
         
         try {
-            const response = await fetch('/api/addresses', {
-                method: 'POST',
+            const isEditing = editingAddressId !== null;
+            const url = isEditing ? '/api/addresses' : '/api/addresses';
+            const method = isEditing ? 'PUT' : 'POST';
+            const body = isEditing 
+                ? { id: editingAddressId, ...addressFormData }
+                : addressFormData;
+
+            const response = await fetch(url, {
+                method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(addressFormData)
+                body: JSON.stringify(body)
             });
             
             if (!response.ok) {
                 const data = await response.json();
-                throw new Error(data.error || 'Erreur lors de l\'ajout de l\'adresse');
+                throw new Error(data.error || `Erreur lors de ${isEditing ? 'la modification' : 'l\'ajout'} de l'adresse`);
             }
             
             const data = await response.json();
-            setAddresses([...addresses, data.address]);
+            
+            if (isEditing) {
+                setAddresses(addresses.map(addr => 
+                    addr.id === editingAddressId ? data.address : addr
+                ));
+                setToastMessage('Adresse modifiée !');
+            } else {
+                setAddresses([...addresses, data.address]);
+                setToastMessage('Adresse ajoutée !');
+            }
+            
             setAddressFormData({ name: '', address: '', postalCode: '', city: '' });
+            setEditingAddressId(null);
             setShowAddressModal(false);
-            setToastMessage('Adresse ajoutée !');
             setShowToast(true);
             setTimeout(() => setShowToast(false), 3000);
         } catch (err: any) {
-            setError(err.message || 'Erreur lors de l\'ajout de l\'adresse');
+            setError(err.message || 'Erreur lors de la sauvegarde de l\'adresse');
         } finally {
             setIsSavingAddress(false);
         }
@@ -464,13 +493,22 @@ export default function AccountPage() {
                                                     {address.postalCode} {address.city}
                                                 </p>
                                             </div>
-                                            <button 
-                                                onClick={() => handleDeleteAddress(address.id)}
-                                                className={styles.deleteAddressButton}
-                                                title="Supprimer"
-                                            >
-                                                ×
-                                            </button>
+                                            <div className={styles.addressActions}>
+                                                <button 
+                                                    onClick={() => handleEditAddress(address)}
+                                                    className={styles.editAddressButton}
+                                                    title="Modifier"
+                                                >
+                                                    ✎
+                                                </button>
+                                                <button 
+                                                    onClick={() => handleDeleteAddress(address.id)}
+                                                    className={styles.deleteAddressButton}
+                                                    title="Supprimer"
+                                                >
+                                                    ×
+                                                </button>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
@@ -498,21 +536,29 @@ export default function AccountPage() {
                     </div>
                 )}
 
-                {/* Modal Ajout d'adresse */}
+                {/* Modal Ajout/Modification d'adresse */}
                 {showAddressModal && (
-                    <div className={styles.modalOverlay} onClick={() => setShowAddressModal(false)}>
+                    <div className={styles.modalOverlay} onClick={() => {
+                        setShowAddressModal(false);
+                        setEditingAddressId(null);
+                        setAddressFormData({ name: '', address: '', postalCode: '', city: '' });
+                    }}>
                         <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                             <div className={styles.modalHeader}>
-                                <h2>Ajouter une adresse</h2>
+                                <h2>{editingAddressId ? 'Modifier l\'adresse' : 'Ajouter une adresse'}</h2>
                                 <button 
-                                    onClick={() => setShowAddressModal(false)}
+                                    onClick={() => {
+                                        setShowAddressModal(false);
+                                        setEditingAddressId(null);
+                                        setAddressFormData({ name: '', address: '', postalCode: '', city: '' });
+                                    }}
                                     className={styles.modalClose}
                                 >
                                     ×
                                 </button>
                             </div>
                             
-                            <form onSubmit={handleAddAddress} className={styles.addressForm}>
+                            <form onSubmit={handleSaveAddress} className={styles.addressForm}>
                                 <div className={styles.inputGroup}>
                                     <label>Nom de l&apos;adresse</label>
                                     <input
@@ -575,7 +621,9 @@ export default function AccountPage() {
                                         className={styles.saveButton}
                                         disabled={isSavingAddress}
                                     >
-                                        {isSavingAddress ? 'Ajout...' : 'Ajouter'}
+                                        {isSavingAddress 
+                                            ? (editingAddressId ? 'Modification...' : 'Ajout...') 
+                                            : (editingAddressId ? 'Modifier' : 'Ajouter')}
                                     </button>
                                 </div>
                             </form>

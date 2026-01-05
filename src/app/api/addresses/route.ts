@@ -64,6 +64,55 @@ export async function POST(request: NextRequest) {
     }
 }
 
+// PUT - Mettre à jour une adresse
+export async function PUT(request: NextRequest) {
+    try {
+        const session = await auth.api.getSession({
+            headers: request.headers
+        });
+
+        if (!session?.user) {
+            return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+        }
+
+        const body = await request.json();
+        const { id, name, address, postalCode, city } = body;
+
+        if (!id || !name || !address || !postalCode || !city) {
+            return NextResponse.json({ error: 'Tous les champs sont requis' }, { status: 400 });
+        }
+
+        // Vérifier que l'adresse appartient à l'utilisateur
+        const existingAddress = db.prepare('SELECT userId FROM addresses WHERE id = ?').get(id);
+        
+        if (!existingAddress) {
+            return NextResponse.json({ error: 'Adresse non trouvée' }, { status: 404 });
+        }
+
+        if (existingAddress.userId !== session.user.id) {
+            return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
+        }
+
+        const now = new Date().toISOString();
+
+        db.prepare(`
+            UPDATE addresses 
+            SET name = ?, address = ?, postalCode = ?, city = ?, updatedAt = ?
+            WHERE id = ?
+        `).run(name, address, postalCode, city, now, id);
+
+        const updatedAddress = db.prepare('SELECT * FROM addresses WHERE id = ?').get(id);
+
+        return NextResponse.json({ 
+            success: true, 
+            address: updatedAddress
+        });
+    } catch (error: any) {
+        console.error('[API] Erreur PUT addresses:', error);
+        return NextResponse.json({ error: error.message || 'Erreur serveur' }, { status: 500 });
+    }
+}
+
 // DELETE - Supprimer une adresse
 export async function DELETE(request: NextRequest) {
     try {
