@@ -86,6 +86,47 @@
     color: #999;
 }
 
+.inputGroup select,
+.inputGroup textarea {
+    padding: 1rem;
+    border: 1px solid #d1d1d1;
+    border-radius: 4px;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s;
+    background-color: white;
+    color: #333;
+    font-family: inherit;
+}
+
+.inputGroup select:focus,
+.inputGroup textarea:focus {
+    border-color: #111;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+}
+
+.inputGroup textarea {
+    resize: vertical;
+    min-height: 150px;
+}
+
+.select {
+    padding: 1rem;
+    border: 1px solid #d1d1d1;
+    border-radius: 4px;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s;
+    background-color: white;
+    color: #333;
+    cursor: pointer;
+}
+
+.select:focus {
+    border-color: #111;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+}
+
 .submitButton {
     padding: 1.2rem;
     background-color: #111;
