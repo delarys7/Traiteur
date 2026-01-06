@@ -22,7 +22,11 @@ export default function Contact() {
     const { items, total } = useCart();
     
     const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
         phone: '',
+        company: '',
         motif: '',
         message: '',
         selectedAddress: '',
@@ -44,10 +48,23 @@ export default function Contact() {
         }
     }, [searchParams]);
 
-    // Charger les adresses si l'utilisateur est connecté et que le motif est "commande"
+    // Charger les adresses si l'utilisateur est connecté et que le motif requiert une adresse
+    // Et initialiser les données utilisateur
     useEffect(() => {
-        if (user && formData.motif === 'commande') {
-            loadAddresses();
+        if (user) {
+            const isCollaboration = formData.motif === 'collaboration-entreprise' || formData.motif === 'collaboration-particulier';
+            if (formData.motif === 'commande' || isCollaboration) {
+                loadAddresses();
+            }
+            // Pré-remplir les données utilisateur si non déjà remplies
+            setFormData(prev => ({
+                ...prev,
+                firstName: prev.firstName || user.firstName || '',
+                lastName: prev.lastName || user.lastName || '',
+                email: prev.email || user.email || '',
+                phone: prev.phone || user.phone || '',
+                company: prev.company || user.raisonSociale || ''
+            }));
         }
     }, [user, formData.motif]);
 
@@ -93,7 +110,9 @@ export default function Contact() {
         }
 
         // Validation pour les collaborations
-        if ((formData.motif === 'collaboration-entreprise' || formData.motif === 'collaboration-particulier')) {
+        const isCollaboration = formData.motif === 'collaboration-entreprise' || formData.motif === 'collaboration-particulier';
+        
+        if (isCollaboration) {
             if (!formData.eventDate.day || !formData.eventDate.month || !formData.eventDate.year) {
                 setError('Veuillez saisir la date de l\'événement');
                 setIsSubmitting(false);
@@ -118,21 +137,21 @@ export default function Contact() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    firstName: user.firstName || '',
-                    lastName: user.lastName || '',
-                    entreprise: user.type === 'entreprise' ? user.raisonSociale : null,
-                    email: user?.email,
+                    firstName: formData.firstName || user.firstName || '',
+                    lastName: formData.lastName || user.lastName || '',
+                    entreprise: formData.company || (user.type === 'entreprise' ? user.raisonSociale : null),
+                    email: formData.email || user.email,
                     phone: formData.phone || null,
                     motif: formData.motif,
                     message: formData.message,
-                    selectedAddress: formData.motif === 'commande' ? formData.selectedAddress : null,
-                    eventDate: (formData.motif === 'collaboration-entreprise' || formData.motif === 'collaboration-particulier') 
+                    selectedAddress: (formData.motif === 'commande' || isCollaboration) ? formData.selectedAddress : null,
+                    eventDate: (isCollaboration) 
                         ? `${formData.eventDate.year}-${formData.eventDate.month.padStart(2, '0')}-${formData.eventDate.day.padStart(2, '0')}`
                         : null,
-                    numberOfGuests: (formData.motif === 'collaboration-entreprise' || formData.motif === 'collaboration-particulier')
+                    numberOfGuests: (isCollaboration)
                         ? parseInt(formData.numberOfGuests)
                         : null,
-                    budgetPerPerson: (formData.motif === 'collaboration-entreprise' || formData.motif === 'collaboration-particulier')
+                    budgetPerPerson: (isCollaboration)
                         ? parseFloat(formData.budgetPerPerson)
                         : null,
                     cartItems: formData.motif === 'commande' ? items : null,
@@ -149,7 +168,11 @@ export default function Contact() {
             // Succès
             setShowToast(true);
             setFormData({ 
+                firstName: '',
+                lastName: '',
+                email: '',
                 phone: '', 
+                company: '',
                 motif: '', 
                 message: '', 
                 selectedAddress: '',
@@ -208,6 +231,7 @@ export default function Contact() {
 
                 <form onSubmit={handleSubmit} className={styles.form}>
                     {/* Informations automatiques si connecté */}
+                    {/* Informations automatiques si connecté (mais modifiables) */}
                     {user ? (
                         <>
                             {/* Champ Entreprise pour les professionnels */}
@@ -215,8 +239,8 @@ export default function Contact() {
                                 <div className={styles.inputGroup}>
                                     <input
                                         type="text"
-                                        value={user.raisonSociale || ''}
-                                        disabled
+                                        value={formData.company}
+                                        onChange={e => setFormData({ ...formData, company: e.target.value })}
                                         placeholder="Entreprise"
                                     />
                                 </div>
@@ -227,16 +251,16 @@ export default function Contact() {
                                 <div className={styles.inputGroup}>
                                     <input
                                         type="text"
-                                        value={user.firstName || ''}
-                                        disabled
+                                        value={formData.firstName}
+                                        onChange={e => setFormData({ ...formData, firstName: e.target.value })}
                                         placeholder="Prénom"
                                     />
                                 </div>
                                 <div className={styles.inputGroup}>
                                     <input
                                         type="text"
-                                        value={user.lastName || ''}
-                                        disabled
+                                        value={formData.lastName}
+                                        onChange={e => setFormData({ ...formData, lastName: e.target.value })}
                                         placeholder="Nom"
                                     />
                                 </div>
@@ -245,8 +269,8 @@ export default function Contact() {
                             <div className={styles.inputGroup}>
                                 <input
                                     type="email"
-                                    value={user.email || ''}
-                                    disabled
+                                    value={formData.email}
+                                    onChange={e => setFormData({ ...formData, email: e.target.value })}
                                     placeholder="Email"
                                 />
                             </div>
@@ -459,6 +483,39 @@ export default function Contact() {
                                     />
                                 </div>
                             </div>
+
+                            {/* Adresse de l'événement pour les collaborations */}
+                            {user && (
+                                <div className={styles.inputGroup}>
+                                    <label style={{ 
+                                        fontSize: '0.9rem', 
+                                        fontWeight: '500', 
+                                        marginBottom: '0.5rem',
+                                        display: 'block',
+                                        color: '#333'
+                                    }}>
+                                        Adresse de l'événement
+                                    </label>
+                                    <select
+                                        value={formData.selectedAddress}
+                                        onChange={e => setFormData(prev => ({ ...prev, selectedAddress: e.target.value }))}
+                                        className={styles.select}
+                                        disabled={isLoadingAddresses}
+                                    >
+                                        <option value="">Sélectionner une adresse</option>
+                                        {addresses.map((address) => (
+                                            <option key={address.id} value={address.id}>
+                                                {address.name} - {address.address}, {address.postalCode} {address.city}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {addresses.length === 0 && !isLoadingAddresses && (
+                                        <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.5rem' }}>
+                                            Aucune adresse enregistrée. <a href="/compte" style={{ color: '#111', textDecoration: 'underline' }}>Ajouter une adresse</a>
+                                        </p>
+                                    )}
+                                </div>
+                            )}
 
                             <div className={styles.inputGroup}>
                                 <input

@@ -46,7 +46,8 @@ export default function AccountPage() {
         firstName: '',
         lastName: '',
         phone: '',
-        raisonSociale: ''
+        raisonSociale: '',
+        allergies: ''
     });
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [showAddressModal, setShowAddressModal] = useState(false);
@@ -215,7 +216,8 @@ export default function AccountPage() {
                     firstName: currentUser.firstName || '',
                     lastName: currentUser.lastName || '',
                     phone: currentUser.phone || '',
-                    raisonSociale: currentUser.raisonSociale || ''
+                    raisonSociale: currentUser.raisonSociale || '',
+                    allergies: currentUser.allergies || ''
                 });
             }
         }
@@ -243,7 +245,8 @@ export default function AccountPage() {
                 firstName: currentUser.firstName || '',
                 lastName: currentUser.lastName || '',
                 phone: currentUser.phone || '',
-                raisonSociale: currentUser.raisonSociale || ''
+                raisonSociale: currentUser.raisonSociale || '',
+                allergies: currentUser.allergies || ''
             });
         }
     };
@@ -277,7 +280,8 @@ export default function AccountPage() {
                         firstName: data.user.firstName !== undefined ? data.user.firstName : currentUser.firstName,
                         lastName: data.user.lastName !== undefined ? data.user.lastName : currentUser.lastName,
                         phone: data.user.phone !== undefined ? data.user.phone : currentUser.phone,
-                        raisonSociale: data.user.raisonSociale !== undefined ? data.user.raisonSociale : currentUser.raisonSociale
+                        raisonSociale: data.user.raisonSociale !== undefined ? data.user.raisonSociale : currentUser.raisonSociale,
+                        allergies: data.user.allergies !== undefined ? data.user.allergies : currentUser.allergies
                     });
                 }
             }
@@ -287,7 +291,8 @@ export default function AccountPage() {
                 firstName: data.user?.firstName || editFormData.firstName,
                 lastName: data.user?.lastName || editFormData.lastName,
                 phone: data.user?.phone || editFormData.phone,
-                raisonSociale: data.user?.raisonSociale || editFormData.raisonSociale
+                raisonSociale: data.user?.raisonSociale || editFormData.raisonSociale,
+                allergies: data.user?.allergies || editFormData.allergies
             });
             
             setIsEditing(false);
@@ -459,6 +464,23 @@ export default function AccountPage() {
                                         </div>
                                     )}
                                     
+                                    <div className={styles.inputGroup}>
+                                        <label htmlFor="edit-allergies">Allergies</label>
+                                        <select
+                                            id="edit-allergies"
+                                            value={editFormData.allergies || 'aucun'}
+                                            onChange={(e) => setEditFormData({ ...editFormData, allergies: e.target.value === 'aucun' ? '' : e.target.value })}
+                                            className={styles.select}
+                                            style={{ padding: '0.9rem', width: '100%', backgroundColor: '#fafafa', borderRadius: '4px', border: '1px solid #ddd' }}
+                                        >
+                                            <option value="aucun">Aucune</option>
+                                            <option value="gluten">Gluten</option>
+                                            <option value="lactose">Lactose</option>
+                                            <option value="fruits à coque">Fruits à coque</option>
+                                            <option value="crustacés">Crustacés</option>
+                                            <option value="sésame">Sésame</option>
+                                        </select>
+                                    </div>
                                     <div className={styles.formActions}>
                                         <button 
                                             type="button" 
@@ -511,6 +533,10 @@ export default function AccountPage() {
                                             <span className={styles.infoValue}>{displayUser?.phone || user?.phone}</span>
                                         </div>
                                     )}
+                                    <div className={styles.infoRow}>
+                                        <span className={styles.infoLabel}>Allergies</span>
+                                        <span className={styles.infoValue}>{(displayUser?.allergies || user?.allergies) ? (displayUser?.allergies || user?.allergies).charAt(0).toUpperCase() + (displayUser?.allergies || user?.allergies).slice(1) : '-'}</span>
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -788,23 +814,22 @@ export default function AccountPage() {
                                 </div>
                             </div>
 
-                            <div className={styles.formRow}>
-                                <div className={styles.inputGroup}>
-                                    <input
-                                        type="email"
-                                        required
-                                        placeholder="Email"
-                                        value={formData.email}
-                                        onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                    />
-                                </div>
-                                <div className={styles.inputGroup}>
-                                    <PhoneInput
-                                        value={formData.phone}
-                                        onChange={(value: string) => setFormData({ ...formData, phone: value })}
-                                        placeholder="Téléphone (Optionnel)"
-                                    />
-                                </div>
+                            <div className={styles.inputGroup}>
+                                <input
+                                    type="email"
+                                    required
+                                    placeholder="Email"
+                                    value={formData.email}
+                                    onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                />
+                            </div>
+                            
+                            <div className={styles.inputGroup}>
+                                <PhoneInput
+                                    value={formData.phone}
+                                    onChange={(value: string) => setFormData({ ...formData, phone: value })}
+                                    placeholder="Téléphone (Optionnel)"
+                                />
                             </div>
 
                             <div className={styles.inputGroup}>

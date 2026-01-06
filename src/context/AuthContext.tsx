@@ -14,6 +14,7 @@ interface User {
     type?: string;
     raisonSociale?: string;
     phone?: string;
+    allergies?: string;
 }
 
 interface AuthContextType {

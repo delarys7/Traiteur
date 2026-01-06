@@ -1,27 +1,8 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { countries, Country } from '@/data/countries';
 import styles from './PhoneInput.module.css';
-
-interface Country {
-    code: string;
-    name: string;
-    dialCode: string;
-    flag: string;
-}
-
-const countries: Country[] = [
-    { code: 'FR', name: 'France', dialCode: '+33', flag: '🇫🇷' },
-    { code: 'BE', name: 'Belgique', dialCode: '+32', flag: '🇧🇪' },
-    { code: 'CH', name: 'Suisse', dialCode: '+41', flag: '🇨🇭' },
-    { code: 'LU', name: 'Luxembourg', dialCode: '+352', flag: '🇱🇺' },
-    { code: 'GB', name: 'Royaume-Uni', dialCode: '+44', flag: '🇬🇧' },
-    { code: 'DE', name: 'Allemagne', dialCode: '+49', flag: '🇩🇪' },
-    { code: 'ES', name: 'Espagne', dialCode: '+34', flag: '🇪🇸' },
-    { code: 'IT', name: 'Italie', dialCode: '+39', flag: '🇮🇹' },
-    { code: 'US', name: 'États-Unis', dialCode: '+1', flag: '🇺🇸' },
-    { code: 'CA', name: 'Canada', dialCode: '+1', flag: '🇨🇦' },
-];
 
 interface PhoneInputProps {
     value: string;
@@ -43,8 +24,10 @@ export default function PhoneInput({ value, onChange, placeholder = "Téléphone
                 };
             }
         }
+        // Par défaut France
+        const defaultCountry = countries.find(c => c.code === 'FR') || countries[0];
         return {
-            country: countries[0],
+            country: defaultCountry,
             phoneNumber: value || ''
         };
     };
@@ -106,28 +89,33 @@ export default function PhoneInput({ value, onChange, placeholder = "Téléphone
                     className={styles.countryButton}
                     onClick={() => !disabled && setShowCountryList(!showCountryList)}
                     disabled={disabled}
+                    title={selectedCountry.name}
                 >
-                    <span className={styles.flag}>{selectedCountry.flag}</span>
+                    <img 
+                        src={`https://flagcdn.com/w40/${selectedCountry.code.toLowerCase()}.png`}
+                        srcSet={`https://flagcdn.com/w80/${selectedCountry.code.toLowerCase()}.png 2x`}
+                        width="20"
+                        alt={selectedCountry.name}
+                        className={styles.flag}
+                    />
                     <span className={styles.dialCode}>{selectedCountry.dialCode}</span>
                     <span className={styles.arrow}>▼</span>
                 </button>
-                {showCountryList && !disabled && (
-                    <div className={styles.countryList}>
-                        {countries.map((country) => (
-                            <button
-                                key={country.code}
-                                type="button"
-                                className={styles.countryOption}
-                                onClick={() => handleCountryChange(country)}
-                            >
-                                <span className={styles.flag}>{country.flag}</span>
-                                <span className={styles.countryName}>{country.name}</span>
-                                <span className={styles.dialCode}>{country.dialCode}</span>
-                            </button>
-                        ))}
-                    </div>
-                )}
             </div>
+            {showCountryList && !disabled && (
+                <div className={styles.countryList}>
+                    {countries.map((country) => (
+                        <button
+                            key={country.code}
+                            type="button"
+                            className={styles.countryOption}
+                            onClick={() => handleCountryChange(country)}
+                        >
+                            <span className={styles.countryName}>{country.name} ({country.dialCode})</span>
+                        </button>
+                    ))}
+                </div>
+            )}
             <input
                 type="tel"
                 placeholder={placeholder}
