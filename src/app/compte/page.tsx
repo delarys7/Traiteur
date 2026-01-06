@@ -22,7 +22,9 @@ export default function AccountPage() {
     // État local pour l'affichage des données utilisateur (mis à jour immédiatement)
     const [displayUser, setDisplayUser] = useState(user || null);
     const [isLoginView, setIsLoginView] = useState(true);
+    const [isForgotPasswordView, setIsForgotPasswordView] = useState(false);
     const [accountType, setAccountType] = useState<'particulier' | 'entreprise'>('particulier');
+    const [resetEmail, setResetEmail] = useState('');
     const [formData, setFormData] = useState({ 
         name: '', 
         firstName: '',
@@ -62,7 +64,6 @@ export default function AccountPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-        setSuccessMessage('');
         setIsSubmitting(true);
 
         try {
@@ -118,7 +119,9 @@ export default function AccountPage() {
                 }
                 
                 setIsLoginView(true);
-                setSuccessMessage('Compte créé ! Veuillez vérifier vos emails pour valider votre compte avant de vous connecter.');
+                setToastMessage('Compte créé ! Veuillez vérifier vos emails pour valider votre compte avant de vous connecter.');
+                setShowToast(true);
+                setTimeout(() => setShowToast(false), 5000);
             }
         } catch (err: any) {
             console.error('[Client] Exception capturée:', err);
@@ -137,12 +140,60 @@ export default function AccountPage() {
                 callbackURL: "/compte"
             });
             if (resendError) throw new Error(resendError.message || "Erreur lors de l'envoi");
-            setSuccessMessage('Email de vérification renvoyé !');
+            setToastMessage('Email de vérification renvoyé !');
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3000);
             setShowResend(false);
         } catch (err: any) {
             setError(err.message || "Impossible de renvoyer l'email");
         } finally {
             setIsResending(false);
+        }
+    };
+
+    const handleForgotPassword = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+        setIsSubmitting(true);
+        
+        try {
+            const response = await fetch('/api/auth/forgot-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: resetEmail,
+                    callbackURL: window.location.origin + '/compte'
+                })
+            });
+
+            // Vérifier le content-type avant de parser
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                const text = await response.text();
+                throw new Error(text || 'Erreur lors de l\'envoi de l\'email de réinitialisation');
+            }
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Erreur lors de l\'envoi de l\'email de réinitialisation');
+            }
+
+            setError('');
+            setToastMessage('Email de réinitialisation envoyé !');
+            setShowToast(true);
+            setTimeout(() => {
+                setShowToast(false);
+                setIsForgotPasswordView(false);
+                setResetEmail('');
+            }, 3000);
+        } catch (err: any) {
+            console.error('[Client] Erreur forgot-password:', err);
+            setError(err.message || 'Erreur lors de l\'envoi de l\'email de réinitialisation');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -637,45 +688,73 @@ export default function AccountPage() {
     return (
         <div className={styles.container}>
             <div className={styles.authBox}>
-                <h1 className={styles.authTitle}>{isLoginView ? 'Connexion' : 'Créer un compte'}</h1>
+                <h1 className={styles.authTitle}>
+                    {isForgotPasswordView ? 'Réinitialiser son mot de passe' : (isLoginView ? 'Connexion' : 'Créer un compte')}
+                </h1>
 
-                {!isLoginView && (
-                    <div className={styles.typeToggle}>
-                        <button 
-                            type="button"
-                            className={`${styles.typeButton} ${accountType === 'particulier' ? styles.typeButtonActive : ''}`}
-                            onClick={() => setAccountType('particulier')}
-                        >
-                            Particulier
-                        </button>
-                        <button 
-                            type="button"
-                            className={`${styles.typeButton} ${accountType === 'entreprise' ? styles.typeButtonActive : ''}`}
-                            onClick={() => setAccountType('entreprise')}
-                        >
-                            Professionnel
-                        </button>
-                    </div>
-                )}
+                {isForgotPasswordView ? (
+                    <>
+                        {error && (
+                            <div className={styles.error}>
+                                {error}
+                            </div>
+                        )}
 
-                {error && (
-                    <div className={styles.error}>
-                        {error}
-                        {showResend && (
-                            <div className={styles.resendWrapper}>
+                        <form onSubmit={handleForgotPassword} className={styles.form}>
+                            <div className={styles.inputGroup}>
+                                <input
+                                    type="email"
+                                    required
+                                    placeholder="Email"
+                                    value={resetEmail}
+                                    onChange={e => setResetEmail(e.target.value)}
+                                />
+                            </div>
+
+                            <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
+                                {isSubmitting ? 'Envoi...' : 'Réinitialiser mon mot de passe'}
+                            </button>
+                        </form>
+                    </>
+                ) : (
+                    <>
+                        {!isLoginView && (
+                            <div className={styles.typeToggle}>
                                 <button 
-                                    onClick={handleResendEmail} 
-                                    className={styles.resendLink}
-                                    disabled={isResending}
+                                    type="button"
+                                    className={`${styles.typeButton} ${accountType === 'particulier' ? styles.typeButtonActive : ''}`}
+                                    onClick={() => setAccountType('particulier')}
                                 >
-                                    {isResending ? 'Envoi...' : 'Renvoyer le mail ?'}
+                                    Particulier
+                                </button>
+                                <button 
+                                    type="button"
+                                    className={`${styles.typeButton} ${accountType === 'entreprise' ? styles.typeButtonActive : ''}`}
+                                    onClick={() => setAccountType('entreprise')}
+                                >
+                                    Professionnel
                                 </button>
                             </div>
                         )}
-                    </div>
-                )}
 
-                <form onSubmit={handleSubmit} className={styles.form}>
+                        {error && (
+                            <div className={styles.error}>
+                                {error}
+                                {showResend && (
+                                    <div className={styles.resendWrapper}>
+                                        <button 
+                                            onClick={handleResendEmail} 
+                                            className={styles.resendLink}
+                                            disabled={isResending}
+                                        >
+                                            {isResending ? 'Envoi...' : 'Renvoyer le mail ?'}
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        <form onSubmit={handleSubmit} className={styles.form}>
                     {!isLoginView && (
                         <>
                             {accountType === 'entreprise' && (
@@ -767,25 +846,67 @@ export default function AccountPage() {
                         </>
                     )}
 
-                    <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
-                        {isSubmitting ? 'Chargement...' : (isLoginView ? 'Se connecter' : "S'inscrire")}
-                    </button>
-                </form>
+                            <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
+                                {isSubmitting ? 'Chargement...' : (isLoginView ? 'Se connecter' : "S'inscrire")}
+                            </button>
+                        </form>
+                    </>
+                )}
 
-                <div className={styles.toggle}>
-                    <button 
-                        type="button" 
-                        onClick={() => {
-                            setIsLoginView(!isLoginView);
-                            setError('');
-                            setSuccessMessage('');
-                            setShowResend(false);
-                        }}
-                        className={styles.toggleLink}
-                    >
-                        {isLoginView ? "Besoin d'un compte ? S'inscrire" : "Déjà membre ? Se connecter"}
-                    </button>
-                </div>
+                {!isForgotPasswordView && (
+                    <>
+                        {isLoginView && (
+                            <div className={styles.toggle}>
+                                <button 
+                                    type="button" 
+                                    onClick={() => {
+                                        setIsForgotPasswordView(true);
+                                        setError('');
+                                    }}
+                                    className={styles.toggleLink}
+                                >
+                                    Mot de passe oublié
+                                </button>
+                            </div>
+                        )}
+                        <div className={styles.toggle}>
+                            <button 
+                                type="button" 
+                                onClick={() => {
+                                    setIsLoginView(!isLoginView);
+                                    setError('');
+                                    setShowResend(false);
+                                }}
+                                className={styles.toggleLink}
+                            >
+                                {isLoginView ? "Besoin d'un compte ? S'inscrire" : "Déjà membre ? Se connecter"}
+                            </button>
+                        </div>
+                    </>
+                )}
+
+                {isForgotPasswordView && (
+                    <div className={styles.toggle}>
+                        <button 
+                            type="button" 
+                            onClick={() => {
+                                setIsForgotPasswordView(false);
+                                setError('');
+                                setResetEmail('');
+                            }}
+                            className={styles.toggleLink}
+                        >
+                            Retour à la connexion
+                        </button>
+                    </div>
+                )}
+
+                {/* Toast Notification */}
+                {showToast && (
+                    <div className={styles.toast}>
+                        {toastMessage}
+                    </div>
+                )}
             </div>
         </div>
     );
