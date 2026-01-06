@@ -465,21 +465,53 @@ export default function AccountPage() {
                                     )}
                                     
                                     <div className={styles.inputGroup}>
-                                        <label htmlFor="edit-allergies">Allergies</label>
-                                        <select
-                                            id="edit-allergies"
-                                            value={editFormData.allergies || 'aucun'}
-                                            onChange={(e) => setEditFormData({ ...editFormData, allergies: e.target.value === 'aucun' ? '' : e.target.value })}
-                                            className={styles.select}
-                                            style={{ padding: '0.9rem', width: '100%', backgroundColor: '#fafafa', borderRadius: '4px', border: '1px solid #ddd' }}
-                                        >
-                                            <option value="aucun">Aucune</option>
-                                            <option value="gluten">Gluten</option>
-                                            <option value="lactose">Lactose</option>
-                                            <option value="fruits à coque">Fruits à coque</option>
-                                            <option value="crustacés">Crustacés</option>
-                                            <option value="sésame">Sésame</option>
-                                        </select>
+                                        <label>Allergies</label>
+                                        <div className={styles.allergiesContainer}>
+                                            <div className={styles.selectedTags}>
+                                                {editFormData.allergies.split(',').filter(Boolean).map((allergy) => (
+                                                    <span key={allergy} className={styles.allergyTag}>
+                                                        {allergy.charAt(0).toUpperCase() + allergy.slice(1)}
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                const newAllergies = editFormData.allergies
+                                                                    .split(',')
+                                                                    .filter(a => a !== allergy)
+                                                                    .join(',');
+                                                                setEditFormData({ ...editFormData, allergies: newAllergies });
+                                                            }}
+                                                            className={styles.removeTag}
+                                                        >
+                                                            ×
+                                                        </button>
+                                                    </span>
+                                                ))}
+                                            </div>
+                                            <select
+                                                value=""
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    if (value && !editFormData.allergies.split(',').includes(value)) {
+                                                        const newAllergies = editFormData.allergies 
+                                                            ? `${editFormData.allergies},${value}`
+                                                            : value;
+                                                        setEditFormData({ ...editFormData, allergies: newAllergies });
+                                                    }
+                                                }}
+                                                className={styles.select}
+                                                style={{ padding: '0.9rem', width: '100%', backgroundColor: '#fafafa', borderRadius: '4px', border: '1px solid #ddd' }}
+                                            >
+                                                <option value="">Ajouter une allergie...</option>
+                                                {['gluten', 'lactose', 'fruits à coque', 'crustacés', 'sésame']
+                                                    .filter(a => !editFormData.allergies.split(',').includes(a))
+                                                    .map(opt => (
+                                                        <option key={opt} value={opt}>
+                                                            {opt.charAt(0).toUpperCase() + opt.slice(1)}
+                                                        </option>
+                                                    ))
+                                                }
+                                            </select>
+                                        </div>
                                     </div>
                                     <div className={styles.formActions}>
                                         <button 
@@ -535,7 +567,17 @@ export default function AccountPage() {
                                     )}
                                     <div className={styles.infoRow}>
                                         <span className={styles.infoLabel}>Allergies</span>
-                                        <span className={styles.infoValue}>{(displayUser?.allergies || user?.allergies) ? (displayUser?.allergies || user?.allergies).charAt(0).toUpperCase() + (displayUser?.allergies || user?.allergies).slice(1) : '-'}</span>
+                                        <span className={styles.infoValue}>
+                                            {(displayUser?.allergies || user?.allergies) ? (
+                                                <div className={styles.displayTags}>
+                                                    {(displayUser?.allergies || user?.allergies).split(',').filter(Boolean).map((allergy: string) => (
+                                                        <span key={allergy} className={styles.displayTag}>
+                                                            {allergy.charAt(0).toUpperCase() + allergy.slice(1)}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            ) : '-'}
+                                        </span>
                                     </div>
                                 </div>
                             )}

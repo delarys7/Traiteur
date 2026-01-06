@@ -40,12 +40,23 @@ export default function PhoneInput({ value, onChange, placeholder = "Téléphone
     // Mettre à jour quand la valeur externe change
     useEffect(() => {
         if (value) {
-            const foundCountry = countries.find(country => value.startsWith(country.dialCode));
-            if (foundCountry) {
-                setSelectedCountry(foundCountry);
-                setPhoneNumber(value.replace(foundCountry.dialCode, '').trim());
+            // Si le pays sélectionné correspond déjà au début de la value, on le garde
+            // Cela évite de basculer sur le premier pays de la liste (ex: Canada vs USA pour +1)
+            if (selectedCountry && value.startsWith(selectedCountry.dialCode)) {
+                setPhoneNumber(value.replace(selectedCountry.dialCode, '').trim());
             } else {
-                setPhoneNumber(value);
+                // Sinon on cherche le pays correspondant
+                // On trie par longueur de dialCode décroissante pour éviter les faux positifs (+1 vs +1242)
+                const foundCountry = [...countries]
+                    .sort((a, b) => b.dialCode.length - a.dialCode.length)
+                    .find(country => value.startsWith(country.dialCode));
+                
+                if (foundCountry) {
+                    setSelectedCountry(foundCountry);
+                    setPhoneNumber(value.replace(foundCountry.dialCode, '').trim());
+                } else {
+                    setPhoneNumber(value);
+                }
             }
         } else {
             setPhoneNumber('');
@@ -70,7 +81,7 @@ export default function PhoneInput({ value, onChange, placeholder = "Téléphone
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             const target = event.target as HTMLElement;
-            if (showCountryList && !target.closest(`.${styles.countrySelector}`)) {
+            if (showCountryList && !target.closest(`.${styles.countrySelector}`) && !target.closest(`.${styles.countryList}`)) {
                 setShowCountryList(false);
             }
         };

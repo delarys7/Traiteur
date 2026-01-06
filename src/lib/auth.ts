@@ -141,6 +141,7 @@ export const auth = betterAuth({
             type: { type: "string", required: false, defaultValue: "particulier" }, // 'particulier' | 'entreprise'
             raisonSociale: { type: "string", required: false },
             phone: { type: "string", required: false },
+            allergies: { type: "string", required: false },
         },
     },
     socialProviders: {

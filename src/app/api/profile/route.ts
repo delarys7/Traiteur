@@ -14,7 +14,7 @@ export async function PUT(request: NextRequest) {
         }
 
         const body = await request.json();
-        const { firstName, lastName, phone, raisonSociale } = body;
+        const { firstName, lastName, phone, raisonSociale, allergies } = body;
 
         console.log('[API] Mise à jour profil:', { userId: session.user.id, body });
 
@@ -37,6 +37,10 @@ export async function PUT(request: NextRequest) {
         if (raisonSociale !== undefined) {
             updateFields.push('raisonSociale = ?');
             updateValues.push(raisonSociale);
+        }
+        if (allergies !== undefined) {
+            updateFields.push('allergies = ?');
+            updateValues.push(allergies);
         }
 
         if (updateFields.length === 0) {
