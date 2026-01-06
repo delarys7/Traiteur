@@ -46,9 +46,7 @@ export async function POST(request: NextRequest) {
         const logoUrl = `${appUrl}/images/Logo-NoBG-rogne.png`;
         
         // Construire l'URL de réinitialisation
-        const resetUrl = callbackURL 
-            ? `${callbackURL}?token=${token}` 
-            : `${appUrl}/compte/reset-password?token=${token}`;
+        const resetUrl = `${appUrl}/reset-password?token=${token}`;
         
         // Supprimer les anciens tokens de réinitialisation pour cet email
         db.prepare('DELETE FROM verification WHERE identifier = ?').run(email);

@@ -3,6 +3,7 @@ import db from "./db";
 import { Resend } from "resend";
 import fs from "fs";
 import path from "path";
+import { hash, compare } from "bcrypt";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -33,6 +34,14 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
         requireEmailVerification: true,
+        password: {
+            hash: async (password: string) => {
+                return await hash(password, 10);
+            },
+            verify: async ({ hash, password }: { hash: string; password: string }) => {
+                return await compare(password, hash);
+            },
+        },
         sendPasswordResetEmail: async ({ user, url, token }: { user: any; url: string; token: string }, request: any) => {
             console.log(`[Better-Auth] Envoi d'email de réinitialisation à: ${user.email}`);
             
