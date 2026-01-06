@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { Resend } from 'resend';
+import db from '@/lib/db';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -17,9 +18,9 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
-        const { name, email, phone, motif, message, cartItems, cartTotal } = body;
+        const { firstName, lastName, entreprise, email, phone, motif, message, selectedAddress, eventDate, numberOfGuests, budgetPerPerson, cartItems, cartTotal } = body;
 
-        if (!name || !email || !motif || !message) {
+        if (!firstName || !lastName || !email || !motif || !message) {
             return NextResponse.json(
                 { error: 'Tous les champs requis doivent être remplis' },
                 { status: 400 }
@@ -36,11 +37,40 @@ export async function POST(request: NextRequest) {
         // Construire le contenu de l'email
         let emailContent = `
             <h2>Nouveau message de contact</h2>
-            <p><strong>Nom/Entreprise:</strong> ${name}</p>
+            ${entreprise ? `<p><strong>Entreprise:</strong> ${entreprise}</p>` : ''}
+            <p><strong>Prénom:</strong> ${firstName}</p>
+            <p><strong>Nom:</strong> ${lastName}</p>
             <p><strong>Email:</strong> ${email}</p>
             ${phone ? `<p><strong>Téléphone:</strong> ${phone}</p>` : ''}
             <p><strong>Motif:</strong> ${getMotifLabel(motif)}</p>
         `;
+
+        // Ajouter l'adresse sélectionnée si c'est une commande
+        if (motif === 'commande' && selectedAddress) {
+            // Récupérer les détails de l'adresse depuis la base de données
+            const address = db.prepare('SELECT * FROM addresses WHERE id = ?').get(selectedAddress) as any;
+            if (address) {
+                emailContent += `
+                    <h3>Adresse de livraison:</h3>
+                    <p>${address.name}<br>
+                    ${address.address}<br>
+                    ${address.postalCode} ${address.city}</p>
+                `;
+            }
+        }
+
+        // Ajouter la date, nombre d'invités et le budget si c'est une collaboration
+        if ((motif === 'collaboration-entreprise' || motif === 'collaboration-particulier')) {
+            if (eventDate) {
+                emailContent += `<p><strong>Date de l'événement:</strong> ${eventDate}</p>`;
+            }
+            if (numberOfGuests) {
+                emailContent += `<p><strong>Nombre d'invités:</strong> ${numberOfGuests}</p>`;
+            }
+            if (budgetPerPerson) {
+                emailContent += `<p><strong>Budget par personne:</strong> ${budgetPerPerson} €</p>`;
+            }
+        }
 
         // Ajouter le récapitulatif du panier si c'est une commande
         if (motif === 'commande' && cartItems && cartItems.length > 0) {

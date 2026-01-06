@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { signUp, signIn, authClient } from '@/lib/auth-client';
+import PhoneInput from '@/components/PhoneInput';
 import styles from './page.module.css';
 
 interface Address {
@@ -440,12 +441,9 @@ export default function AccountPage() {
                                     
                                     <div className={styles.inputGroup}>
                                         <label>Téléphone</label>
-                                        <input
-                                            type="tel"
+                                        <PhoneInput
                                             value={editFormData.phone}
-                                            onChange={e => setEditFormData({ ...editFormData, phone: e.target.value })}
-                                            className={styles.editInput}
-                                            placeholder="+33 6 12 34 56 78"
+                                            onChange={(value: string) => setEditFormData({ ...editFormData, phone: value })}
                                         />
                                     </div>
                                     
@@ -801,11 +799,10 @@ export default function AccountPage() {
                                     />
                                 </div>
                                 <div className={styles.inputGroup}>
-                                    <input
-                                        type="tel"
-                                        placeholder="Téléphone (Optionnel)"
+                                    <PhoneInput
                                         value={formData.phone}
-                                        onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                                        onChange={(value: string) => setFormData({ ...formData, phone: value })}
+                                        placeholder="Téléphone (Optionnel)"
                                     />
                                 </div>
                             </div>

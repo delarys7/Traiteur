@@ -4,7 +4,16 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
+import PhoneInput from '@/components/PhoneInput';
 import styles from '../compte/page.module.css';
+
+interface Address {
+    id: string;
+    name: string;
+    address: string;
+    postalCode: string;
+    city: string;
+}
 
 export default function Contact() {
     const { user, isLoading } = useAuth();
@@ -15,8 +24,14 @@ export default function Contact() {
     const [formData, setFormData] = useState({
         phone: '',
         motif: '',
-        message: ''
+        message: '',
+        selectedAddress: '',
+        eventDate: { day: '', month: '', year: '' },
+        budgetPerPerson: '',
+        numberOfGuests: ''
     });
+    const [addresses, setAddresses] = useState<Address[]>([]);
+    const [isLoadingAddresses, setIsLoadingAddresses] = useState(false);
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showToast, setShowToast] = useState(false);
@@ -29,7 +44,28 @@ export default function Contact() {
         }
     }, [searchParams]);
 
-    // Pas de redirection automatique - la page est accessible sans connexion
+    // Charger les adresses si l'utilisateur est connecté et que le motif est "commande"
+    useEffect(() => {
+        if (user && formData.motif === 'commande') {
+            loadAddresses();
+        }
+    }, [user, formData.motif]);
+
+    const loadAddresses = async () => {
+        if (!user) return;
+        setIsLoadingAddresses(true);
+        try {
+            const response = await fetch('/api/addresses');
+            if (response.ok) {
+                const data = await response.json();
+                setAddresses(data.addresses || []);
+            }
+        } catch (error) {
+            console.error('Erreur lors du chargement des adresses:', error);
+        } finally {
+            setIsLoadingAddresses(false);
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -56,6 +92,25 @@ export default function Contact() {
             return;
         }
 
+        // Validation pour les collaborations
+        if ((formData.motif === 'collaboration-entreprise' || formData.motif === 'collaboration-particulier')) {
+            if (!formData.eventDate.day || !formData.eventDate.month || !formData.eventDate.year) {
+                setError('Veuillez saisir la date de l\'événement');
+                setIsSubmitting(false);
+                return;
+            }
+            if (!formData.numberOfGuests || parseInt(formData.numberOfGuests) <= 0) {
+                setError('Veuillez saisir un nombre d\'invités valide');
+                setIsSubmitting(false);
+                return;
+            }
+            if (!formData.budgetPerPerson || parseFloat(formData.budgetPerPerson) <= 0) {
+                setError('Veuillez saisir un budget par personne valide');
+                setIsSubmitting(false);
+                return;
+            }
+        }
+
         try {
             const response = await fetch('/api/contact', {
                 method: 'POST',
@@ -63,11 +118,23 @@ export default function Contact() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    name: user?.type === 'entreprise' ? user.raisonSociale : `${user?.firstName || ''} ${user?.lastName || ''}`.trim(),
+                    firstName: user.firstName || '',
+                    lastName: user.lastName || '',
+                    entreprise: user.type === 'entreprise' ? user.raisonSociale : null,
                     email: user?.email,
                     phone: formData.phone || null,
                     motif: formData.motif,
                     message: formData.message,
+                    selectedAddress: formData.motif === 'commande' ? formData.selectedAddress : null,
+                    eventDate: (formData.motif === 'collaboration-entreprise' || formData.motif === 'collaboration-particulier') 
+                        ? `${formData.eventDate.year}-${formData.eventDate.month.padStart(2, '0')}-${formData.eventDate.day.padStart(2, '0')}`
+                        : null,
+                    numberOfGuests: (formData.motif === 'collaboration-entreprise' || formData.motif === 'collaboration-particulier')
+                        ? parseInt(formData.numberOfGuests)
+                        : null,
+                    budgetPerPerson: (formData.motif === 'collaboration-entreprise' || formData.motif === 'collaboration-particulier')
+                        ? parseFloat(formData.budgetPerPerson)
+                        : null,
                     cartItems: formData.motif === 'commande' ? items : null,
                     cartTotal: formData.motif === 'commande' ? total : null
                 })
@@ -81,7 +148,15 @@ export default function Contact() {
 
             // Succès
             setShowToast(true);
-            setFormData({ phone: '', motif: '', message: '' });
+            setFormData({ 
+                phone: '', 
+                motif: '', 
+                message: '', 
+                selectedAddress: '',
+                eventDate: { day: '', month: '', year: '' },
+                budgetPerPerson: '',
+                numberOfGuests: ''
+            });
             setTimeout(() => {
                 setShowToast(false);
             }, 3000);
@@ -102,6 +177,8 @@ export default function Contact() {
             </div>
         );
     }
+
+    const isCollaboration = formData.motif === 'collaboration-entreprise' || formData.motif === 'collaboration-particulier';
 
     return (
         <div className={styles.container}>
@@ -130,16 +207,39 @@ export default function Contact() {
                 )}
 
                 <form onSubmit={handleSubmit} className={styles.form}>
-                    {/* Informations automatiques si connecté, sinon champs libres */}
+                    {/* Informations automatiques si connecté */}
                     {user ? (
                         <>
-                            <div className={styles.inputGroup}>
-                                <input
-                                    type="text"
-                                    value={user.type === 'entreprise' ? user.raisonSociale || '' : `${user.firstName || ''} ${user.lastName || ''}`.trim()}
-                                    disabled
-                                    placeholder={user.type === 'entreprise' ? 'Raison sociale' : 'Nom et prénom'}
-                                />
+                            {/* Champ Entreprise pour les professionnels */}
+                            {user.type === 'entreprise' && (
+                                <div className={styles.inputGroup}>
+                                    <input
+                                        type="text"
+                                        value={user.raisonSociale || ''}
+                                        disabled
+                                        placeholder="Entreprise"
+                                    />
+                                </div>
+                            )}
+
+                            {/* Nom et Prénom séparés */}
+                            <div className={styles.formRow}>
+                                <div className={styles.inputGroup}>
+                                    <input
+                                        type="text"
+                                        value={user.firstName || ''}
+                                        disabled
+                                        placeholder="Prénom"
+                                    />
+                                </div>
+                                <div className={styles.inputGroup}>
+                                    <input
+                                        type="text"
+                                        value={user.lastName || ''}
+                                        disabled
+                                        placeholder="Nom"
+                                    />
+                                </div>
                             </div>
 
                             <div className={styles.inputGroup}>
@@ -153,14 +253,32 @@ export default function Contact() {
                         </>
                     ) : (
                         <>
-                            <div className={styles.inputGroup}>
-                                <input
-                                    type="text"
-                                    placeholder="Nom et prénom"
-                                    disabled
-                                />
+                            {/* Champs désactivés si non connecté */}
+                            {user?.type === 'entreprise' && (
+                                <div className={styles.inputGroup}>
+                                    <input
+                                        type="text"
+                                        placeholder="Entreprise"
+                                        disabled
+                                    />
+                                </div>
+                            )}
+                            <div className={styles.formRow}>
+                                <div className={styles.inputGroup}>
+                                    <input
+                                        type="text"
+                                        placeholder="Prénom"
+                                        disabled
+                                    />
+                                </div>
+                                <div className={styles.inputGroup}>
+                                    <input
+                                        type="text"
+                                        placeholder="Nom"
+                                        disabled
+                                    />
+                                </div>
                             </div>
-
                             <div className={styles.inputGroup}>
                                 <input
                                     type="email"
@@ -173,11 +291,10 @@ export default function Contact() {
 
                     {/* Téléphone optionnel */}
                     <div className={styles.inputGroup}>
-                        <input
-                            type="tel"
-                            placeholder="Téléphone (optionnel)"
+                        <PhoneInput
                             value={formData.phone}
-                            onChange={e => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                            onChange={(value) => setFormData(prev => ({ ...prev, phone: value }))}
+                            placeholder="Téléphone (optionnel)"
                         />
                     </div>
 
@@ -185,7 +302,7 @@ export default function Contact() {
                     <div className={styles.inputGroup}>
                         <select
                             value={formData.motif}
-                            onChange={e => setFormData(prev => ({ ...prev, motif: e.target.value }))}
+                            onChange={e => setFormData(prev => ({ ...prev, motif: e.target.value, selectedAddress: '', eventDate: { day: '', month: '', year: '' }, budgetPerPerson: '', numberOfGuests: '' }))}
                             required
                             className={styles.select}
                         >
@@ -196,6 +313,177 @@ export default function Contact() {
                             <option value="autre">Autre (renseignements, etc.)</option>
                         </select>
                     </div>
+
+                    {/* Sélection d'adresse pour les commandes */}
+                    {formData.motif === 'commande' && user && (
+                        <div className={styles.inputGroup}>
+                            <select
+                                value={formData.selectedAddress}
+                                onChange={e => setFormData(prev => ({ ...prev, selectedAddress: e.target.value }))}
+                                className={styles.select}
+                                disabled={isLoadingAddresses}
+                            >
+                                <option value="">Sélectionner une adresse</option>
+                                {addresses.map((address) => (
+                                    <option key={address.id} value={address.id}>
+                                        {address.name} - {address.address}, {address.postalCode} {address.city}
+                                    </option>
+                                ))}
+                            </select>
+                            {addresses.length === 0 && !isLoadingAddresses && (
+                                <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.5rem' }}>
+                                    Aucune adresse enregistrée. <a href="/compte" style={{ color: '#111', textDecoration: 'underline' }}>Ajouter une adresse</a>
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Date de l'événement et Budget pour les collaborations */}
+                    {isCollaboration && (
+                        <>
+                            <div className={styles.inputGroup}>
+                                <label style={{ 
+                                    fontSize: '0.9rem', 
+                                    fontWeight: '500', 
+                                    marginBottom: '0.5rem',
+                                    display: 'block',
+                                    color: '#333'
+                                }}>
+                                    Date de l'événement
+                                </label>
+                                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                    <input
+                                        type="text"
+                                        placeholder="DD"
+                                        maxLength={2}
+                                        value={formData.eventDate.day}
+                                        onChange={e => {
+                                            const value = e.target.value.replace(/\D/g, '').slice(0, 2);
+                                            if (value === '' || (parseInt(value) >= 1 && parseInt(value) <= 31)) {
+                                                setFormData(prev => ({
+                                                    ...prev,
+                                                    eventDate: { ...prev.eventDate, day: value }
+                                                }));
+                                            }
+                                        }}
+                                        style={{
+                                            width: '60px',
+                                            textAlign: 'center',
+                                            padding: '1rem',
+                                            border: '1px solid #d1d1d1',
+                                            borderRadius: '4px',
+                                            fontSize: '1rem',
+                                            outline: 'none',
+                                            transition: 'all 0.2s',
+                                            backgroundColor: 'white',
+                                            color: '#333'
+                                        }}
+                                        onFocus={(e) => {
+                                            e.target.style.borderColor = '#111';
+                                            e.target.style.boxShadow = '0 0 0 2px rgba(0,0,0,0.05)';
+                                        }}
+                                        onBlur={(e) => {
+                                            e.target.style.borderColor = '#d1d1d1';
+                                            e.target.style.boxShadow = 'none';
+                                        }}
+                                    />
+                                    <span style={{ color: '#999', fontSize: '1rem' }}>/</span>
+                                    <input
+                                        type="text"
+                                        placeholder="MM"
+                                        maxLength={2}
+                                        value={formData.eventDate.month}
+                                        onChange={e => {
+                                            const value = e.target.value.replace(/\D/g, '').slice(0, 2);
+                                            if (value === '' || (parseInt(value) >= 1 && parseInt(value) <= 12)) {
+                                                setFormData(prev => ({
+                                                    ...prev,
+                                                    eventDate: { ...prev.eventDate, month: value }
+                                                }));
+                                            }
+                                        }}
+                                        style={{
+                                            width: '60px',
+                                            textAlign: 'center',
+                                            padding: '1rem',
+                                            border: '1px solid #d1d1d1',
+                                            borderRadius: '4px',
+                                            fontSize: '1rem',
+                                            outline: 'none',
+                                            transition: 'all 0.2s',
+                                            backgroundColor: 'white',
+                                            color: '#333'
+                                        }}
+                                        onFocus={(e) => {
+                                            e.target.style.borderColor = '#111';
+                                            e.target.style.boxShadow = '0 0 0 2px rgba(0,0,0,0.05)';
+                                        }}
+                                        onBlur={(e) => {
+                                            e.target.style.borderColor = '#d1d1d1';
+                                            e.target.style.boxShadow = 'none';
+                                        }}
+                                    />
+                                    <span style={{ color: '#999', fontSize: '1rem' }}>/</span>
+                                    <input
+                                        type="text"
+                                        placeholder="YYYY"
+                                        maxLength={4}
+                                        value={formData.eventDate.year}
+                                        onChange={e => {
+                                            const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                                            setFormData(prev => ({
+                                                ...prev,
+                                                eventDate: { ...prev.eventDate, year: value }
+                                            }));
+                                        }}
+                                        style={{
+                                            width: '80px',
+                                            textAlign: 'center',
+                                            padding: '1rem',
+                                            border: '1px solid #d1d1d1',
+                                            borderRadius: '4px',
+                                            fontSize: '1rem',
+                                            outline: 'none',
+                                            transition: 'all 0.2s',
+                                            backgroundColor: 'white',
+                                            color: '#333'
+                                        }}
+                                        onFocus={(e) => {
+                                            e.target.style.borderColor = '#111';
+                                            e.target.style.boxShadow = '0 0 0 2px rgba(0,0,0,0.05)';
+                                        }}
+                                        onBlur={(e) => {
+                                            e.target.style.borderColor = '#d1d1d1';
+                                            e.target.style.boxShadow = 'none';
+                                        }}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className={styles.inputGroup}>
+                                <input
+                                    type="number"
+                                    placeholder="Nombre d'invités"
+                                    value={formData.numberOfGuests}
+                                    onChange={e => setFormData(prev => ({ ...prev, numberOfGuests: e.target.value }))}
+                                    min="1"
+                                    required
+                                />
+                            </div>
+
+                            <div className={styles.inputGroup}>
+                                <input
+                                    type="number"
+                                    placeholder="Budget par personne (€)"
+                                    value={formData.budgetPerPerson}
+                                    onChange={e => setFormData(prev => ({ ...prev, budgetPerPerson: e.target.value }))}
+                                    min="0"
+                                    step="0.01"
+                                    required
+                                />
+                            </div>
+                        </>
+                    )}
 
                     {/* Récapitulatif du panier si motif = commande */}
                     {formData.motif === 'commande' && items.length > 0 && (
