@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { signUp, signIn, authClient } from '@/lib/auth-client';
 import PhoneInput from '@/components/PhoneInput';
+import { useLanguage } from '@/context/LanguageContext';
 import styles from './page.module.css';
 
 interface Address {
@@ -20,6 +21,7 @@ interface Address {
 export default function AccountPage() {
     const { user, logout } = useAuth();
     const router = useRouter();
+    const { t } = useLanguage();
     // État local pour l'affichage des données utilisateur (mis à jour immédiatement)
     const [displayUser, setDisplayUser] = useState(user || null);
     const [isLoginView, setIsLoginView] = useState(true);
@@ -85,10 +87,10 @@ export default function AccountPage() {
                     
                     if (errorMsg.includes('Email not verified') || errorMsg.includes('email not verified')) {
                         setShowResend(true);
-                        throw new Error('Email non vérifié, veuillez consulter votre boîte mail');
+                        throw new Error(t('account.error_email_not_verified'));
                     }
                     if (errorMsg.includes('Invalid email or password') || errorMsg.includes('invalid')) {
-                        throw new Error('Email ou mot de passe invalide');
+                        throw new Error(t('account.error_invalid_credentials'));
                     }
                     throw new Error(errorMsg || 'Erreur de connexion');
                 }
@@ -115,13 +117,13 @@ export default function AccountPage() {
                     const errorMsg = result.error.message || JSON.stringify(result.error);
                     
                     if (errorMsg.includes('User already exists') || errorMsg.includes('already exists')) {
-                        throw new Error('Cet email est déjà utilisé');
+                        throw new Error(t('account.error_user_exists'));
                     }
                     throw new Error(errorMsg || 'Erreur d\'inscription');
                 }
                 
                 setIsLoginView(true);
-                setToastMessage('Compte créé ! Veuillez vérifier vos emails pour valider votre compte avant de vous connecter.');
+                setToastMessage(t('account.account_created'));
                 setShowToast(true);
                 setTimeout(() => setShowToast(false), 5000);
             }
@@ -141,13 +143,13 @@ export default function AccountPage() {
                 email: formData.email,
                 callbackURL: "/compte"
             });
-            if (resendError) throw new Error(resendError.message || "Erreur lors de l'envoi");
-            setToastMessage('Email de vérification renvoyé !');
+            if (resendError) throw new Error(resendError.message || t('common.error'));
+            setToastMessage(t('account.verification_sent'));
             setShowToast(true);
             setTimeout(() => setShowToast(false), 3000);
             setShowResend(false);
         } catch (err: any) {
-            setError(err.message || "Impossible de renvoyer l'email");
+            setError(err.message || t('common.error'));
         } finally {
             setIsResending(false);
         }
@@ -184,7 +186,7 @@ export default function AccountPage() {
             }
 
             setError('');
-            setToastMessage('Email de réinitialisation envoyé !');
+            setToastMessage(t('account.reset_email_sent'));
             setShowToast(true);
             setTimeout(() => {
                 setShowToast(false);
@@ -296,7 +298,7 @@ export default function AccountPage() {
             });
             
             setIsEditing(false);
-            setToastMessage('Informations modifiées !');
+            setToastMessage(t('account.profile_updated'));
             setShowToast(true);
             setTimeout(() => {
                 setShowToast(false);
@@ -349,10 +351,10 @@ export default function AccountPage() {
                 setAddresses(addresses.map(addr => 
                     addr.id === editingAddressId ? data.address : addr
                 ));
-                setToastMessage('Adresse modifiée !');
+                setToastMessage(t('account.address_modified'));
             } else {
                 setAddresses([...addresses, data.address]);
-                setToastMessage('Adresse ajoutée !');
+                setToastMessage(t('account.address_added'));
             }
             
             setAddressFormData({ name: '', address: '', postalCode: '', city: '' });
@@ -368,7 +370,7 @@ export default function AccountPage() {
     };
 
     const handleDeleteAddress = async (addressId: string) => {
-        if (!confirm('Êtes-vous sûr de vouloir supprimer cette adresse ?')) return;
+        if (!confirm(t('account.delete_address_confirm'))) return;
         
         try {
             const response = await fetch(`/api/addresses?id=${addressId}`, {
@@ -381,7 +383,7 @@ export default function AccountPage() {
             }
             
             setAddresses(addresses.filter(addr => addr.id !== addressId));
-            setToastMessage('Adresse supprimée !');
+            setToastMessage(t('account.address_deleted'));
             setShowToast(true);
             setTimeout(() => setShowToast(false), 3000);
         } catch (err: any) {
@@ -399,13 +401,13 @@ export default function AccountPage() {
                         {/* Section Informations personnelles - Gauche */}
                         <div className={styles.personalInfoSection}>
                             <div className={styles.sectionHeader}>
-                                <h2 className={styles.sectionTitle}>Informations personnelles</h2>
+                                <h2 className={styles.sectionTitle}>{t('account.personal_info')}</h2>
                                 {!isEditing && (
                                     <button 
                                         onClick={() => setIsEditing(true)}
                                         className={styles.editButton}
                                     >
-                                        Modifier
+                                        {t('account.edit')}
                                     </button>
                                 )}
                             </div>
@@ -414,7 +416,7 @@ export default function AccountPage() {
                                 <form onSubmit={handleEditProfile} className={styles.editForm}>
                                     <div className={styles.formRow}>
                                         <div className={styles.inputGroup}>
-                                            <label>Prénom</label>
+                                            <label>{t('account.firstname')}</label>
                                             <input
                                                 type="text"
                                                 value={editFormData.firstName}
@@ -423,7 +425,7 @@ export default function AccountPage() {
                                             />
                                         </div>
                                         <div className={styles.inputGroup}>
-                                            <label>Nom</label>
+                                            <label>{t('account.lastname')}</label>
                                             <input
                                                 type="text"
                                                 value={editFormData.lastName}
@@ -434,18 +436,18 @@ export default function AccountPage() {
                                     </div>
                                     
                                     <div className={styles.inputGroup}>
-                                        <label>Email</label>
+                                        <label>{t('account.email')}</label>
                                         <input
                                             type="email"
                                             value={displayUser?.email || user?.email || ''}
                                             disabled
                                             className={styles.editInput}
                                         />
-                                        <small className={styles.inputHint}>L&apos;email ne peut pas être modifié</small>
+                                        <small className={styles.inputHint}>{t('account.email_cannot_edit')}</small>
                                     </div>
                                     
                                     <div className={styles.inputGroup}>
-                                        <label>Téléphone</label>
+                                        <label>{t('account.phone')}</label>
                                         <PhoneInput
                                             value={editFormData.phone}
                                             onChange={(value: string) => setEditFormData({ ...editFormData, phone: value })}
@@ -465,7 +467,7 @@ export default function AccountPage() {
                                     )}
                                     
                                     <div className={styles.inputGroup}>
-                                        <label>Allergies</label>
+                                        <label>{t('account.allergies')}</label>
                                         <div className={styles.allergiesContainer}>
                                             <div className={styles.selectedTags}>
                                                 {editFormData.allergies.split(',').filter(Boolean).map((allergy) => (
@@ -501,7 +503,7 @@ export default function AccountPage() {
                                                 className={styles.select}
                                                 style={{ padding: '0.9rem', width: '100%', backgroundColor: '#fafafa', borderRadius: '4px', border: '1px solid #ddd' }}
                                             >
-                                                <option value="">Ajouter une allergie...</option>
+                                                <option value="">{t('account.add_allergy')}</option>
                                                 {['gluten', 'lactose', 'fruits à coque', 'crustacés', 'sésame']
                                                     .filter(a => !editFormData.allergies.split(',').includes(a))
                                                     .map(opt => (
@@ -522,23 +524,23 @@ export default function AccountPage() {
                                             }}
                                             className={styles.cancelButton}
                                         >
-                                            Annuler
+                                            {t('account.cancel')}
                                         </button>
                                         <button 
                                             type="submit" 
                                             className={styles.saveButton}
                                             disabled={isSubmitting}
                                         >
-                                            {isSubmitting ? 'Enregistrement...' : 'Enregistrer'}
+                                            {isSubmitting ? t('account.saving') : t('account.save')}
                                         </button>
                                     </div>
                                 </form>
                             ) : (
                                 <div className={styles.profileInfo}>
                                     <div className={styles.infoRow}>
-                                        <span className={styles.infoLabel}>Type de compte</span>
+                                        <span className={styles.infoLabel}>{t('account.account_type')}</span>
                                         <span className={styles.infoValue}>
-                                            {(displayUser?.type || user?.type) === 'entreprise' ? 'Professionnel' : 'Particulier'}
+                                            {(displayUser?.type || user?.type) === 'entreprise' ? t('account.professionnel') : t('account.particulier')}
                                         </span>
                                     </div>
                                     {(displayUser?.type || user?.type) === 'entreprise' && (displayUser?.raisonSociale || user?.raisonSociale) && (
@@ -548,7 +550,7 @@ export default function AccountPage() {
                                         </div>
                                     )}
                                     <div className={styles.infoRow}>
-                                        <span className={styles.infoLabel}>Nom complet</span>
+                                        <span className={styles.infoLabel}>{t('account.full_name')}</span>
                                         <span className={styles.infoValue}>
                                             {(displayUser?.firstName || user?.firstName) && (displayUser?.lastName || user?.lastName)
                                                 ? `${displayUser?.firstName || user?.firstName} ${displayUser?.lastName || user?.lastName}`
@@ -556,21 +558,21 @@ export default function AccountPage() {
                                         </span>
                                     </div>
                                     <div className={styles.infoRow}>
-                                        <span className={styles.infoLabel}>Email</span>
+                                        <span className={styles.infoLabel}>{t('account.email')}</span>
                                         <span className={styles.infoValue}>{displayUser?.email || user?.email}</span>
                                     </div>
                                     {(displayUser?.phone || user?.phone) && (
                                         <div className={styles.infoRow}>
-                                            <span className={styles.infoLabel}>Téléphone</span>
+                                            <span className={styles.infoLabel}>{t('account.phone')}</span>
                                             <span className={styles.infoValue}>{displayUser?.phone || user?.phone}</span>
                                         </div>
                                     )}
                                     <div className={styles.infoRow}>
-                                        <span className={styles.infoLabel}>Allergies</span>
+                                        <span className={styles.infoLabel}>{t('account.allergies')}</span>
                                         <span className={styles.infoValue}>
                                             {(displayUser?.allergies || user?.allergies) ? (
                                                 <div className={styles.displayTags}>
-                                                    {(displayUser?.allergies || user?.allergies).split(',').filter(Boolean).map((allergy: string) => (
+                                                    {(displayUser?.allergies || user?.allergies || '').split(',').filter(Boolean).map((allergy: string) => (
                                                         <span key={allergy} className={styles.displayTag}>
                                                             {allergy.charAt(0).toUpperCase() + allergy.slice(1)}
                                                         </span>
@@ -586,19 +588,19 @@ export default function AccountPage() {
                         {/* Section Adresses - Droite */}
                         <div className={styles.addressesSection}>
                             <div className={styles.sectionHeader}>
-                                <h2 className={styles.sectionTitle}>Adresses</h2>
+                                <h2 className={styles.sectionTitle}>{t('account.addresses')}</h2>
                                 <button 
                                     onClick={() => setShowAddressModal(true)}
                                     className={styles.addAddressButton}
                                 >
-                                    + Ajouter une adresse
+                                    {t('account.add_address')}
                                 </button>
                             </div>
                             
                             {isLoadingAddresses ? (
-                                <p className={styles.empty}>Chargement...</p>
+                                <p className={styles.empty}>{t('account.loading_addresses')}</p>
                             ) : addresses.length === 0 ? (
-                                <p className={styles.empty}>Aucune adresse enregistrée</p>
+                                <p className={styles.empty}>{t('account.no_address')}</p>
                             ) : (
                                 <div className={styles.addressesList}>
                                     {addresses.map((address) => (
@@ -636,14 +638,14 @@ export default function AccountPage() {
                     {/* Section Commandes - Pleine largeur */}
                     <div className={styles.premiumCard}>
                         <div className={styles.cardHeader}>
-                            <h2 className={styles.cardTitle}>Commandes</h2>
+                            <h2 className={styles.cardTitle}>{t('account.orders')}</h2>
                         </div>
                         <div className={styles.ordersGallery}>
-                            <p className={styles.empty}>Vous n&apos;avez pas encore passé de commande.</p>
+                            <p className={styles.empty}>{t('account.no_orders')}</p>
                         </div>
                     </div>
 
-                    <button onClick={logout} className={styles.logoutButton}>Se déconnecter</button>
+                    <button onClick={logout} className={styles.logoutButton}>{t('account.logout')}</button>
                 </div>
 
                 {/* Toast Notification */}
@@ -662,7 +664,7 @@ export default function AccountPage() {
                     }}>
                         <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                             <div className={styles.modalHeader}>
-                                <h2>{editingAddressId ? 'Modifier l\'adresse' : 'Ajouter une adresse'}</h2>
+                                <h2>{editingAddressId ? t('account.edit_address') : t('account.add_address_modal')}</h2>
                                 <button 
                                     onClick={() => {
                                         setShowAddressModal(false);
@@ -677,53 +679,53 @@ export default function AccountPage() {
                             
                             <form onSubmit={handleSaveAddress} className={styles.addressForm}>
                                 <div className={styles.inputGroup}>
-                                    <label>Nom de l&apos;adresse</label>
+                                    <label>{t('account.address_name')}</label>
                                     <input
                                         type="text"
                                         required
                                         value={addressFormData.name}
                                         onChange={e => setAddressFormData({ ...addressFormData, name: e.target.value })}
                                         className={styles.modalInput}
-                                        placeholder="Ex: Domicile, Bureau, etc."
+                                        placeholder={t('account.address_name_placeholder')}
                                     />
                                 </div>
                                 
                                 <div className={styles.inputGroup}>
-                                    <label>Adresse</label>
+                                    <label>{t('account.address_street')}</label>
                                     <input
                                         type="text"
                                         required
                                         value={addressFormData.address}
                                         onChange={e => setAddressFormData({ ...addressFormData, address: e.target.value })}
                                         className={styles.modalInput}
-                                        placeholder="Numéro et nom de rue"
+                                        placeholder={t('account.address_street_placeholder')}
                                     />
                                 </div>
                                 
                                 <div className={styles.formRow}>
                                     <div className={styles.inputGroup}>
-                                        <label>Code postal</label>
+                                        <label>{t('account.postal_code')}</label>
                                         <input
                                             type="text"
                                             required
                                             value={addressFormData.postalCode}
                                             onChange={e => setAddressFormData({ ...addressFormData, postalCode: e.target.value })}
                                             className={styles.modalInput}
-                                            placeholder="75001"
+                                            placeholder={t('account.postal_code_placeholder')}
                                         />
-                                    </div>
+                        </div>
                                     <div className={styles.inputGroup}>
-                                        <label>Ville</label>
+                                        <label>{t('account.city')}</label>
                                         <input
                                             type="text"
                                             required
                                             value={addressFormData.city}
                                             onChange={e => setAddressFormData({ ...addressFormData, city: e.target.value })}
                                             className={styles.modalInput}
-                                            placeholder="Paris"
+                                            placeholder={t('account.city_placeholder')}
                                         />
-                                    </div>
-                                </div>
+                        </div>
+                    </div>
                                 
                                 <div className={styles.modalActions}>
                                     <button 
@@ -731,7 +733,7 @@ export default function AccountPage() {
                                         onClick={() => setShowAddressModal(false)}
                                         className={styles.cancelButton}
                                     >
-                                        Annuler
+                                        {t('account.cancel')}
                                     </button>
                                     <button 
                                         type="submit" 
@@ -739,12 +741,12 @@ export default function AccountPage() {
                                         disabled={isSavingAddress}
                                     >
                                         {isSavingAddress 
-                                            ? (editingAddressId ? 'Modification...' : 'Ajout...') 
-                                            : (editingAddressId ? 'Modifier' : 'Ajouter')}
+                                            ? (editingAddressId ? t('account.modifying') : t('account.adding')) 
+                                            : (editingAddressId ? t('account.modify') : t('account.add_address'))}
                                     </button>
                                 </div>
                             </form>
-                        </div>
+                </div>
                     </div>
                 )}
             </div>
@@ -755,7 +757,7 @@ export default function AccountPage() {
         <div className={styles.container}>
             <div className={styles.authBox}>
                 <h1 className={styles.authTitle}>
-                    {isForgotPasswordView ? 'Réinitialiser son mot de passe' : (isLoginView ? 'Connexion' : 'Créer un compte')}
+                    {isForgotPasswordView ? t('account.forgot_password') : (isLoginView ? t('account.login') : t('account.register'))}
                 </h1>
 
                 {isForgotPasswordView ? (
@@ -778,7 +780,7 @@ export default function AccountPage() {
                             </div>
 
                             <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
-                                {isSubmitting ? 'Envoi...' : 'Réinitialiser mon mot de passe'}
+                                {isSubmitting ? t('account.sending') : t('account.reset_password')}
                             </button>
                         </form>
                     </>
@@ -791,36 +793,36 @@ export default function AccountPage() {
                                     className={`${styles.typeButton} ${accountType === 'particulier' ? styles.typeButtonActive : ''}`}
                                     onClick={() => setAccountType('particulier')}
                                 >
-                                    Particulier
+                                    {t('account.particulier')}
                                 </button>
                                 <button 
                                     type="button"
                                     className={`${styles.typeButton} ${accountType === 'entreprise' ? styles.typeButtonActive : ''}`}
                                     onClick={() => setAccountType('entreprise')}
                                 >
-                                    Professionnel
+                                    {t('account.professionnel')}
                                 </button>
                             </div>
                         )}
 
-                        {error && (
-                            <div className={styles.error}>
-                                {error}
-                                {showResend && (
-                                    <div className={styles.resendWrapper}>
+                {error && (
+                    <div className={styles.error}>
+                        {error}
+                        {showResend && (
+                            <div className={styles.resendWrapper}>
                                         <button 
                                             onClick={handleResendEmail} 
                                             className={styles.resendLink}
                                             disabled={isResending}
                                         >
-                                            {isResending ? 'Envoi...' : 'Renvoyer le mail ?'}
+                                            {isResending ? t('account.sending_resend') : t('account.resend_email')}
                                         </button>
-                                    </div>
-                                )}
                             </div>
                         )}
+                    </div>
+                )}
 
-                        <form onSubmit={handleSubmit} className={styles.form}>
+                <form onSubmit={handleSubmit} className={styles.form}>
                     {!isLoginView && (
                         <>
                             {accountType === 'entreprise' && (
@@ -828,7 +830,7 @@ export default function AccountPage() {
                                     <input
                                         type="text"
                                         required
-                                        placeholder="Nom d'entreprise"
+                                        placeholder={t('account.company_name')}
                                         value={formData.raisonSociale}
                                         onChange={e => setFormData({ ...formData, raisonSociale: e.target.value })}
                                     />
@@ -840,7 +842,7 @@ export default function AccountPage() {
                                     <input
                                         type="text"
                                         required
-                                        placeholder={accountType === 'entreprise' ? "Nom (Responsable)" : "Nom"}
+                                        placeholder={accountType === 'entreprise' ? `${t('account.lastname')} (Responsable)` : t('account.lastname')}
                                         value={formData.lastName}
                                         onChange={e => setFormData({ ...formData, lastName: e.target.value })}
                                     />
@@ -849,7 +851,7 @@ export default function AccountPage() {
                                     <input
                                         type="text"
                                         required
-                                        placeholder={accountType === 'entreprise' ? "Prénom (Responsable)" : "Prénom"}
+                                        placeholder={accountType === 'entreprise' ? `${t('account.firstname')} (Responsable)` : t('account.firstname')}
                                         value={formData.firstName}
                                         onChange={e => setFormData({ ...formData, firstName: e.target.value })}
                                     />
@@ -860,7 +862,7 @@ export default function AccountPage() {
                                 <input
                                     type="email"
                                     required
-                                    placeholder="Email"
+                                    placeholder={t('account.email')}
                                     value={formData.email}
                                     onChange={e => setFormData({ ...formData, email: e.target.value })}
                                 />
@@ -870,7 +872,7 @@ export default function AccountPage() {
                                 <PhoneInput
                                     value={formData.phone}
                                     onChange={(value: string) => setFormData({ ...formData, phone: value })}
-                                    placeholder="Téléphone (Optionnel)"
+                                    placeholder={t('account.phone')}
                                 />
                             </div>
 
@@ -878,7 +880,7 @@ export default function AccountPage() {
                                 <input
                                     type="password"
                                     required
-                                    placeholder="Mot de passe"
+                                    placeholder={t('account.password')}
                                     value={formData.password}
                                     onChange={e => setFormData({ ...formData, password: e.target.value })}
                                 />
@@ -892,7 +894,7 @@ export default function AccountPage() {
                                 <input
                                     type="email"
                                     required
-                                    placeholder="Email"
+                                    placeholder={t('account.email')}
                                     value={formData.email}
                                     onChange={e => setFormData({ ...formData, email: e.target.value })}
                                 />
@@ -902,7 +904,7 @@ export default function AccountPage() {
                                 <input
                                     type="password"
                                     required
-                                    placeholder="Mot de passe"
+                                    placeholder={t('account.password')}
                                     value={formData.password}
                                     onChange={e => setFormData({ ...formData, password: e.target.value })}
                                 />
@@ -911,9 +913,9 @@ export default function AccountPage() {
                     )}
 
                             <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
-                                {isSubmitting ? 'Chargement...' : (isLoginView ? 'Se connecter' : "S'inscrire")}
+                                {isSubmitting ? t('account.loading') : (isLoginView ? t('account.submit_login') : t('account.submit_register'))}
                             </button>
-                        </form>
+                </form>
                     </>
                 )}
 
@@ -929,7 +931,7 @@ export default function AccountPage() {
                                     }}
                                     className={styles.toggleLink}
                                 >
-                                    Mot de passe oublié
+                                    {t('account.forgot_password')}
                                 </button>
                             </div>
                         )}
@@ -943,7 +945,7 @@ export default function AccountPage() {
                                 }}
                                 className={styles.toggleLink}
                             >
-                                {isLoginView ? "Besoin d'un compte ? S'inscrire" : "Déjà membre ? Se connecter"}
+                                {isLoginView ? t('account.need_account') : t('account.already_member')}
                             </button>
                         </div>
                     </>
@@ -960,7 +962,7 @@ export default function AccountPage() {
                             }}
                             className={styles.toggleLink}
                         >
-                            Retour à la connexion
+                            {t('account.back_to_login')}
                         </button>
                     </div>
                 )}

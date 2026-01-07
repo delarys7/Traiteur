@@ -1,22 +1,23 @@
 "use client";
 
 import { useCart } from '@/context/CartContext';
+import { useLanguage } from '@/context/LanguageContext';
 import styles from './page.module.css';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function CartPage() {
     const { items, removeFromCart, updateQuantity, total } = useCart();
-
+    const { t } = useLanguage();
     const router = useRouter();
 
     if (items.length === 0) {
         return (
             <div className={styles.emptyContainer}>
-                <h1 className={styles.title}>Votre Panier</h1>
-                <p className={styles.emptyText}>Votre panier est actuellement vide.</p>
+                <h1 className={styles.title}>{t('cart.title')}</h1>
+                <p className={styles.emptyText}>{t('cart.empty')}</p>
                 <Link href="/traiteur" className={styles.continueButton}>
-                    Découvrir nos créations
+                    {t('cart.discover')}
                 </Link>
             </div>
         );
@@ -24,17 +25,17 @@ export default function CartPage() {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>Votre Sélection</h1>
+            <h1 className={styles.title}>{t('cart.selection')}</h1>
 
             <div className={styles.grid}>
                 <div className={styles.itemList}>
                     {/* Grouping and Sorting Logic */}
                     {(() => {
                         const groups = {
-                            'Buffets': items.filter(i => i.category?.toLowerCase() === 'buffet'),
-                            'Plateaux Repas': items.filter(i => i.category?.toLowerCase() === 'plateau'),
-                            'Pièces Cocktails': items.filter(i => i.category?.toLowerCase() === 'cocktail'),
-                            'Autres': items.filter(i => !['buffet', 'plateau', 'cocktail'].includes(i.category?.toLowerCase() || ''))
+                            [t('cart.groups.buffets')]: items.filter(i => i.category?.toLowerCase() === 'buffet'),
+                            [t('cart.groups.plateaux')]: items.filter(i => i.category?.toLowerCase() === 'plateau'),
+                            [t('cart.groups.cocktails')]: items.filter(i => i.category?.toLowerCase() === 'cocktail'),
+                            [t('cart.groups.autres')]: items.filter(i => !['buffet', 'plateau', 'cocktail'].includes(i.category?.toLowerCase() || ''))
                         };
 
                         return Object.entries(groups).map(([groupName, groupItems]) => {
@@ -80,7 +81,7 @@ export default function CartPage() {
                                                     className={styles.removeButton}
                                                     onClick={() => removeFromCart(item.id)}
                                                 >
-                                                    Retirer
+                                                    {t('cart.remove')}
                                                 </button>
                                             </div>
                                         </div>
@@ -92,24 +93,24 @@ export default function CartPage() {
                 </div>
 
                 <div className={styles.summary}>
-                    <h2 className={styles.summaryTitle}>Récapitulatif</h2>
+                    <h2 className={styles.summaryTitle}>{t('cart.summary')}</h2>
                     <div className={styles.summaryRow}>
-                        <span>Sous-total</span>
+                        <span>{t('cart.subtotal')}</span>
                         <span>{total.toFixed(2)}€</span>
                     </div>
                     <div className={styles.summaryRow}>
-                        <span>Livraison</span>
-                        <span>Calculé à l&apos;étape suivante</span>
+                        <span>{t('cart.delivery')}</span>
+                        <span>{t('cart.delivery_note')}</span>
                     </div>
                     <div className={`${styles.summaryRow} ${styles.total}`}>
-                        <span>Total</span>
+                        <span>{t('cart.total')}</span>
                         <span>{total.toFixed(2)}€</span>
                     </div>
                     <button 
                         className={styles.checkoutButton} 
                         onClick={() => router.push('/contact?from=cart')}
                     >
-                        Commander
+                        {t('cart.checkout')}
                     </button>
                 </div>
             </div>

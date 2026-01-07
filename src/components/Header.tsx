@@ -162,9 +162,9 @@ export default function Header() {
                                 {t('header.caterer')}
                             </a>
                             <div className={styles.dropdown}>
-                                <Link href="/traiteur?category=buffet" className={styles.dropdownLink}>Buffets</Link>
-                                <Link href="/traiteur?category=plateau" className={styles.dropdownLink}>Plateaux repas</Link>
-                                <Link href="/traiteur?category=cocktail" className={styles.dropdownLink}>Pièces cocktails</Link>
+                                <Link href="/traiteur?category=buffet" className={styles.dropdownLink}>{t('header.dropdown.buffets')}</Link>
+                                <Link href="/traiteur?category=plateau" className={styles.dropdownLink}>{t('header.dropdown.plateaux')}</Link>
+                                <Link href="/traiteur?category=cocktail" className={styles.dropdownLink}>{t('header.dropdown.cocktails')}</Link>
                             </div>
                         </div>
                         <div className={styles.navItem}>
@@ -177,10 +177,10 @@ export default function Header() {
                                 {t('header.services')}
                             </a>
                             <div className={styles.dropdown}>
-                                <Link href="/prestations/grands-evenements" className={styles.dropdownLink}>Grands événements</Link>
-                                <Link href="/prestations/reception-entreprise" className={styles.dropdownLink}>Réception d&apos;entreprise</Link>
-                                <Link href="/prestations/consulting" className={styles.dropdownLink}>Consulting</Link>
-                                <Link href="/prestations/chef-a-domicile" className={styles.dropdownLink}>Chef à domicile</Link>
+                                <Link href="/prestations/grands-evenements" className={styles.dropdownLink}>{t('header.dropdown.grands_evenements')}</Link>
+                                <Link href="/prestations/reception-entreprise" className={styles.dropdownLink}>{t('header.dropdown.reception_entreprise')}</Link>
+                                <Link href="/prestations/consulting" className={styles.dropdownLink}>{t('header.dropdown.consulting')}</Link>
+                                <Link href="/prestations/chef-a-domicile" className={styles.dropdownLink}>{t('header.dropdown.chef_domicile')}</Link>
                             </div>
                         </div>
                         <div className={styles.navItem}>
@@ -193,9 +193,9 @@ export default function Header() {
                                 {t('header.concept')}
                             </a>
                             <div className={styles.dropdown}>
-                                <Link href="/a-propos/histoire" className={styles.dropdownLink}>Notre Histoire</Link>
-                                <Link href="/a-propos/equipe" className={styles.dropdownLink}>L&apos;Équipe</Link>
-                                <Link href="/a-propos/collaborations" className={styles.dropdownLink}>Collaborations</Link>
+                                <Link href="/a-propos/histoire" className={styles.dropdownLink}>{t('header.dropdown.histoire')}</Link>
+                                <Link href="/a-propos/equipe" className={styles.dropdownLink}>{t('header.dropdown.equipe')}</Link>
+                                <Link href="/a-propos/collaborations" className={styles.dropdownLink}>{t('header.dropdown.collaborations')}</Link>
                             </div>
                         </div>
                         <Link href="/contact" className={styles.link}>{t('header.contact')}</Link>
@@ -209,7 +209,7 @@ export default function Header() {
                     <button 
                         className={styles.closeButton} 
                         onClick={() => setIsMenuOpen(false)}
-                        aria-label="Fermer le menu"
+                        aria-label={t('header.close_menu')}
                     >
                         <div className={`${styles.burgerIcon} ${styles.burgerActive}`}>
                             <span></span>
@@ -222,24 +222,24 @@ export default function Header() {
                         
                         <div className={styles.mobileCategory}>
                             <div className={styles.mobileCategoryTitle}>{t('header.caterer')}</div>
-                            <Link href="/traiteur?category=buffet" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Buffets</Link>
-                            <Link href="/traiteur?category=plateau" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Plateaux repas</Link>
-                            <Link href="/traiteur?category=cocktail" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Pièces cocktails</Link>
+                            <Link href="/traiteur?category=buffet" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.buffets')}</Link>
+                            <Link href="/traiteur?category=plateau" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.plateaux')}</Link>
+                            <Link href="/traiteur?category=cocktail" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.cocktails')}</Link>
                         </div>
 
                         <div className={styles.mobileCategory}>
                             <div className={styles.mobileCategoryTitle}>{t('header.services')}</div>
-                            <Link href="/prestations/grands-evenements" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Grands événements</Link>
-                            <Link href="/prestations/reception-entreprise" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Réception d&apos;entreprise</Link>
-                            <Link href="/prestations/consulting" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Consulting</Link>
-                            <Link href="/prestations/chef-a-domicile" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Chef à domicile</Link>
+                            <Link href="/prestations/grands-evenements" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.grands_evenements')}</Link>
+                            <Link href="/prestations/reception-entreprise" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.reception_entreprise')}</Link>
+                            <Link href="/prestations/consulting" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.consulting')}</Link>
+                            <Link href="/prestations/chef-a-domicile" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.chef_domicile')}</Link>
                         </div>
                         
                         <div className={styles.mobileCategory}>
                             <div className={styles.mobileCategoryTitle}>{t('header.concept')}</div>
-                            <Link href="/a-propos/histoire" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Notre Histoire</Link>
-                            <Link href="/a-propos/equipe" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>L&apos;Équipe</Link>
-                            <Link href="/a-propos/collaborations" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Collaborations</Link>
+                            <Link href="/a-propos/histoire" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.histoire')}</Link>
+                            <Link href="/a-propos/equipe" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.equipe')}</Link>
+                            <Link href="/a-propos/collaborations" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.collaborations')}</Link>
                         </div>
 
                         <Link href="/contact" className={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>{t('header.contact')}</Link>

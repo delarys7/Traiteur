@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signOut } from '@/lib/auth-client';
+import { useLanguage } from '@/context/LanguageContext';
 import styles from '../compte/page.module.css';
 
 export default function ResetPasswordPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const { t } = useLanguage();
     const token = searchParams.get('token');
     
     const [password, setPassword] = useState('');
@@ -20,7 +22,7 @@ export default function ResetPasswordPage() {
     // Vérifier que le token est présent et valide au chargement
     useEffect(() => {
         if (!token) {
-            setError('Token de réinitialisation manquant');
+            setError(t('reset_password.error_missing_token'));
             setIsValidating(false);
             return;
         }
@@ -45,7 +47,7 @@ export default function ResetPasswordPage() {
             if (data.valid) {
                 setIsValidToken(true);
             } else {
-                setError(data.error || 'Token invalide ou expiré');
+                setError(data.error || t('reset_password.error_invalid_token'));
             }
         })
         .catch((err) => {
@@ -63,12 +65,12 @@ export default function ResetPasswordPage() {
 
         // Validation
         if (!password || password.length < 6) {
-            setError('Le mot de passe doit contenir au moins 6 caractères');
+            setError(t('reset_password.error_password_length'));
             return;
         }
 
         if (password !== confirmPassword) {
-            setError('Les mots de passe ne correspondent pas');
+            setError(t('reset_password.error_password_match'));
             return;
         }
 
@@ -123,7 +125,7 @@ export default function ResetPasswordPage() {
         return (
             <div className={styles.container}>
                 <div className={styles.authBox}>
-                    <h1 className={styles.authTitle}>Vérification du token...</h1>
+                    <h1 className={styles.authTitle}>{t('reset_password.verifying')}</h1>
                 </div>
             </div>
         );
@@ -133,7 +135,7 @@ export default function ResetPasswordPage() {
         return (
             <div className={styles.container}>
                 <div className={styles.authBox}>
-                    <h1 className={styles.authTitle}>Réinitialisation du mot de passe</h1>
+                    <h1 className={styles.authTitle}>{t('reset_password.title')}</h1>
                     {error && (
                         <div className={styles.error}>
                             {error}
@@ -143,7 +145,7 @@ export default function ResetPasswordPage() {
                         onClick={() => router.push('/compte')}
                         className={styles.submitButton}
                     >
-                        Retour à la connexion
+                        {t('reset_password.back_to_login')}
                     </button>
                 </div>
             </div>
@@ -153,7 +155,7 @@ export default function ResetPasswordPage() {
     return (
         <div className={styles.container}>
             <div className={styles.authBox}>
-                <h1 className={styles.authTitle}>Réinitialiser son mot de passe</h1>
+                <h1 className={styles.authTitle}>{t('reset_password.title')}</h1>
 
                 {error && (
                     <div className={styles.error}>
@@ -166,7 +168,7 @@ export default function ResetPasswordPage() {
                         <input
                             type="password"
                             required
-                            placeholder="Nouveau mot de passe"
+                            placeholder={t('reset_password.new_password')}
                             value={password}
                             onChange={e => setPassword(e.target.value)}
                             minLength={6}
@@ -177,7 +179,7 @@ export default function ResetPasswordPage() {
                         <input
                             type="password"
                             required
-                            placeholder="Confirmer le mot de passe"
+                            placeholder={t('reset_password.confirm_password')}
                             value={confirmPassword}
                             onChange={e => setConfirmPassword(e.target.value)}
                             minLength={6}
@@ -185,7 +187,7 @@ export default function ResetPasswordPage() {
                     </div>
 
                     <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
-                        {isSubmitting ? 'Traitement...' : 'Confirmer la réinitialisation'}
+                        {isSubmitting ? t('reset_password.processing') : t('reset_password.submit')}
                     </button>
                 </form>
             </div>

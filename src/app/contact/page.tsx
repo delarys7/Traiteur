@@ -205,7 +205,7 @@ export default function Contact() {
         return (
             <div className={styles.container}>
                 <div className={styles.authBox}>
-                    <h1 className={styles.authTitle}>Chargement...</h1>
+                    <h1 className={styles.authTitle}>{t('contact.loading')}</h1>
                 </div>
             </div>
         );
@@ -234,8 +234,8 @@ export default function Contact() {
                         color: '#8a6d3b',
                         fontSize: '0.9rem',
                         textAlign: 'center'
-                    }}>
-                        ⚠️ Vous devez être connecté pour envoyer un message. <a href="/compte" style={{ color: '#8a6d3b', textDecoration: 'underline' }}>Se connecter</a>
+                    }}                    >
+                        ⚠️ {t('contact.must_login')} <a href="/compte" style={{ color: '#8a6d3b', textDecoration: 'underline' }}>{t('contact.login_link')}</a>
                     </div>
                 )}
 
@@ -348,7 +348,7 @@ export default function Contact() {
                                 className={styles.select}
                                 disabled={isLoadingAddresses}
                             >
-                                <option value="">Sélectionner une adresse</option>
+                                <option value="">{t('contact.select_address')}</option>
                                 {addresses.map((address) => (
                                     <option key={address.id} value={address.id}>
                                         {address.name} - {address.address}, {address.postalCode} {address.city}
@@ -357,7 +357,7 @@ export default function Contact() {
                             </select>
                             {addresses.length === 0 && !isLoadingAddresses && (
                                 <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.5rem' }}>
-                                    Aucune adresse enregistrée. <a href="/compte" style={{ color: '#111', textDecoration: 'underline' }}>Ajouter une adresse</a>
+                                    {t('contact.no_address')} <a href="/compte" style={{ color: '#111', textDecoration: 'underline' }}>{t('contact.add_address')}</a>
                                 </p>
                             )}
                         </div>
@@ -374,7 +374,7 @@ export default function Contact() {
                                     display: 'block',
                                     color: '#333'
                                 }}>
-                                    Date de l'événement
+                                    {t('contact.event_date')}
                                 </label>
                                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                                     <input
@@ -541,7 +541,7 @@ export default function Contact() {
                                             {/* Manual Address Fields */}
                                             <input
                                                 type="text"
-                                                placeholder="Adresse (Numéro et voie)"
+                                                placeholder={t('contact.address_street')}
                                                 value={formData.manualAddress}
                                                 onChange={e => setFormData(prev => ({ ...prev, manualAddress: e.target.value }))}
                                                 className={styles.input}
@@ -550,7 +550,7 @@ export default function Contact() {
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1rem' }}>
                                                 <input
                                                     type="text"
-                                                    placeholder="Code Postal"
+                                                    placeholder={t('contact.postal_code')}
                                                     value={formData.manualPostalCode}
                                                     onChange={e => setFormData(prev => ({ ...prev, manualPostalCode: e.target.value }))}
                                                     className={styles.input}
@@ -558,7 +558,7 @@ export default function Contact() {
                                                 />
                                                 <input
                                                     type="text"
-                                                    placeholder="Ville"
+                                                    placeholder={t('contact.city')}
                                                     value={formData.manualCity}
                                                     onChange={e => setFormData(prev => ({ ...prev, manualCity: e.target.value }))}
                                                     className={styles.input}
@@ -585,7 +585,7 @@ export default function Contact() {
                                     )}
                                     {addresses.length === 0 && !isLoadingAddresses && (
                                         <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.5rem' }}>
-                                            Aucune adresse enregistrée. <a href="/compte" style={{ color: '#111', textDecoration: 'underline' }}>Ajouter une adresse</a>
+                                            {t('contact.no_address')} <a href="/compte" style={{ color: '#111', textDecoration: 'underline' }}>{t('contact.add_address')}</a>
                                         </p>
                                     )}
                                 </div>
@@ -624,13 +624,13 @@ export default function Contact() {
                             <label style={{ 
                                 fontSize: '0.9rem', 
                                 fontWeight: '500', 
-                                marginBottom: '0.5rem',
+                                marginTop: '0.5rem',
                                 display: 'block',
                                 color: '#333',
                                 textTransform: 'uppercase',
                                 letterSpacing: '0.05em'
                             }}>
-                                Produits
+                                {t('contact.products')}
                             </label>
                             <div style={{
                                 backgroundColor: '#fcfcfc',
@@ -696,7 +696,7 @@ export default function Contact() {
                                                                         }}
                                                                         onMouseOver={(e) => e.currentTarget.style.color = '#ff4d4d'}
                                                                         onMouseOut={(e) => e.currentTarget.style.color = '#999'}
-                                                                        title="Retirer du panier"
+                                                                        title={t('contact.remove_from_cart')}
                                                                     >
                                                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                                                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -721,7 +721,7 @@ export default function Contact() {
                                     fontWeight: '600',
                                     fontSize: '0.95rem'
                                 }}>
-                                    <span>Total</span>
+                                    <span>{t('contact.total')}</span>
                                     <span>{total.toFixed(2)} €</span>
                                 </div>
                             </div>
@@ -745,7 +745,7 @@ export default function Contact() {
                         className={styles.submitButton} 
                         disabled={isSubmitting || !user}
                     >
-                        {isSubmitting ? 'Envoi...' : !user ? 'Connectez-vous pour envoyer' : t('contact.submit')}
+                        {isSubmitting ? t('contact.sending') : !user ? t('contact.connect_to_send') : t('contact.submit')}
                     </button>
                 </form>
             </div>

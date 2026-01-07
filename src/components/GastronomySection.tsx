@@ -2,9 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { useLanguage } from '@/context/LanguageContext';
 import styles from './GastronomySection.module.css';
 
 export default function GastronomySection() {
+    const { t } = useLanguage();
     const sectionRef = useRef<HTMLElement>(null);
     const [isVisible, setIsVisible] = useState(false);
     const [imagesVisible, setImagesVisible] = useState(false);
@@ -89,7 +91,7 @@ export default function GastronomySection() {
 
             <div className={styles.descriptionBox}>
                 <p className={`${styles.descText} ${imagesVisible ? styles.descVisible : ''}`}>
-                    L&apos;excellence n&apos;est pas une option, c&apos;est notre héritage. Chaque ingrédient est sélectionné avec une rigueur absolue, chaque geste est une quête de perfection pour transformer vos réceptions en moments de pur enchantement.
+                    {t('home.gastronomy_text')}
                 </p>
             </div>
         </section>

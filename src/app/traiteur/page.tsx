@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
+import { useLanguage } from '@/context/LanguageContext';
 import styles from './page.module.css';
 
 interface Product {
@@ -21,6 +22,7 @@ interface Product {
 function TraiteurContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
+    const { t } = useLanguage();
 
     const activeTab = searchParams.get('category') || 'buffet';
     const activeSubTab = searchParams.get('subcategory') || 'standard';
@@ -104,12 +106,12 @@ function TraiteurContent() {
 
     const getTitle = () => {
         switch (activeTab) {
-            case 'buffet': return 'Buffets & Banquets';
-            case 'plateau': return 'Plateaux Repas';
+            case 'buffet': return t('traiteur.title_buffets');
+            case 'plateau': return t('traiteur.title_plateaux');
             case 'cocktail':
                 const sub = activeSubTab.charAt(0).toUpperCase() + activeSubTab.slice(1);
-                return `Pièces Cocktails ${sub}`;
-            default: return 'Traiteur';
+                return `${t('traiteur.title_cocktails')} ${sub}`;
+            default: return t('header.caterer');
         }
     };
 
@@ -118,12 +120,12 @@ function TraiteurContent() {
             <div className={styles.pageHeader}>
                 <div className={styles.titleGroup}>
                     <h1 className={styles.pageTitle}>{getTitle()}</h1>
-                    <span className={styles.resultCount}>({filteredProducts.length} résultats)</span>
+                    <span className={styles.resultCount}>({filteredProducts.length} {t('traiteur.results')})</span>
                 </div>
                 
                 <div className={styles.filterBar}>
                     <div className={styles.filtersLeft}>
-                        <span className={styles.filterLabel}>Filtrer par :</span>
+                        <span className={styles.filterLabel}>{t('traiteur.filter_by')}</span>
                         
                         {/* Price Filter */}
                         <div className={styles.filterItem} ref={pricePopupRef}>
@@ -131,21 +133,21 @@ function TraiteurContent() {
                                 className={`${styles.filterButton} ${ (priceMin || priceMax) ? styles.activeFilter : ''}`}
                                 onClick={() => setShowPricePopup(!showPricePopup)}
                             >
-                                Prix {(priceMin || priceMax) ? `(${priceMin || '0'}€ - ${priceMax || '∞'}€)` : ''}
+                                {t('traiteur.price')} {(priceMin || priceMax) ? `(${priceMin || '0'}€ - ${priceMax || '∞'}€)` : ''}
                             </button>
                             {showPricePopup && (
                                 <div className={styles.pricePopup}>
                                     <div className={styles.priceInputGroup}>
                                         <input 
                                             type="number" 
-                                            placeholder="Min €" 
+                                            placeholder={t('traiteur.min_price')} 
                                             value={priceMin} 
                                             onChange={(e) => setPriceMin(e.target.value)}
                                             className={styles.priceInput}
                                         />
                                         <input 
                                             type="number" 
-                                            placeholder="Max €" 
+                                            placeholder={t('traiteur.max_price')} 
                                             value={priceMax} 
                                             onChange={(e) => setPriceMax(e.target.value)}
                                             className={styles.priceInput}
@@ -155,7 +157,7 @@ function TraiteurContent() {
                                         className={styles.clearButton}
                                         onClick={() => { setPriceMin(''); setPriceMax(''); }}
                                     >
-                                        Effacer
+                                        {t('traiteur.clear')}
                                     </button>
                                 </div>
                             )}
@@ -167,7 +169,7 @@ function TraiteurContent() {
                             value={selectedCuisine}
                             onChange={(e) => setSelectedCuisine(e.target.value)}
                         >
-                            <option value="all">Cuisine</option>
+                            <option value="all">{t('traiteur.cuisine')}</option>
                             {cuisineOptions.map(opt => <option key={opt} value={opt}>{opt.charAt(0).toUpperCase() + opt.slice(1)}</option>)}
                         </select>
 
@@ -177,7 +179,7 @@ function TraiteurContent() {
                             value={selectedDietary}
                             onChange={(e) => setSelectedDietary(e.target.value)}
                         >
-                            <option value="all">Régime</option>
+                            <option value="all">{t('traiteur.dietary')}</option>
                             {dietaryOptions.map(opt => <option key={opt} value={opt}>{opt.charAt(0).toUpperCase() + opt.slice(1)}</option>)}
                         </select>
 
@@ -187,7 +189,7 @@ function TraiteurContent() {
                             value={selectedAllergy}
                             onChange={(e) => setSelectedAllergy(e.target.value)}
                         >
-                            <option value="all">Allergies</option>
+                            <option value="all">{t('traiteur.allergies')}</option>
                             {allergyOptions.map(opt => <option key={opt} value={opt}>{opt.charAt(0).toUpperCase() + opt.slice(1)}</option>)}
                         </select>
                     </div>
@@ -202,13 +204,13 @@ function TraiteurContent() {
                             setSelectedAllergy('all');
                         }}
                     >
-                        Réinitialiser
+                        {t('traiteur.reset')}
                     </button>
                 </div>
             </div>
 
             {loading ? (
-                <div className={styles.loading}>Chargement des mets d&apos;exception...</div>
+                <div className={styles.loading}>{t('traiteur.loading')}</div>
             ) : (
                 <div className={styles.grid}>
                     {filteredProducts.map((product) => (
@@ -216,7 +218,7 @@ function TraiteurContent() {
                     ))}
                     {filteredProducts.length === 0 && (
                         <div className={styles.emptyContainer}>
-                            <p className={styles.empty}>Aucun produit ne correspond à vos critères d&apos;exception.</p>
+                            <p className={styles.empty}>{t('traiteur.no_results')}</p>
                             <button 
                                 className={styles.clearAllButton}
                                 onClick={() => {
@@ -227,7 +229,7 @@ function TraiteurContent() {
                                     setSelectedAllergy('all');
                                 }}
                             >
-                                Voir toute la collection
+                                {t('traiteur.see_all')}
                             </button>
                         </div>
                     )}
