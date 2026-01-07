@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
-        const { firstName, lastName, entreprise, email, phone, motif, message, selectedAddress, eventDate, numberOfGuests, budgetPerPerson, cartItems, cartTotal } = body;
+        const { firstName, lastName, entreprise, email, phone, motif, message, selectedAddress, manualAddress, manualPostalCode, manualCity, eventDate, numberOfGuests, budgetPerPerson, cartItems, cartTotal } = body;
 
         if (!firstName || !lastName || !email || !motif || !message) {
             return NextResponse.json(
@@ -45,16 +45,25 @@ export async function POST(request: NextRequest) {
             <p><strong>Motif:</strong> ${getMotifLabel(motif)}</p>
         `;
 
-        // Ajouter l'adresse sélectionnée si c'est une commande
-        if (motif === 'commande' && selectedAddress) {
-            // Récupérer les détails de l'adresse depuis la base de données
-            const address = db.prepare('SELECT * FROM addresses WHERE id = ?').get(selectedAddress) as any;
-            if (address) {
+        // Ajouter l'adresse (soit depuis la DB, soit manuelle)
+        if (motif === 'commande' || motif === 'collaboration-entreprise' || motif === 'collaboration-particulier') {
+            if (selectedAddress) {
+                // Récupérer les détails de l'adresse depuis la base de données
+                const address = db.prepare('SELECT * FROM addresses WHERE id = ?').get(selectedAddress) as any;
+                if (address) {
+                    emailContent += `
+                        <h3>Adresse de l'événement / livraison:</h3>
+                        <p>${address.name}<br>
+                        ${address.address}<br>
+                        ${address.postalCode} ${address.city}</p>
+                    `;
+                }
+            } else if (manualAddress) {
+                // Utiliser l'adresse saisie manuellement
                 emailContent += `
-                    <h3>Adresse de livraison:</h3>
-                    <p>${address.name}<br>
-                    ${address.address}<br>
-                    ${address.postalCode} ${address.city}</p>
+                    <h3>Adresse de l'événement / livraison (Saisie manuelle):</h3>
+                    <p>${manualAddress}<br>
+                    ${manualPostalCode} ${manualCity}</p>
                 `;
             }
         }

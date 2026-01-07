@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
 import PhoneInput from '@/components/PhoneInput';
 import styles from '../compte/page.module.css';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface Address {
     id: string;
@@ -17,6 +18,7 @@ interface Address {
 }
 
 export default function Contact() {
+    const { t } = useLanguage();
     const { user, isLoading } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -33,8 +35,12 @@ export default function Contact() {
         selectedAddress: '',
         eventDate: { day: '', month: '', year: '' },
         budgetPerPerson: '',
-        numberOfGuests: ''
+        numberOfGuests: '',
+        manualAddress: '',
+        manualPostalCode: '',
+        manualCity: ''
     });
+    const [isManualAddress, setIsManualAddress] = useState(false);
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [isLoadingAddresses, setIsLoadingAddresses] = useState(false);
     const [error, setError] = useState('');
@@ -146,6 +152,9 @@ export default function Contact() {
                     motif: formData.motif,
                     message: formData.message,
                     selectedAddress: (formData.motif === 'commande' || isCollaboration) ? formData.selectedAddress : null,
+                    manualAddress: isManualAddress ? formData.manualAddress : null,
+                    manualPostalCode: isManualAddress ? formData.manualPostalCode : null,
+                    manualCity: isManualAddress ? formData.manualCity : null,
                     eventDate: (isCollaboration) 
                         ? `${formData.eventDate.year}-${formData.eventDate.month.padStart(2, '0')}-${formData.eventDate.day.padStart(2, '0')}`
                         : null,
@@ -207,7 +216,7 @@ export default function Contact() {
     return (
         <div className={styles.container}>
             <div className={styles.authBox}>
-                <h1 className={styles.authTitle}>Contact</h1>
+                <h1 className={styles.authTitle}>{t('contact.title')}</h1>
 
                 {error && (
                     <div className={styles.error} style={{ marginBottom: '1rem' }}>
@@ -242,7 +251,7 @@ export default function Contact() {
                                         type="text"
                                         value={formData.company}
                                         onChange={e => setFormData({ ...formData, company: e.target.value })}
-                                        placeholder="Entreprise"
+                                        placeholder={t('contact.company')}
                                     />
                                 </div>
                             )}
@@ -254,7 +263,7 @@ export default function Contact() {
                                         type="text"
                                         value={formData.firstName}
                                         onChange={e => setFormData({ ...formData, firstName: e.target.value })}
-                                        placeholder="Prénom"
+                                        placeholder={t('contact.firstname')}
                                     />
                                 </div>
                                 <div className={styles.inputGroup}>
@@ -262,7 +271,7 @@ export default function Contact() {
                                         type="text"
                                         value={formData.lastName}
                                         onChange={e => setFormData({ ...formData, lastName: e.target.value })}
-                                        placeholder="Nom"
+                                        placeholder={t('contact.lastname')}
                                     />
                                 </div>
                             </div>
@@ -272,7 +281,7 @@ export default function Contact() {
                                     type="email"
                                     value={formData.email}
                                     onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                    placeholder="Email"
+                                    placeholder={t('contact.email')}
                                 />
                             </div>
                         </>
@@ -283,14 +292,14 @@ export default function Contact() {
                                 <div className={styles.inputGroup}>
                                     <input
                                         type="text"
-                                        placeholder="Prénom"
+                                        placeholder={t('contact.firstname')}
                                         disabled
                                     />
                                 </div>
                                 <div className={styles.inputGroup}>
                                     <input
                                         type="text"
-                                        placeholder="Nom"
+                                        placeholder={t('contact.lastname')}
                                         disabled
                                     />
                                 </div>
@@ -310,7 +319,7 @@ export default function Contact() {
                         <PhoneInput
                             value={formData.phone}
                             onChange={(value) => setFormData(prev => ({ ...prev, phone: value }))}
-                            placeholder="Téléphone (optionnel)"
+                            placeholder={t('contact.phone')}
                         />
                     </div>
 
@@ -322,11 +331,11 @@ export default function Contact() {
                             required
                             className={styles.select}
                         >
-                            <option value="">Sélectionner un motif</option>
-                            <option value="commande">Commande / Devis</option>
-                            <option value="collaboration-entreprise">Collaboration - Entreprise</option>
-                            <option value="collaboration-particulier">Collaboration - Particulier</option>
-                            <option value="autre">Autre (renseignements, etc.)</option>
+                            <option value="">{t('contact.reason')}</option>
+                            <option value="commande">{t('contact.reasons.order')}</option>
+                            <option value="collaboration-entreprise">{t('contact.reasons.collab_company')}</option>
+                            <option value="collaboration-particulier">{t('contact.reasons.collab_individual')}</option>
+                            <option value="autre">{t('contact.reasons.other')}</option>
                         </select>
                     </div>
 
@@ -476,8 +485,11 @@ export default function Contact() {
                                 </div>
                             </div>
 
-                            {/* Adresse de l'événement pour les collaborations */}
-                            {user && (
+                        </>
+                    )}
+
+                    {/* Adresse de l'événement / Leiu de livraison */}
+                    {(isCollaboration || formData.motif === 'commande') && user && (
                                 <div className={styles.inputGroup}>
                                     <label style={{ 
                                         fontSize: '0.9rem', 
@@ -486,21 +498,91 @@ export default function Contact() {
                                         display: 'block',
                                         color: '#333'
                                     }}>
-                                        Adresse de l'événement
+                                        {t('contact.address')}
                                     </label>
-                                    <select
-                                        value={formData.selectedAddress}
-                                        onChange={e => setFormData(prev => ({ ...prev, selectedAddress: e.target.value }))}
-                                        className={styles.select}
-                                        disabled={isLoadingAddresses}
-                                    >
-                                        <option value="">Sélectionner une adresse</option>
-                                        {addresses.map((address) => (
-                                            <option key={address.id} value={address.id}>
-                                                {address.name} - {address.address}, {address.postalCode} {address.city}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    {/* Toggle between Dropdown and Manual Entry */}
+                                    {!isManualAddress ? (
+                                        <>
+                                            <select
+                                                value={formData.selectedAddress}
+                                                onChange={e => setFormData(prev => ({ ...prev, selectedAddress: e.target.value }))}
+                                                className={styles.select}
+                                                disabled={isLoadingAddresses}
+                                            >
+                                                <option value="">{t('contact.select_address')}</option>
+                                                {addresses.map((address) => (
+                                                    <option key={address.id} value={address.id}>
+                                                        {address.name} - {address.address}, {address.postalCode} {address.city}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setIsManualAddress(true);
+                                                    setFormData(prev => ({ ...prev, selectedAddress: '' })); // Clear selection
+                                                }}
+                                                style={{
+                                                    background: 'none',
+                                                    border: 'none',
+                                                    color: '#666',
+                                                    textDecoration: 'underline',
+                                                    fontSize: '0.85rem',
+                                                    cursor: 'pointer',
+                                                    marginTop: '0.5rem',
+                                                    padding: 0
+                                                }}
+                                            >
+                                                {t('contact.manual_address_link')}
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                            {/* Manual Address Fields */}
+                                            <input
+                                                type="text"
+                                                placeholder="Adresse (Numéro et voie)"
+                                                value={formData.manualAddress}
+                                                onChange={e => setFormData(prev => ({ ...prev, manualAddress: e.target.value }))}
+                                                className={styles.input}
+                                                required={isManualAddress}
+                                            />
+                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1rem' }}>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Code Postal"
+                                                    value={formData.manualPostalCode}
+                                                    onChange={e => setFormData(prev => ({ ...prev, manualPostalCode: e.target.value }))}
+                                                    className={styles.input}
+                                                    required={isManualAddress}
+                                                />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Ville"
+                                                    value={formData.manualCity}
+                                                    onChange={e => setFormData(prev => ({ ...prev, manualCity: e.target.value }))}
+                                                    className={styles.input}
+                                                    required={isManualAddress}
+                                                />
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => setIsManualAddress(false)}
+                                                style={{
+                                                    background: 'none',
+                                                    border: 'none',
+                                                    color: '#666',
+                                                    textDecoration: 'underline',
+                                                    fontSize: '0.85rem',
+                                                    cursor: 'pointer',
+                                                    alignSelf: 'flex-start',
+                                                    padding: 0
+                                                }}
+                                            >
+                                                {t('contact.back_to_select')}
+                                            </button>
+                                        </div>
+                                    )}
                                     {addresses.length === 0 && !isLoadingAddresses && (
                                         <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.5rem' }}>
                                             Aucune adresse enregistrée. <a href="/compte" style={{ color: '#111', textDecoration: 'underline' }}>Ajouter une adresse</a>
@@ -509,10 +591,12 @@ export default function Contact() {
                                 </div>
                             )}
 
-                            <div className={styles.inputGroup}>
+                            {isCollaboration && (
+                                <>
+                                    <div className={styles.inputGroup}>
                                 <input
                                     type="number"
-                                    placeholder="Nombre d'invités"
+                                    placeholder={t('contact.guests')}
                                     value={formData.numberOfGuests}
                                     onChange={e => setFormData(prev => ({ ...prev, numberOfGuests: e.target.value }))}
                                     min="1"
@@ -523,7 +607,7 @@ export default function Contact() {
                             <div className={styles.inputGroup}>
                                 <input
                                     type="number"
-                                    placeholder="Budget par personne (€)"
+                                    placeholder={t('contact.budget')}
                                     value={formData.budgetPerPerson}
                                     onChange={e => setFormData(prev => ({ ...prev, budgetPerPerson: e.target.value }))}
                                     min="0"
@@ -647,7 +731,7 @@ export default function Contact() {
                     {/* Message descriptif */}
                     <div className={styles.inputGroup}>
                         <textarea
-                            placeholder="Votre message..."
+                            placeholder={t('contact.message')}
                             value={formData.message}
                             onChange={e => setFormData(prev => ({ ...prev, message: e.target.value }))}
                             required
@@ -661,7 +745,7 @@ export default function Contact() {
                         className={styles.submitButton} 
                         disabled={isSubmitting || !user}
                     >
-                        {isSubmitting ? 'Envoi...' : !user ? 'Connectez-vous pour envoyer' : 'Envoyer'}
+                        {isSubmitting ? 'Envoi...' : !user ? 'Connectez-vous pour envoyer' : t('contact.submit')}
                     </button>
                 </form>
             </div>
@@ -669,7 +753,7 @@ export default function Contact() {
             {/* Toast de succès */}
             {showToast && (
                 <div className={styles.toast}>
-                    Message envoyé avec succès !
+                    {t('contact.success')}
                 </div>
             )}
         </div>

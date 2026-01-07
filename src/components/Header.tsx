@@ -5,9 +5,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styles from './Header.module.css';
 import { useCart } from '@/context/CartContext';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Header() {
     const { count } = useCart();
+    const { language, setLanguage, t } = useLanguage();
     const [isLogoHidden, setIsLogoHidden] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
@@ -79,6 +81,23 @@ export default function Header() {
                     <div className={styles.topRow}>
                         <div className={styles.spacerLeft}>
                             {/* Burger Menu for mobile (Left aligned or kept as spacer) */}
+                            <button
+                                onClick={() => setLanguage(language === 'fr' ? 'en' : 'fr')}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    fontFamily: 'var(--font-inter)',
+                                    fontSize: '0.9rem',
+                                    fontWeight: '500',
+                                    color: '#111',
+                                    letterSpacing: '1px'
+                                }}
+                            >
+                                <span style={{ opacity: language === 'fr' ? 1 : 0.5 }}>FR</span>
+                                <span style={{ margin: '0 5px' }}>|</span>
+                                <span style={{ opacity: language === 'en' ? 1 : 0.5 }}>EN</span>
+                            </button>
                         </div>
                         
                         <div className={styles.logoCenter}>
@@ -132,7 +151,7 @@ export default function Header() {
 
                     {/* BOTTOM ROW: Navigation (Hidden on mobile) */}
                     <nav className={styles.bottomRow}>
-                        <Link href="/" className={styles.link}>Accueil</Link>
+                        <Link href="/" className={styles.link}>{t('header.home')}</Link>
                         <div className={styles.navItem}>
                             <a 
                                 href="#" 
@@ -140,7 +159,7 @@ export default function Header() {
                                 onClick={(e) => e.preventDefault()}
                                 style={{ cursor: 'default' }}
                             >
-                                Traiteur
+                                {t('header.caterer')}
                             </a>
                             <div className={styles.dropdown}>
                                 <Link href="/traiteur?category=buffet" className={styles.dropdownLink}>Buffets</Link>
@@ -155,7 +174,7 @@ export default function Header() {
                                 onClick={(e) => e.preventDefault()}
                                 style={{ cursor: 'default' }}
                             >
-                                Prestations
+                                {t('header.services')}
                             </a>
                             <div className={styles.dropdown}>
                                 <Link href="/prestations/grands-evenements" className={styles.dropdownLink}>Grands événements</Link>
@@ -171,7 +190,7 @@ export default function Header() {
                                 onClick={(e) => e.preventDefault()}
                                 style={{ cursor: 'default' }}
                             >
-                                À propos
+                                {t('header.concept')}
                             </a>
                             <div className={styles.dropdown}>
                                 <Link href="/a-propos/histoire" className={styles.dropdownLink}>Notre Histoire</Link>
@@ -179,7 +198,7 @@ export default function Header() {
                                 <Link href="/a-propos/collaborations" className={styles.dropdownLink}>Collaborations</Link>
                             </div>
                         </div>
-                        <Link href="/contact" className={styles.link}>Contact</Link>
+                        <Link href="/contact" className={styles.link}>{t('header.contact')}</Link>
                     </nav>
                 </div>
             </header>
@@ -199,17 +218,17 @@ export default function Header() {
                         </div>
                     </button>
                     <nav className={styles.mobileNav}>
-                        <Link href="/" className={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>Accueil</Link>
+                        <Link href="/" className={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>{t('header.home')}</Link>
                         
                         <div className={styles.mobileCategory}>
-                            <div className={styles.mobileCategoryTitle}>Traiteur</div>
+                            <div className={styles.mobileCategoryTitle}>{t('header.caterer')}</div>
                             <Link href="/traiteur?category=buffet" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Buffets</Link>
                             <Link href="/traiteur?category=plateau" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Plateaux repas</Link>
                             <Link href="/traiteur?category=cocktail" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Pièces cocktails</Link>
                         </div>
 
                         <div className={styles.mobileCategory}>
-                            <div className={styles.mobileCategoryTitle}>Prestations</div>
+                            <div className={styles.mobileCategoryTitle}>{t('header.services')}</div>
                             <Link href="/prestations/grands-evenements" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Grands événements</Link>
                             <Link href="/prestations/reception-entreprise" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Réception d&apos;entreprise</Link>
                             <Link href="/prestations/consulting" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Consulting</Link>
@@ -217,22 +236,22 @@ export default function Header() {
                         </div>
                         
                         <div className={styles.mobileCategory}>
-                            <div className={styles.mobileCategoryTitle}>À propos</div>
+                            <div className={styles.mobileCategoryTitle}>{t('header.concept')}</div>
                             <Link href="/a-propos/histoire" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Notre Histoire</Link>
                             <Link href="/a-propos/equipe" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>L&apos;Équipe</Link>
                             <Link href="/a-propos/collaborations" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>Collaborations</Link>
                         </div>
 
-                        <Link href="/contact" className={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>Contact</Link>
+                        <Link href="/contact" className={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>{t('header.contact')}</Link>
                         
                         <div className={styles.mobileDivider}></div>
                         
                         <div className={styles.mobileActions}>
                             <Link href="/compte" className={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>
-                                Mon Compte
+                                {t('header.account')}
                             </Link>
                             <Link href="/panier" className={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>
-                                Mon Panier ({count})
+                                {t('header.cart')} ({count})
                             </Link>
                         </div>
                     </nav>

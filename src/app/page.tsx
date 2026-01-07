@@ -1,11 +1,15 @@
+"use client";
+
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './page.module.css';
 import GastronomySection from '@/components/GastronomySection';
 import HomeInviteSection from '@/components/HomeInviteSection';
 import FadeIn from '@/components/FadeIn';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function Home() {
+  const { t } = useLanguage();
   return (
     <div className={styles.container}>
       {/* 1. Video Header */}
@@ -25,19 +29,19 @@ export default function Home() {
         <div className={styles.heroOverlay} />
 
         <div className={styles.heroContent}>
-          <h1 className={styles.title}>L&apos;Art de Recevoir</h1>
+          <h1 className={styles.title}>{t('home.hero_title')}</h1>
           <p className={styles.subtitle}>
-            Haute Couture Gastronomique
+            {t('home.hero_subtitle')}
           </p>
           <Link href="/traiteur" className={styles.primaryButton}>
-            Entrer dans la Maison
+            {t('home.cta_enter')}
           </Link>
         </div>
       </section>
 
       {/* 2. Discover Our Products */}
       <section className={styles.discoverSection}>
-        <h2 className={styles.sectionTitle}>Collections Culinaires</h2>
+        <h2 className={styles.sectionTitle}>{t('home.collections_title')}</h2>
         <div className={styles.discoverGrid}>
 
           {/* Buffets */}
@@ -50,10 +54,10 @@ export default function Home() {
                 className={styles.cardImage}
               />
               <div className={styles.cardOverlay}>
-                <span className={styles.cardLabel}>Voir la Collection</span>
+                <span className={styles.cardLabel}>{t('home.see_collection')}</span>
               </div>
             </div>
-            <h3 className={styles.cardTitle}>Buffets & Banquets</h3>
+            <h3 className={styles.cardTitle}>{t('home.buffets')}</h3>
           </Link>
 
           {/* Plateaux Repas */}
@@ -66,10 +70,10 @@ export default function Home() {
                 className={styles.cardImage}
               />
               <div className={styles.cardOverlay}>
-                <span className={styles.cardLabel}>Voir la Collection</span>
+                <span className={styles.cardLabel}>{t('home.see_collection')}</span>
               </div>
             </div>
-            <h3 className={styles.cardTitle}>Plateaux d&apos;Affaires</h3>
+            <h3 className={styles.cardTitle}>{t('home.trays')}</h3>
           </Link>
 
           {/* Pièces Cocktails */}
@@ -82,10 +86,10 @@ export default function Home() {
                 className={styles.cardImage}
               />
               <div className={styles.cardOverlay}>
-                <span className={styles.cardLabel}>Voir la Collection</span>
+                <span className={styles.cardLabel}>{t('home.see_collection')}</span>
               </div>
             </div>
-            <h3 className={styles.cardTitle}>Cocktails & Réceptions</h3>
+            <h3 className={styles.cardTitle}>{t('home.cocktails')}</h3>
           </Link>
 
         </div>
@@ -96,7 +100,7 @@ export default function Home() {
 
       {/* 4. Nos Prestations */}
       <section className={styles.prestationsSection}>
-        <h2 className={styles.prestationsTitle}>Nos Prestations</h2>
+        <h2 className={styles.prestationsTitle}>{t('home.services_title')}</h2>
         
         {/* Full width Banner */}
         <FadeIn>
@@ -117,8 +121,8 @@ export default function Home() {
                 />
               </div>
               <div className={styles.prestationContent}>
-                <h3 className={styles.prestationName}>Grands événements</h3>
-                <span className={styles.prestationLink}>Découvrir</span>
+                <h3 className={styles.prestationName}>{t('home.service_grand')}</h3>
+                <span className={styles.prestationLink}>{t('home.services_btn')}</span>
               </div>
             </Link>
           </FadeIn>
@@ -135,8 +139,8 @@ export default function Home() {
                 />
               </div>
               <div className={styles.prestationContent}>
-                <h3 className={styles.prestationName}>Réceptions d&apos;entreprise</h3>
-                <span className={styles.prestationLink}>Découvrir</span>
+                <h3 className={styles.prestationName}>{t('home.service_corp')}</h3>
+                <span className={styles.prestationLink}>{t('home.services_btn')}</span>
               </div>
             </Link>
           </FadeIn>
@@ -153,8 +157,8 @@ export default function Home() {
                 />
               </div>
               <div className={styles.prestationContent}>
-                <h3 className={styles.prestationName}>Réceptions privées</h3>
-                <span className={styles.prestationLink}>Découvrir</span>
+                <h3 className={styles.prestationName}>{t('home.service_private')}</h3>
+                <span className={styles.prestationLink}>{t('home.services_btn')}</span>
               </div>
             </Link>
           </FadeIn>

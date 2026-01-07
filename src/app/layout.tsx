@@ -6,6 +6,8 @@ import Footer from '@/components/Footer'
 import { CartProvider } from '@/context/CartContext'
 import { AuthProvider } from '@/context/AuthContext'
 
+import { LanguageProvider } from '@/context/LanguageContext'
+
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' })
 const cormorant = Cormorant_Garamond({ 
@@ -28,15 +30,17 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <body className={`${inter.variable} ${playfair.variable} ${cormorant.variable}`}>
-        <AuthProvider>
-          <CartProvider>
-            <Header />
-            <main style={{ minHeight: '80vh' }}>
-              {children}
-            </main>
-            <Footer />
-          </CartProvider>
-        </AuthProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <CartProvider>
+              <Header />
+              <main style={{ minHeight: '80vh' }}>
+                {children}
+              </main>
+              <Footer />
+            </CartProvider>
+          </AuthProvider>
+        </LanguageProvider>
       </body>
     </html>
   )
