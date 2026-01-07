@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { countries, Country } from '@/data/countries';
+import { useLanguage } from '@/context/LanguageContext';
 import styles from './PhoneInput.module.css';
 
 interface PhoneInputProps {
@@ -13,6 +14,25 @@ interface PhoneInputProps {
 }
 
 export default function PhoneInput({ value, onChange, placeholder = "Téléphone", disabled = false, className }: PhoneInputProps) {
+    const { language, t } = useLanguage();
+    
+    // Créer une liste de pays avec noms traduits et triée selon la langue
+    const sortedCountries = useMemo(() => {
+        const countriesWithTranslatedNames = countries.map(country => ({
+            ...country,
+            translatedName: language === 'en' 
+                ? (t(`countries.${country.code}`) || country.name)
+                : country.name
+        }));
+        
+        // Trier par nom traduit selon la langue
+        return countriesWithTranslatedNames.sort((a, b) => {
+            const nameA = a.translatedName.toLowerCase();
+            const nameB = b.translatedName.toLowerCase();
+            return nameA.localeCompare(nameB, language === 'en' ? 'en' : 'fr');
+        });
+    }, [language, t]);
+    
     // Parser la valeur initiale pour extraire le code pays et le numéro
     const getInitialState = () => {
         if (value) {
@@ -34,6 +54,14 @@ export default function PhoneInput({ value, onChange, placeholder = "Téléphone
 
     const initialState = getInitialState();
     const [selectedCountry, setSelectedCountry] = useState<Country>(initialState.country);
+    
+    // Fonction pour obtenir le nom traduit d'un pays
+    const getCountryName = (country: Country) => {
+        if (language === 'en') {
+            return t(`countries.${country.code}`) || country.name;
+        }
+        return country.name;
+    };
     const [showCountryList, setShowCountryList] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState(initialState.phoneNumber);
 
@@ -100,13 +128,13 @@ export default function PhoneInput({ value, onChange, placeholder = "Téléphone
                     className={styles.countryButton}
                     onClick={() => !disabled && setShowCountryList(!showCountryList)}
                     disabled={disabled}
-                    title={selectedCountry.name}
+                    title={getCountryName(selectedCountry)}
                 >
                     <img 
                         src={`https://flagcdn.com/w40/${selectedCountry.code.toLowerCase()}.png`}
                         srcSet={`https://flagcdn.com/w80/${selectedCountry.code.toLowerCase()}.png 2x`}
                         width="20"
-                        alt={selectedCountry.name}
+                        alt={getCountryName(selectedCountry)}
                         className={styles.flag}
                     />
                     <span className={styles.dialCode}>{selectedCountry.dialCode}</span>
@@ -115,14 +143,22 @@ export default function PhoneInput({ value, onChange, placeholder = "Téléphone
             </div>
             {showCountryList && !disabled && (
                 <div className={styles.countryList}>
-                    {countries.map((country) => (
+                    {sortedCountries.map((country) => (
                         <button
                             key={country.code}
                             type="button"
                             className={styles.countryOption}
                             onClick={() => handleCountryChange(country)}
                         >
-                            <span className={styles.countryName}>{country.name} ({country.dialCode})</span>
+                            <img 
+                                src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`}
+                                srcSet={`https://flagcdn.com/w80/${country.code.toLowerCase()}.png 2x`}
+                                width="20"
+                                alt={country.translatedName}
+                                className={styles.flag}
+                                style={{ marginRight: '8px' }}
+                            />
+                            <span className={styles.countryName}>{country.translatedName} ({country.dialCode})</span>
                         </button>
                     ))}
                 </div>

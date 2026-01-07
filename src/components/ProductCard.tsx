@@ -88,7 +88,9 @@ export default function ProductCard({ product }: { product: Product }) {
                     ))}
                 </div>
 
-                <p className={styles.description}>{product.description}</p>
+                <p className={styles.description}>
+                    {t(`product.descriptions.${product.name}`) || product.description}
+                </p>
                 
                 <div className={styles.actions}>
                     <button 
