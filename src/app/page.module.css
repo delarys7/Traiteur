@@ -225,21 +225,36 @@
   color: #111;
   margin-top: 1rem;
   position: relative;
-  align-self: flex-start;
+  align-self: center;
   /* Left align title */
-  padding-left: 1vw;
-  border-left: 1px solid transparent;
+  padding-left: 0;
+  border-left: none;
   transition: all 0.4s ease;
   white-space: nowrap; /* Force single line */
   width: 100%; /* Ensure it takes available width */
-  text-align: left; /* Align text left */
+  text-align: center; /* Align text left */
   overflow: visible; /* Or hidden if we strictly don't want overflow, but fluid size should prevent it */
+}
+
+.cardTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 40px;
+  height: 1px;
+  background-color: #111;
+  transition: transform 0.4s ease;
 }
 
 /* Line appearing on hover next to title */
 .discoverCard:hover .cardTitle {
-  border-left: 1px solid #111;
-  padding-left: 1.5rem;
+  transform: translateY(-5px);
+}
+
+.discoverCard:hover .cardTitle::after {
+  transform: translateX(-50%) scaleX(1);
 }
 
 /* ===== 3. NOS PRESTATIONS SECTION ===== */
