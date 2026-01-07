@@ -42,10 +42,19 @@ function TraiteurContent() {
     const [showPricePopup, setShowPricePopup] = useState(false);
     const pricePopupRef = useRef<HTMLDivElement>(null);
 
-    // Options for filters
+    // Options for filters (valeurs en français pour la base de données, mais affichage traduit)
     const cuisineOptions = ['italienne', 'française', 'espagnole', 'mexicaine', 'libanaise', 'marocaine', 'japonaise', 'chinoise', 'russe', 'américaine'];
     const dietaryOptions = ['végétarien', 'végétalien', 'vegan', 'carnivore', 'poisson'];
     const allergyOptions = ['gluten', 'lactose', 'fruits à coque', 'crustacés', 'sésame'];
+    
+    // Fonction pour traduire les options de filtres
+    const translateFilterOption = (value: string, type: 'cuisine' | 'dietary' | 'allergies') => {
+        if (value === 'all') return value;
+        const key = value.toLowerCase().trim();
+        const translationKey = `filters.${type}.${key}`;
+        const translated = t(translationKey);
+        return translated === translationKey ? value : translated;
+    };
 
     useEffect(() => {
         async function fetchProducts() {
@@ -170,7 +179,7 @@ function TraiteurContent() {
                             onChange={(e) => setSelectedCuisine(e.target.value)}
                         >
                             <option value="all">{t('traiteur.cuisine')}</option>
-                            {cuisineOptions.map(opt => <option key={opt} value={opt}>{opt.charAt(0).toUpperCase() + opt.slice(1)}</option>)}
+                            {cuisineOptions.map(opt => <option key={opt} value={opt}>{translateFilterOption(opt, 'cuisine')}</option>)}
                         </select>
 
                         {/* Dietary Filter */}
@@ -180,7 +189,7 @@ function TraiteurContent() {
                             onChange={(e) => setSelectedDietary(e.target.value)}
                         >
                             <option value="all">{t('traiteur.dietary')}</option>
-                            {dietaryOptions.map(opt => <option key={opt} value={opt}>{opt.charAt(0).toUpperCase() + opt.slice(1)}</option>)}
+                            {dietaryOptions.map(opt => <option key={opt} value={opt}>{translateFilterOption(opt, 'dietary')}</option>)}
                         </select>
 
                         {/* Allergy Filter */}
@@ -190,7 +199,7 @@ function TraiteurContent() {
                             onChange={(e) => setSelectedAllergy(e.target.value)}
                         >
                             <option value="all">{t('traiteur.allergies')}</option>
-                            {allergyOptions.map(opt => <option key={opt} value={opt}>{opt.charAt(0).toUpperCase() + opt.slice(1)}</option>)}
+                            {allergyOptions.map(opt => <option key={opt} value={opt}>{translateFilterOption(opt, 'allergies')}</option>)}
                         </select>
                     </div>
 

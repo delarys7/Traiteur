@@ -205,6 +205,105 @@ export const translations = {
             loading: 'Chargement...',
             error: 'Une erreur est survenue',
             success: 'Succès'
+        },
+        product: {
+            add_to_cart: 'Ajouter au panier',
+            added_to_cart: 'Ajouté au panier !'
+        },
+        filters: {
+            cuisine: {
+                italienne: 'Italian',
+                française: 'French',
+                espagnole: 'Spanish',
+                mexicaine: 'Mexican',
+                libanaise: 'Lebanese',
+                marocaine: 'Moroccan',
+                japonaise: 'Japanese',
+                chinoise: 'Chinese',
+                russe: 'Russian',
+                américaine: 'American'
+            },
+            dietary: {
+                végétarien: 'Vegetarian',
+                végétalien: 'Vegan',
+                vegan: 'Vegan',
+                carnivore: 'Carnivore',
+                poisson: 'Fish'
+            },
+            allergies: {
+                gluten: 'Gluten',
+                lactose: 'Lactose',
+                'fruits à coque': 'Nuts',
+                crustacés: 'Shellfish',
+                sésame: 'Sesame'
+            }
+        },
+        consulting: {
+            title: 'Consulting Culinaire',
+            description: 'Expertise et conseil pour les professionnels de la restauration. Optimisation des process, formation des équipes, et création de cartes innovantes.',
+            establishments: 'Etablissements accompagnés',
+            coming_soon: 'Liste des restaurants et prestations à venir...'
+        },
+        chef_domicile: {
+            hero_subtitle: 'L\'Intimité du Goût',
+            hero_title: 'L\'Excellence s\'invite dans votre Demeure',
+            selections: 'Sélections du Chef',
+            menus_title: 'Menus déjà préparés',
+            menu_signature: 'Menu Signature',
+            menu_signature_desc: 'Une immersion dans l\'univers créatif du Chef.',
+            menu_degustation: 'Menu Dégustation',
+            menu_degustation_desc: '7 étapes gastronomiques pour les gourmets exigeants.',
+            menu_saison: 'Menu Saison',
+            menu_saison_desc: 'Le meilleur du terroir à l\'instant présent.',
+            price_from: 'À partir de',
+            per_person: '/ pers',
+            gallery_label: 'Immersion',
+            gallery_title: 'Galerie Photos',
+            vision_label: 'Notre Vision',
+            vision_text: 'Plus qu\'un dîner, nous orchestrons une',
+            vision_highlight: 'expérience sensorielle privée',
+            vision_text_2: '. Nous transformons votre salle à manger en une table de haut prestige, où chaque geste du Chef est une promesse d\'émotion et chaque plat un récit de terroir et de modernité.',
+            experience_01_title: 'La Maestria en Cuisine',
+            experience_01_desc: 'Nos chefs, issus de maisons étoilées, investissent vos pianos avec la rigueur et la passion des plus grandes cuisines. De la sélection rigoureuse des produits de saison au dressage minute devant vos convives, l\'art culinaire s\'exprime sans compromis.',
+            experience_01_tag: 'Discrétion & Rigueur',
+            detail_title: 'L\'Art du Détail',
+            detail_desc: 'Chaque pièce est pensée pour sublimer l\'instant. La porcelaine fine, le cristal et l\'argenterie complètent la symphonie des saveurs.',
+            experience_02_title: 'Une Partition Unique',
+            experience_02_desc: 'Votre menu est une création exclusive. Après un échange approfondi, notre Chef imagine une partition culinaire qui reflète vos goûts, vos envies et l\'esprit de votre réception. Une haute couture gastronomique pour des souvenirs impérissables.',
+            experience_02_link: 'Concevoir mon Menu',
+            quote: 'La gastronomie est l\'art d\'utiliser la nourriture pour créer du bonheur.',
+            quote_author: '— Théodore Monnot, Chef Exécutif',
+            cta_title: 'Portez l\'Excellence à votre Table',
+            cta_button: 'Réserver une Consultation'
+        },
+        histoire: {
+            label: 'Héritage & Vision',
+            title: 'Une Histoire d\'Émotion',
+            genesis_title: 'La Naissance d\'un Idéal',
+            genesis_text: 'Fondée en',
+            genesis_text_2: 'au cœur de Paris, Athéna Event est née d\'une ambition simple mais audacieuse : redéfinir l\'art de recevoir par le prisme de la Haute Gastronomie et de l\'élégance intemporelle. Ce qui n\'était au départ qu\'une passion partagée entre deux gastronomes est devenu aujourd\'hui une signature reconnue dans l\'univers du luxe.',
+            inspiration_title: 'L\'Inspiration',
+            inspiration_text: 'Nous puisons notre essence dans les classiques de la cuisine française, tout en y insufflant la modernité d\'un design épuré. Chaque plat est une toile où s\'expriment les saisons.',
+            engagement_title: 'L\'Engagement',
+            engagement_text: 'La perfection n\'est pas un but, c\'est un standard. Nous travaillons exclusivement avec des producteurs locaux dont nous partageons les valeurs d\'excellence et de respect du vivant.',
+            philosophy_quote: 'Recevoir est un don de soi.',
+            philosophy_text: 'Pour nous, la gastronomie ne se limite pas au goût. C\'est un dialogue, une orchestration où le décor, le service et l\'assiette fusionnent pour créer un instant hors du temps. Notre vision est celle d\'un luxe discret, profondément humain et sincère.'
+        },
+        equipe: {
+            label: 'Les Visages de l\'Excellence',
+            title: 'L\'Équipe',
+            intro: 'Derrière chaque instant d\'exception se cachent des talents passionnés qui unissent leur savoir-faire pour porter l\'art de recevoir à son apogée.',
+            join_title: 'Rejoindre la Maison',
+            join_text: 'Nous sommes toujours à la recherche de talents d\'exception. Partagez notre passion de l\'excellence.',
+            join_button: 'Postuler'
+        },
+        collaborations: {
+            label: 'Nos Alliances d\'Exception',
+            title: 'Collaborations',
+            intro: 'Nous accompagnons les plus grandes maisons et institutions dans la création d\'instants sur-mesure. Une confiance mutuelle au service de l\'excellence.',
+            map_title: 'Nos Réalisations à Paris',
+            map_desc: 'De la Rive Gauche à la Place Vendôme, retrouvez les lieux emblématiques où Athéna Event a laissé son empreinte culinaire.',
+            map_loading: 'Chargement de la carte d\'exception...'
         }
     },
     en: {
@@ -413,6 +512,105 @@ export const translations = {
             loading: 'Loading...',
             error: 'An error occurred',
             success: 'Success'
+        },
+        product: {
+            add_to_cart: 'Add to Cart',
+            added_to_cart: 'Added to Cart!'
+        },
+        filters: {
+            cuisine: {
+                italienne: 'Italian',
+                française: 'French',
+                espagnole: 'Spanish',
+                mexicaine: 'Mexican',
+                libanaise: 'Lebanese',
+                marocaine: 'Moroccan',
+                japonaise: 'Japanese',
+                chinoise: 'Chinese',
+                russe: 'Russian',
+                américaine: 'American'
+            },
+            dietary: {
+                végétarien: 'Vegetarian',
+                végétalien: 'Vegan',
+                vegan: 'Vegan',
+                carnivore: 'Carnivore',
+                poisson: 'Fish'
+            },
+            allergies: {
+                gluten: 'Gluten',
+                lactose: 'Lactose',
+                'fruits à coque': 'Nuts',
+                crustacés: 'Shellfish',
+                sésame: 'Sesame'
+            }
+        },
+        consulting: {
+            title: 'Culinary Consulting',
+            description: 'Expertise and advice for restaurant professionals. Process optimization, team training, and innovative menu creation.',
+            establishments: 'Accompanied Establishments',
+            coming_soon: 'List of restaurants and services coming soon...'
+        },
+        chef_domicile: {
+            hero_subtitle: 'The Intimacy of Taste',
+            hero_title: 'Excellence Comes to Your Home',
+            selections: 'Chef\'s Selections',
+            menus_title: 'Pre-prepared Menus',
+            menu_signature: 'Signature Menu',
+            menu_signature_desc: 'An immersion into the Chef\'s creative universe.',
+            menu_degustation: 'Tasting Menu',
+            menu_degustation_desc: '7 gastronomic courses for demanding gourmets.',
+            menu_saison: 'Seasonal Menu',
+            menu_saison_desc: 'The best of the terroir at the present moment.',
+            price_from: 'From',
+            per_person: '/ person',
+            gallery_label: 'Immersion',
+            gallery_title: 'Photo Gallery',
+            vision_label: 'Our Vision',
+            vision_text: 'More than a dinner, we orchestrate a',
+            vision_highlight: 'private sensory experience',
+            vision_text_2: '. We transform your dining room into a prestigious table, where each gesture of the Chef is a promise of emotion and each dish a story of terroir and modernity.',
+            experience_01_title: 'Culinary Mastery',
+            experience_01_desc: 'Our chefs, from starred houses, invest your kitchens with the rigor and passion of the greatest cuisines. From the rigorous selection of seasonal products to minute plating before your guests, culinary art is expressed without compromise.',
+            experience_01_tag: 'Discretion & Rigor',
+            detail_title: 'The Art of Detail',
+            detail_desc: 'Each piece is designed to enhance the moment. Fine porcelain, crystal, and silverware complete the symphony of flavors.',
+            experience_02_title: 'A Unique Composition',
+            experience_02_desc: 'Your menu is an exclusive creation. After an in-depth exchange, our Chef imagines a culinary composition that reflects your tastes, your desires, and the spirit of your reception. Haute couture gastronomy for unforgettable memories.',
+            experience_02_link: 'Design my Menu',
+            quote: 'Gastronomy is the art of using food to create happiness.',
+            quote_author: '— Théodore Monnot, Executive Chef',
+            cta_title: 'Bring Excellence to Your Table',
+            cta_button: 'Book a Consultation'
+        },
+        histoire: {
+            label: 'Heritage & Vision',
+            title: 'A Story of Emotion',
+            genesis_title: 'The Birth of an Ideal',
+            genesis_text: 'Founded in',
+            genesis_text_2: 'in the heart of Paris, Athéna Event was born from a simple but bold ambition: to redefine the art of entertaining through the prism of Haute Gastronomy and timeless elegance. What started as a shared passion between two gastronomes has today become a recognized signature in the world of luxury.',
+            inspiration_title: 'The Inspiration',
+            inspiration_text: 'We draw our essence from the classics of French cuisine, while infusing it with the modernity of refined design. Each dish is a canvas where the seasons express themselves.',
+            engagement_title: 'The Commitment',
+            engagement_text: 'Perfection is not a goal, it is a standard. We work exclusively with local producers with whom we share values of excellence and respect for life.',
+            philosophy_quote: 'Entertaining is a gift of self.',
+            philosophy_text: 'For us, gastronomy is not limited to taste. It is a dialogue, an orchestration where decor, service, and the plate merge to create a timeless moment. Our vision is one of discreet luxury, deeply human and sincere.'
+        },
+        equipe: {
+            label: 'The Faces of Excellence',
+            title: 'The Team',
+            intro: 'Behind every exceptional moment lie passionate talents who unite their expertise to bring the art of entertaining to its peak.',
+            join_title: 'Join the House',
+            join_text: 'We are always looking for exceptional talents. Share our passion for excellence.',
+            join_button: 'Apply'
+        },
+        collaborations: {
+            label: 'Our Exceptional Alliances',
+            title: 'Collaborations',
+            intro: 'We accompany the greatest houses and institutions in creating tailor-made moments. Mutual trust in the service of excellence.',
+            map_title: 'Our Achievements in Paris',
+            map_desc: 'From the Left Bank to Place Vendôme, discover the emblematic places where Athéna Event has left its culinary mark.',
+            map_loading: 'Loading the exceptional map...'
         }
     }
 };

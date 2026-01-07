@@ -1,17 +1,22 @@
 "use client";
 
 import Image from 'next/image';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, Suspense } from 'react';
 import dynamic from 'next/dynamic';
+import { useLanguage } from '@/context/LanguageContext';
 import styles from './page.module.css';
 
-const LeafletMap = dynamic(() => import('./LeafletMap'), { 
-    ssr: false,
-    loading: () => (
+// LeafletMap loading component
+function MapLoading({ t }: { t: (key: string) => string }) {
+    return (
         <div className={styles.mapLoading}>
-            <p>Chargement de la carte d&apos;exception...</p>
+            <p>{t('collaborations.map_loading')}</p>
         </div>
-    )
+    );
+}
+
+const LeafletMap = dynamic(() => import('./LeafletMap'), { 
+    ssr: false
 });
 
 const collaborations = [
@@ -82,6 +87,7 @@ const MAP_STYLES = [
 ];
 
 export default function Collaborations() {
+    const { t } = useLanguage();
     const revealRefs = useRef<(HTMLElement | null)[]>([]);
 
     useEffect(() => {
@@ -105,11 +111,10 @@ export default function Collaborations() {
             {/* Header, PartnerStrip, CaseStudies remain unchanged */}
             {/* ... */}
             <section className={styles.header}>
-                <p className={styles.label}>Nos Alliances d&apos;Exception</p>
-                <h1 className={styles.title}>Collaborations</h1>
+                <p className={styles.label}>{t('collaborations.label')}</p>
+                <h1 className={styles.title}>{t('collaborations.title')}</h1>
                 <p className={styles.intro}>
-                    Nous accompagnons les plus grandes maisons et institutions dans la création 
-                    d&apos;instants sur-mesure. Une confiance mutuelle au service de l&apos;excellence.
+                    {t('collaborations.intro')}
                 </p>
             </section>
 
@@ -170,15 +175,16 @@ export default function Collaborations() {
             {/* MAP SECTION (STYLIZED PARIS MAP) */}
             <section className={styles.mapSection}>
                 <div className={styles.mapHeader}>
-                    <h2 className={styles.mapTitle}>Nos Réalisations à Paris</h2>
+                    <h2 className={styles.mapTitle}>{t('collaborations.map_title')}</h2>
                     <p className={styles.mapDesc}>
-                        De la Rive Gauche à la Place Vendôme, retrouvez les lieux emblématiques 
-                        où Athéna Event a laissé son empreinte culinaire.
+                        {t('collaborations.map_desc')}
                     </p>
                 </div>
                 <div className={styles.mapContainer}>
                     <div className={styles.stylizedMap}>
-                        <LeafletMap locations={locations} center={MAP_CENTER} />
+                        <Suspense fallback={<MapLoading t={t} />}>
+                            <LeafletMap locations={locations} center={MAP_CENTER} />
+                        </Suspense>
                     </div>
                 </div>
             </section>

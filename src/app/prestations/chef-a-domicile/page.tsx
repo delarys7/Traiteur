@@ -3,9 +3,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
 import styles from './page.module.css';
 
 export default function ChefADomicile() {
+    const { t } = useLanguage();
     // Simple Intersection Observer for scroll animations
     const sectionRefs = useRef<(HTMLElement | null)[]>([]);
 
@@ -39,8 +41,8 @@ export default function ChefADomicile() {
                 />
                 <div className={styles.heroOverlay} />
                 <div className={styles.heroContent}>
-                    <p className={styles.heroSubtitle}>L&apos;Intimité du Goût</p>
-                    <h1 className={styles.heroTitle}>L&apos;Excellence s&apos;invite dans votre Demeure</h1>
+                    <p className={styles.heroSubtitle}>{t('chef_domicile.hero_subtitle')}</p>
+                    <h1 className={styles.heroTitle}>{t('chef_domicile.hero_title')}</h1>
                     <div className={styles.scrollIndicator}>
                         <div className={styles.scrollLine} />
                     </div>
@@ -53,24 +55,24 @@ export default function ChefADomicile() {
                 ref={el => { sectionRefs.current[4] = el; }}
             >
                 <div className={styles.sectionHeader}>
-                    <span className={styles.manifestoLabel}>Sélections du Chef</span>
-                    <h2 className={styles.experienceTitle}>Menus déjà préparés</h2>
+                    <span className={styles.manifestoLabel}>{t('chef_domicile.selections')}</span>
+                    <h2 className={styles.experienceTitle}>{t('chef_domicile.menus_title')}</h2>
                 </div>
                 <div className={styles.menusGrid}>
                     <div className={styles.menuCard}>
-                        <h3>Menu Signature</h3>
-                        <p>Une immersion dans l&apos;univers créatif du Chef.</p>
-                        <span className={styles.menuPrice}>À partir de 95€ / pers</span>
+                        <h3>{t('chef_domicile.menu_signature')}</h3>
+                        <p>{t('chef_domicile.menu_signature_desc')}</p>
+                        <span className={styles.menuPrice}>{t('chef_domicile.price_from')} 95€ {t('chef_domicile.per_person')}</span>
                     </div>
                     <div className={styles.menuCard}>
-                        <h3>Menu Dégustation</h3>
-                        <p>7 étapes gastronomiques pour les gourmets exigeants.</p>
-                        <span className={styles.menuPrice}>À partir de 135€ / pers</span>
+                        <h3>{t('chef_domicile.menu_degustation')}</h3>
+                        <p>{t('chef_domicile.menu_degustation_desc')}</p>
+                        <span className={styles.menuPrice}>{t('chef_domicile.price_from')} 135€ {t('chef_domicile.per_person')}</span>
                     </div>
                     <div className={styles.menuCard}>
-                        <h3>Menu Saison</h3>
-                        <p>Le meilleur du terroir à l&apos;instant présent.</p>
-                        <span className={styles.menuPrice}>À partir de 85€ / pers</span>
+                        <h3>{t('chef_domicile.menu_saison')}</h3>
+                        <p>{t('chef_domicile.menu_saison_desc')}</p>
+                        <span className={styles.menuPrice}>{t('chef_domicile.price_from')} 85€ {t('chef_domicile.per_person')}</span>
                     </div>
                 </div>
             </section>
@@ -81,8 +83,8 @@ export default function ChefADomicile() {
                 ref={el => { sectionRefs.current[5] = el; }}
             >
                 <div className={styles.sectionHeader}>
-                    <span className={styles.manifestoLabel}>Immersion</span>
-                    <h2 className={styles.experienceTitle}>Galerie Photos</h2>
+                    <span className={styles.manifestoLabel}>{t('chef_domicile.gallery_label')}</span>
+                    <h2 className={styles.experienceTitle}>{t('chef_domicile.gallery_title')}</h2>
                 </div>
                 <div className={styles.galleryGrid}>
                     <div className={styles.galleryItem}>
@@ -105,12 +107,9 @@ export default function ChefADomicile() {
                 className={`${styles.manifesto} ${styles.reveal}`}
                 ref={el => { sectionRefs.current[0] = el; }}
             >
-                <span className={styles.manifestoLabel}>Notre Vision</span>
+                <span className={styles.manifestoLabel}>{t('chef_domicile.vision_label')}</span>
                 <p className={styles.manifestoText}>
-                    Plus qu&apos;un dîner, nous orchestrons une <span>expérience sensorielle privée</span>. 
-                    Nous transformons votre salle à manger en une table de haut prestige, 
-                    où chaque geste du Chef est une promesse d&apos;émotion et chaque plat un 
-                    récit de terroir et de modernité.
+                    {t('chef_domicile.vision_text')} <span>{t('chef_domicile.vision_highlight')}</span> {t('chef_domicile.vision_text_2')}
                 </p>
             </section>
 
@@ -132,14 +131,11 @@ export default function ChefADomicile() {
                     </div>
                     <div className={styles.experienceContent}>
                         <span className={styles.experienceNumber}>01</span>
-                        <h2 className={styles.experienceTitle}>La Maestria en Cuisine</h2>
+                        <h2 className={styles.experienceTitle}>{t('chef_domicile.experience_01_title')}</h2>
                         <p className={styles.experienceDesc}>
-                            Nos chefs, issus de maisons étoilées, investissent vos pianos avec la rigueur 
-                            et la passion des plus grandes cuisines. De la sélection rigoureuse des 
-                            produits de saison au dressage minute devant vos convives, l&apos;art culinaire 
-                            s&apos;exprime sans compromis.
+                            {t('chef_domicile.experience_01_desc')}
                         </p>
-                        <div className={styles.luxuryTypography}>Discrétion & Rigueur</div>
+                        <div className={styles.luxuryTypography}>{t('chef_domicile.experience_01_tag')}</div>
                     </div>
                 </div>
             </section>
@@ -168,11 +164,9 @@ export default function ChefADomicile() {
                     </div>
                     <div className={styles.stackItemBackground}>
                         <div className={styles.stackInfo}>
-                            <h4>L&apos;Art du Détail</h4>
+                            <h4>{t('chef_domicile.detail_title')}</h4>
                             <p>
-                                Chaque pièce est pensée pour sublimer l&apos;instant. 
-                                La porcelaine fine, le cristal et l&apos;argenterie 
-                                complètent la symphonie des saveurs.
+                                {t('chef_domicile.detail_desc')}
                             </p>
                         </div>
                     </div>
@@ -197,15 +191,12 @@ export default function ChefADomicile() {
                     </div>
                     <div className={styles.experienceContent} style={{ direction: 'ltr' }}>
                         <span className={styles.experienceNumber}>02</span>
-                        <h2 className={styles.experienceTitle}>Une Partition Unique</h2>
+                        <h2 className={styles.experienceTitle}>{t('chef_domicile.experience_02_title')}</h2>
                         <p className={styles.experienceDesc}>
-                            Votre menu est une création exclusive. Après un échange approfondi, 
-                            notre Chef imagine une partition culinaire qui reflète vos goûts, 
-                            vos envies et l&apos;esprit de votre réception. Une haute couture 
-                            gastronomique pour des souvenirs impérissables.
+                            {t('chef_domicile.experience_02_desc')}
                         </p>
                         <Link href="/contact" className={styles.discoverLink} style={{ color: '#111', borderBottom: '1px solid #111', textDecoration: 'none', paddingBottom: '2px', fontSize: '1rem' }}>
-                            Concevoir mon Menu
+                            {t('chef_domicile.experience_02_link')}
                         </Link>
                     </div>
                 </div>
@@ -214,16 +205,16 @@ export default function ChefADomicile() {
             {/* 6. QUOTE */}
             <section className={styles.quoteSection}>
                 <div className={styles.quote}>
-                    &quot;La gastronomie est l&apos;art d&apos;utiliser la nourriture pour créer du bonheur.&quot;
+                    &quot;{t('chef_domicile.quote')}&quot;
                 </div>
-                <div className={styles.quoteAuthor}>— Théodore Monnot, Chef Exécutif</div>
+                <div className={styles.quoteAuthor}>{t('chef_domicile.quote_author')}</div>
             </section>
 
             {/* 7. CTA */}
             <section className={styles.ctaSection}>
-                <h2 className={styles.ctaTitle}>Portez l&apos;Excellence à votre Table</h2>
+                <h2 className={styles.ctaTitle}>{t('chef_domicile.cta_title')}</h2>
                 <Link href="/contact" className={styles.ctaButton}>
-                    Réserver une Consultation
+                    {t('chef_domicile.cta_button')}
                 </Link>
             </section>
         </div>

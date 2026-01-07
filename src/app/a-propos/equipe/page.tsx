@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
 import styles from './page.module.css';
 
 const team = [
@@ -36,6 +37,7 @@ const team = [
 ];
 
 export default function Equipe() {
+    const { t } = useLanguage();
     const revealRefs = useRef<(HTMLElement | null)[]>([]);
 
     useEffect(() => {
@@ -57,11 +59,10 @@ export default function Equipe() {
     return (
         <div className={styles.container}>
             <section className={styles.header}>
-                <p className={styles.label}>Les Visages de l&apos;Excellence</p>
-                <h1 className={styles.title}>L&apos;Équipe</h1>
+                <p className={styles.label}>{t('equipe.label')}</p>
+                <h1 className={styles.title}>{t('equipe.title')}</h1>
                 <p className={styles.intro}>
-                    Derrière chaque instant d&apos;exception se cachent des talents passionnés 
-                    qui unissent leur savoir-faire pour porter l&apos;art de recevoir à son apogée.
+                    {t('equipe.intro')}
                 </p>
             </section>
 
@@ -96,9 +97,9 @@ export default function Equipe() {
 
             <section className={styles.joinUs}>
                 <div className={styles.joinContent}>
-                    <h3>Rejoindre la Maison</h3>
-                    <p>Nous sommes toujours à la recherche de talents d&apos;exception. Partagez notre passion de l&apos;excellence.</p>
-                    <a href="mailto:contact@athena-event.fr" className={styles.contactBtn}>Postuler</a>
+                    <h3>{t('equipe.join_title')}</h3>
+                    <p>{t('equipe.join_text')}</p>
+                    <a href="mailto:contact@athena-event.fr" className={styles.contactBtn}>{t('equipe.join_button')}</a>
                 </div>
             </section>
         </div>

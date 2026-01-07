@@ -2,9 +2,11 @@
 
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
 import styles from './page.module.css';
 
 export default function Histoire() {
+    const { t } = useLanguage();
     const revealRefs = useRef<(HTMLElement | null)[]>([]);
 
     useEffect(() => {
@@ -36,8 +38,8 @@ export default function Histoire() {
                 />
                 <div className={styles.heroOverlay} />
                 <div className={styles.heroContent}>
-                    <p className={styles.label}>Héritage & Vision</p>
-                    <h1 className={styles.title}>Une Histoire d&apos;Émotion</h1>
+                    <p className={styles.label}>{t('histoire.label')}</p>
+                    <h1 className={styles.title}>{t('histoire.title')}</h1>
                 </div>
             </section>
 
@@ -47,12 +49,9 @@ export default function Histoire() {
                 ref={el => { revealRefs.current[0] = el; }}
             >
                 <div className={styles.genesisContent}>
-                    <h2 className={styles.sectionTitle}>La Naissance d&apos;un Idéal</h2>
+                    <h2 className={styles.sectionTitle}>{t('histoire.genesis_title')}</h2>
                     <p className={styles.text}>
-                        Fondée en <span>2015</span> au cœur de Paris, Athéna Event est née d&apos;une ambition simple mais audacieuse : 
-                        redéfinir l&apos;art de recevoir par le prisme de la Haute Gastronomie et de l&apos;élégance intemporelle. 
-                        Ce qui n&apos;était au départ qu&apos;une passion partagée entre deux gastronomes est devenu aujourd&apos;hui une signature 
-                        reconnue dans l&apos;univers du luxe.
+                        {t('histoire.genesis_text')} <span>2015</span> {t('histoire.genesis_text_2')}
                     </p>
                 </div>
                 <div className={styles.sideImage}>
@@ -72,22 +71,18 @@ export default function Histoire() {
                         className={`${styles.visionCard} ${styles.reveal}`}
                         ref={el => { revealRefs.current[1] = el; }}
                     >
-                        <h3>L&apos;Inspiration</h3>
+                        <h3>{t('histoire.inspiration_title')}</h3>
                         <p>
-                            Nous puisons notre essence dans les classiques de la cuisine française, 
-                            tout en y insufflant la modernité d&apos;un design épuré. Chaque plat est une 
-                            toile où s&apos;expriment les saisons.
+                            {t('histoire.inspiration_text')}
                         </p>
                     </div>
                     <div 
                         className={`${styles.visionCard} ${styles.reveal} ${styles.offset}`}
                         ref={el => { revealRefs.current[2] = el; }}
                     >
-                        <h3>L&apos;Engagement</h3>
+                        <h3>{t('histoire.engagement_title')}</h3>
                         <p>
-                            La perfection n&apos;est pas un but, c&apos;est un standard. Nous travaillons 
-                            exclusivement avec des producteurs locaux dont nous partageons les valeurs 
-                            d&apos;excellence et de respect du vivant.
+                            {t('histoire.engagement_text')}
                         </p>
                     </div>
                 </div>
@@ -99,12 +94,9 @@ export default function Histoire() {
                 ref={el => { revealRefs.current[3] = el; }}
             >
                 <div className={styles.philosophyOverlay}>
-                    <h2 className={styles.philoTitle}>&quot;Recevoir est un don de soi.&quot;</h2>
+                    <h2 className={styles.philoTitle}>&quot;{t('histoire.philosophy_quote')}&quot;</h2>
                     <p className={styles.philoDesc}>
-                        Pour nous, la gastronomie ne se limite pas au goût. C&apos;est un dialogue, 
-                        une orchestration où le décor, le service et l&apos;assiette fusionnent pour 
-                        créer un instant hors du temps. Notre vision est celle d&apos;un luxe discret, 
-                        profondément humain et sincère.
+                        {t('histoire.philosophy_text')}
                     </p>
                 </div>
             </section>

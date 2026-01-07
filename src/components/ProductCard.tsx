@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import styles from './ProductCard.module.css';
 import { useCart } from '@/context/CartContext';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface Product {
     id: number;
@@ -18,8 +19,18 @@ interface Product {
 
 export default function ProductCard({ product }: { product: Product }) {
     const { addToCart } = useCart();
+    const { t } = useLanguage();
     const [quantity, setQuantity] = useState(1);
     const [addedStatus, setAddedStatus] = useState<'idle' | 'confirming' | 'added' | 'exiting'>('idle');
+    
+    // Fonction pour traduire les tags
+    const translateTag = (tag: string, type: 'cuisine' | 'dietary' | 'allergies') => {
+        const key = tag.toLowerCase().trim();
+        const translationKey = `filters.${type}.${key}`;
+        const translated = t(translationKey);
+        // Si la traduction retourne la clé elle-même, c'est qu'elle n'existe pas, on retourne le tag original
+        return translated === translationKey ? tag : translated;
+    };
 
     const handleAdd = () => {
         console.log('ProductCard handleAdd:', product); // DEBUG LOG
@@ -67,13 +78,13 @@ export default function ProductCard({ product }: { product: Product }) {
                 
                 <div className={styles.tagContainer}>
                     {product.cuisine && product.cuisine.split(',').map(tag => (
-                        <span key={tag} className={`${styles.tag} ${styles.cuisineTag}`}>{tag}</span>
+                        <span key={tag} className={`${styles.tag} ${styles.cuisineTag}`}>{translateTag(tag.trim(), 'cuisine')}</span>
                     ))}
                     {product.dietary && product.dietary.split(',').map(tag => (
-                        <span key={tag} className={`${styles.tag} ${styles.dietaryTag}`}>{tag}</span>
+                        <span key={tag} className={`${styles.tag} ${styles.dietaryTag}`}>{translateTag(tag.trim(), 'dietary')}</span>
                     ))}
                     {product.allergies && product.allergies !== 'aucune' && product.allergies.split(',').map(tag => (
-                        <span key={tag} className={`${styles.tag} ${styles.allergyTag}`}>{tag}</span>
+                        <span key={tag} className={`${styles.tag} ${styles.allergyTag}`}>{translateTag(tag.trim(), 'allergies')}</span>
                     ))}
                 </div>
 
@@ -91,7 +102,7 @@ export default function ProductCard({ product }: { product: Product }) {
                         disabled={addedStatus !== 'idle'}
                     >
                         <div className={styles.buttonContent}>
-                            <span className={styles.buttonText}>Ajouter au panier</span>
+                            <span className={styles.buttonText}>{t('product.add_to_cart')}</span>
                             <div className={styles.checkIcon}>
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                     <polyline points="20 6 9 17 4 12"></polyline>
@@ -99,7 +110,7 @@ export default function ProductCard({ product }: { product: Product }) {
                             </div>
                         </div>
                         <div className={styles.addedLabelWrapper}>
-                            <span className={styles.addedLabel}>Ajouté au panier !</span>
+                            <span className={styles.addedLabel}>{t('product.added_to_cart')}</span>
                         </div>
                         
                         {/* Vertical Quantity Selector */}
