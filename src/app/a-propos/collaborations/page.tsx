@@ -163,10 +163,10 @@ export default function Collaborations() {
                             />
                         </div>
                         <div className={styles.caseInfo}>
-                            <span className={styles.collabType}>{collab.type}</span>
+                            <span className={styles.collabType}>{t(`collaborations.cases.${collab.name}.type`)}</span>
                             <h2 className={styles.partnerName}>{collab.name}</h2>
-                            <h3 className={styles.caseTitle}>{collab.caseStudy}</h3>
-                            <p className={styles.caseDesc}>{collab.description}</p>
+                            <h3 className={styles.caseTitle}>{t(`collaborations.cases.${collab.name}.caseStudy`)}</h3>
+                            <p className={styles.caseDesc}>{t(`collaborations.cases.${collab.name}.description`)}</p>
                         </div>
                     </div>
                 ))}

@@ -3,6 +3,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useLanguage } from '@/context/LanguageContext';
 import styles from './page.module.css';
 
 // Fix for Leaflet default icon issues in Next.js
@@ -25,6 +26,7 @@ interface MapProps {
 }
 
 export default function LeafletMap({ locations, center }: MapProps) {
+    const { t } = useLanguage();
     return (
         <MapContainer 
             center={[center.lat, center.lng]} 
@@ -45,7 +47,7 @@ export default function LeafletMap({ locations, center }: MapProps) {
                     <Popup className={styles.popup}>
                         <div className={styles.infoWindow}>
                             <strong>{loc.name}</strong>
-                            <p>{loc.type}</p>
+                            <p>{t(`collaborations.location_types.${loc.type}`) || loc.type}</p>
                         </div>
                     </Popup>
                 </Marker>

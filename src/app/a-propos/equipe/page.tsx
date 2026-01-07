@@ -82,14 +82,14 @@ export default function Equipe() {
                             />
                             <div className={styles.overlay}>
                                 <div className={styles.bio}>
-                                    <p className={styles.career}>{member.career}</p>
-                                    <p className={styles.desc}>{member.bio}</p>
+                                    <p className={styles.career}>{t(`equipe.members.${member.name}.career`)}</p>
+                                    <p className={styles.desc}>{t(`equipe.members.${member.name}.bio`)}</p>
                                 </div>
                             </div>
                         </div>
                         <div className={styles.info}>
                             <h2 className={styles.name}>{member.name}</h2>
-                            <p className={styles.role}>{member.role}</p>
+                            <p className={styles.role}>{t(`equipe.members.${member.name}.role`)}</p>
                         </div>
                     </div>
                 ))}

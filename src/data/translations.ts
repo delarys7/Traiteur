@@ -323,7 +323,29 @@ export const translations = {
             intro: 'Derrière chaque instant d\'exception se cachent des talents passionnés qui unissent leur savoir-faire pour porter l\'art de recevoir à son apogée.',
             join_title: 'Rejoindre la Maison',
             join_text: 'Nous sommes toujours à la recherche de talents d\'exception. Partagez notre passion de l\'excellence.',
-            join_button: 'Postuler'
+            join_button: 'Postuler',
+            members: {
+                'Alexandre Dubois': {
+                    role: 'Chef Fondateur',
+                    career: 'Ex-Second de cuisine en Palace étoilé',
+                    bio: 'Visionnaire et passionné par le terroir français, Alexandre insuffle l\'âme créative de la maison. Son parcours dans les plus grandes cuisines parisiennes définit l\'exigence de chaque assiette.'
+                },
+                'Sarah Fredaht': {
+                    role: 'Directrice de Création',
+                    career: 'Designer culinaire & Scénographe',
+                    bio: 'Sarah transforme chaque réception en une œuvre visuelle. Pour elle, le plaisir commence par l\'œil, orchestrant des décors où chaque détail dialogue avec la gastronomie.'
+                },
+                'Marc-Antoine Rossi': {
+                    role: 'Responsable Sommellerie',
+                    career: 'Maître Sommelier international',
+                    bio: 'Gardien de notre cave, Marc-Antoine sélectionne des pépites rares et des domaines de prestige pour créer des accords mets-vins qui subliment vos expériences.'
+                },
+                'Sophie Martin': {
+                    role: 'Coordinatrice Événementielle',
+                    career: 'Master en Management du Luxe',
+                    bio: 'Cheffe d\'orchestre de vos projets, Sophie assure une exécution millimétrée. Son sens du service et sa discrétion font d\'elle le pilier logistique de vos réceptions.'
+                }
+            }
         },
         collaborations: {
             label: 'Nos Alliances d\'Exception',
@@ -331,7 +353,31 @@ export const translations = {
             intro: 'Nous accompagnons les plus grandes maisons et institutions dans la création d\'instants sur-mesure. Une confiance mutuelle au service de l\'excellence.',
             map_title: 'Nos Réalisations à Paris',
             map_desc: 'De la Rive Gauche à la Place Vendôme, retrouvez les lieux emblématiques où Athéna Event a laissé son empreinte culinaire.',
-            map_loading: 'Chargement de la carte d\'exception...'
+            map_loading: 'Chargement de la carte d\'exception...',
+            cases: {
+                'Maison Cartier': {
+                    type: 'Haute Joaillerie',
+                    caseStudy: 'Dîner de Gala - Lancement de Collection',
+                    description: 'Scénographie culinaire sur le thème de la flore exotique. 150 convives dans les jardins de l\'Hôtel Particulier.'
+                },
+                'Galerie Perrotin': {
+                    type: 'Art Contemporain',
+                    caseStudy: 'Vernissage - Exposition Exclusive',
+                    description: 'Création de pièces cocktails monochromes et minimalistes en accord avec les œuvres exposées.'
+                },
+                'LVMH Group': {
+                    type: 'Luxe & Art de vivre',
+                    caseStudy: 'Séminaire de Direction - Sommet Annuel',
+                    description: 'Service de conciergerie gastronomique complet sur trois jours. Chef privé et sommellerie dédiée.'
+                }
+            },
+            location_types: {
+                'Joaillerie': 'Joaillerie',
+                'Mode': 'Mode',
+                'Art & Culture': 'Art & Culture',
+                'Gastronomie': 'Gastronomie',
+                'Événementiel': 'Événementiel'
+            }
         }
     },
     en: {
@@ -658,7 +704,29 @@ export const translations = {
             intro: 'Behind every exceptional moment lie passionate talents who unite their expertise to bring the art of entertaining to its peak.',
             join_title: 'Join the House',
             join_text: 'We are always looking for exceptional talents. Share our passion for excellence.',
-            join_button: 'Apply'
+            join_button: 'Apply',
+            members: {
+                'Alexandre Dubois': {
+                    role: 'Founding Chef',
+                    career: 'Former Second Chef in Starred Palace',
+                    bio: 'Visionary and passionate about French terroir, Alexandre infuses the creative soul of the house. His journey through Paris\'s greatest kitchens defines the requirement of every plate.'
+                },
+                'Sarah Fredaht': {
+                    role: 'Creative Director',
+                    career: 'Culinary Designer & Scenographer',
+                    bio: 'Sarah transforms every reception into a visual work. For her, pleasure begins with the eye, orchestrating settings where every detail dialogues with gastronomy.'
+                },
+                'Marc-Antoine Rossi': {
+                    role: 'Head Sommelier',
+                    career: 'International Master Sommelier',
+                    bio: 'Guardian of our cellar, Marc-Antoine selects rare gems and prestigious estates to create food-wine pairings that enhance your experiences.'
+                },
+                'Sophie Martin': {
+                    role: 'Event Coordinator',
+                    career: 'Master in Luxury Management',
+                    bio: 'Conductor of your projects, Sophie ensures millimeter-perfect execution. Her sense of service and discretion make her the logistical pillar of your receptions.'
+                }
+            }
         },
         collaborations: {
             label: 'Our Exceptional Alliances',
@@ -666,7 +734,31 @@ export const translations = {
             intro: 'We accompany the greatest houses and institutions in creating tailor-made moments. Mutual trust in the service of excellence.',
             map_title: 'Our Achievements in Paris',
             map_desc: 'From the Left Bank to Place Vendôme, discover the emblematic places where Athéna Event has left its culinary mark.',
-            map_loading: 'Loading the exceptional map...'
+            map_loading: 'Loading the exceptional map...',
+            cases: {
+                'Maison Cartier': {
+                    type: 'High Jewelry',
+                    caseStudy: 'Gala Dinner - Collection Launch',
+                    description: 'Culinary scenography on the theme of exotic flora. 150 guests in the gardens of the Private Hotel.'
+                },
+                'Galerie Perrotin': {
+                    type: 'Contemporary Art',
+                    caseStudy: 'Vernissage - Exclusive Exhibition',
+                    description: 'Creation of monochrome and minimalist cocktail pieces in harmony with the exhibited works.'
+                },
+                'LVMH Group': {
+                    type: 'Luxury & Art of Living',
+                    caseStudy: 'Executive Seminar - Annual Summit',
+                    description: 'Complete gastronomic concierge service over three days. Private chef and dedicated sommelier service.'
+                }
+            },
+            location_types: {
+                'Joaillerie': 'Jewelry',
+                'Mode': 'Fashion',
+                'Art & Culture': 'Art & Culture',
+                'Gastronomie': 'Gastronomy',
+                'Événementiel': 'Events'
+            }
         },
         countries: {
             'AF': 'Afghanistan',
