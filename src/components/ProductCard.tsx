@@ -10,6 +10,7 @@ interface Product {
     description: string;
     price: number;
     image: string;
+    category?: string;
     cuisine?: string;
     dietary?: string;
     allergies?: string;
@@ -21,6 +22,7 @@ export default function ProductCard({ product }: { product: Product }) {
     const [addedStatus, setAddedStatus] = useState<'idle' | 'confirming' | 'added' | 'exiting'>('idle');
 
     const handleAdd = () => {
+        console.log('ProductCard handleAdd:', product); // DEBUG LOG
         if (addedStatus !== 'idle') return;
         
         // Phase 1: Confirming (Green + Checkmark)

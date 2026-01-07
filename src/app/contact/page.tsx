@@ -278,15 +278,6 @@ export default function Contact() {
                     ) : (
                         <>
                             {/* Champs désactivés si non connecté */}
-                            {user?.type === 'entreprise' && (
-                                <div className={styles.inputGroup}>
-                                    <input
-                                        type="text"
-                                        placeholder="Entreprise"
-                                        disabled
-                                    />
-                                </div>
-                            )}
                             <div className={styles.formRow}>
                                 <div className={styles.inputGroup}>
                                     <input
@@ -544,48 +535,85 @@ export default function Contact() {
 
                     {/* Récapitulatif du panier si motif = commande */}
                     {formData.motif === 'commande' && items.length > 0 && (
-                        <div style={{
-                            backgroundColor: '#fcfcfc',
-                            border: '1px solid #eee',
-                            padding: '1.5rem',
-                            borderRadius: '4px',
-                            marginBottom: '1rem'
-                        }}>
-                            <h3 style={{
-                                fontSize: '1.2rem',
-                                marginBottom: '1rem',
-                                paddingBottom: '0.5rem',
-                                borderBottom: '1px solid #eee',
-                                fontWeight: '500'
+                        <div className={styles.inputGroup}>
+                            <label style={{ 
+                                fontSize: '0.9rem', 
+                                fontWeight: '500', 
+                                marginBottom: '0.5rem',
+                                display: 'block',
+                                color: '#333',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.05em'
                             }}>
-                                Récapitulatif du panier
-                            </h3>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                                {items.map((item) => (
-                                    <div key={item.id} style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        fontSize: '0.9rem'
-                                    }}>
-                                        <span style={{ fontWeight: '500' }}>{item.name}</span>
-                                        <span style={{ color: '#666' }}>
-                                            {item.quantity} × {(item.price / 100).toFixed(2)} € = {((item.price * item.quantity) / 100).toFixed(2)} €
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
+                                Produits
+                            </label>
                             <div style={{
-                                marginTop: '1rem',
-                                paddingTop: '1rem',
-                                borderTop: '2px solid #111',
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                fontWeight: '600',
-                                fontSize: '1rem'
+                                backgroundColor: '#fcfcfc',
+                                border: '1px solid #e0e0e0',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                marginBottom: '0.5rem'
                             }}>
-                                <span>Total</span>
-                                <span>{(total / 100).toFixed(2)} €</span>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                                    {(() => {
+                                        const groups = {
+                                            'Buffets': items.filter(i => i.category?.toLowerCase() === 'buffet'),
+                                            'Plateaux Repas': items.filter(i => i.category?.toLowerCase() === 'plateau'),
+                                            'Pièces Cocktails': items.filter(i => i.category?.toLowerCase() === 'cocktail'),
+                                            'Autres': items.filter(i => !['buffet', 'plateau', 'cocktail'].includes(i.category?.toLowerCase() || ''))
+                                        };
+
+                                        return Object.entries(groups).map(([groupName, groupItems]) => {
+                                            if (groupItems.length === 0) return null;
+
+                                            const sortedItems = [...groupItems].sort((a, b) => (b.price * b.quantity) - (a.price * a.quantity));
+
+                                            return (
+                                                <div key={groupName}>
+                                                    <h4 style={{ 
+                                                        fontSize: '0.95rem', 
+                                                        fontWeight: '600', 
+                                                        margin: '0 0 0.75rem 0',
+                                                        color: '#111',
+                                                        textTransform: 'uppercase',
+                                                        borderBottom: '1px solid #eee',
+                                                        paddingBottom: '0.25rem',
+                                                        display: 'inline-block'
+                                                    }}>
+                                                        {groupName}
+                                                    </h4>
+                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                                        {sortedItems.map((item) => (
+                                                            <div key={item.id} style={{
+                                                                display: 'flex',
+                                                                justifyContent: 'space-between',
+                                                                alignItems: 'center',
+                                                                fontSize: '0.9rem'
+                                                            }}>
+                                                                <span style={{ fontWeight: '500' }}>{item.name}</span>
+                                                                <span style={{ color: '#666' }}>
+                                                                    {item.quantity} × {item.price.toFixed(2)} €
+                                                                </span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            );
+                                        });
+                                    })()}
+                                </div>
+                                <div style={{
+                                    marginTop: '1rem',
+                                    paddingTop: '0.75rem',
+                                    borderTop: '1px solid #eee',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    fontWeight: '600',
+                                    fontSize: '0.95rem'
+                                }}>
+                                    <span>Total</span>
+                                    <span>{total.toFixed(2)} €</span>
+                                </div>
                             </div>
                         </div>
                     )}
