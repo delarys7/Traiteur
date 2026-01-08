@@ -51,6 +51,8 @@ export const translations = {
                 order: 'Commande / Devis',
                 collab_company: 'Collaboration - Entreprise',
                 collab_individual: 'Collaboration - Particulier',
+                prestation_domicile: 'Prestation à domicile',
+                consulting: 'Consulting',
                 other: 'Autre'
             },
             firstname: 'Prénom',
@@ -80,7 +82,9 @@ export const translations = {
             remove_from_cart: 'Retirer du panier',
             address_street: 'Adresse (Numéro et voie)',
             postal_code: 'Code Postal',
-            city: 'Ville'
+            city: 'Ville',
+            restaurant_name: 'Nom du restaurant',
+            kitchen_staff: 'Employés en cuisine'
         },
         account: {
             login: 'Connexion',
@@ -270,7 +274,8 @@ export const translations = {
             title: 'Consulting Culinaire',
             description: 'Expertise et conseil pour les professionnels de la restauration. Optimisation des process, formation des équipes, et création de cartes innovantes.',
             establishments: 'Etablissements accompagnés',
-            coming_soon: 'Liste des restaurants et prestations à venir...'
+            coming_soon: 'Liste des restaurants et prestations à venir...',
+            book_consultation: 'Réserver une Consultation'
         },
         chef_domicile: {
             hero_subtitle: 'L\'Intimité du Goût',
@@ -432,6 +437,8 @@ export const translations = {
                 order: 'Order / Quote',
                 collab_company: 'Partnership - Corporate',
                 collab_individual: 'Partnership - Individual',
+                prestation_domicile: 'Home Service',
+                consulting: 'Consulting',
                 other: 'Other'
             },
             firstname: 'First Name',
@@ -461,7 +468,9 @@ export const translations = {
             remove_from_cart: 'Remove from cart',
             address_street: 'Address (Street number and name)',
             postal_code: 'Postal Code',
-            city: 'City'
+            city: 'City',
+            restaurant_name: 'Restaurant Name',
+            kitchen_staff: 'Kitchen Staff'
         },
         account: {
             login: 'Login',
@@ -651,7 +660,8 @@ export const translations = {
             title: 'Culinary Consulting',
             description: 'Expertise and advice for restaurant professionals. Process optimization, team training, and innovative menu creation.',
             establishments: 'Accompanied Establishments',
-            coming_soon: 'List of restaurants and services coming soon...'
+            coming_soon: 'List of restaurants and services coming soon...',
+            book_consultation: 'Book a Consultation'
         },
         chef_domicile: {
             hero_subtitle: 'The Intimacy of Taste',

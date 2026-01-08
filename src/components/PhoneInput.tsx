@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { countries, Country } from '@/data/countries';
 import { useLanguage } from '@/context/LanguageContext';
 import styles from './PhoneInput.module.css';
@@ -64,6 +64,7 @@ export default function PhoneInput({ value, onChange, placeholder = "Téléphone
     };
     const [showCountryList, setShowCountryList] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState(initialState.phoneNumber);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     // Mettre à jour quand la valeur externe change
     useEffect(() => {
@@ -108,25 +109,38 @@ export default function PhoneInput({ value, onChange, placeholder = "Téléphone
     // Fermer la liste des pays si on clique ailleurs
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            const target = event.target as HTMLElement;
-            if (showCountryList && !target.closest(`.${styles.countrySelector}`) && !target.closest(`.${styles.countryList}`)) {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
                 setShowCountryList(false);
             }
         };
 
         if (showCountryList) {
-            document.addEventListener('mousedown', handleClickOutside);
-            return () => document.removeEventListener('mousedown', handleClickOutside);
+            // Utiliser 'click' au lieu de 'mousedown' pour éviter les conflits avec le onClick du bouton
+            // Et ajouter un petit délai pour laisser le onClick se déclencher en premier
+            const timeoutId = setTimeout(() => {
+                document.addEventListener('click', handleClickOutside);
+            }, 0);
+            
+            return () => {
+                clearTimeout(timeoutId);
+                document.removeEventListener('click', handleClickOutside);
+            };
         }
     }, [showCountryList]);
 
     return (
-        <div className={`${styles.phoneInputContainer} ${className || ''}`}>
+        <div ref={containerRef} className={`${styles.phoneInputContainer} ${className || ''}`}>
             <div className={styles.countrySelector}>
                 <button
                     type="button"
                     className={styles.countryButton}
-                    onClick={() => !disabled && setShowCountryList(!showCountryList)}
+                    onClick={(e) => {
+                        if (!disabled) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setShowCountryList(prev => !prev);
+                        }
+                    }}
                     disabled={disabled}
                     title={getCountryName(selectedCountry)}
                 >

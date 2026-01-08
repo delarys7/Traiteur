@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
-        const { firstName, lastName, entreprise, email, phone, motif, message, selectedAddress, manualAddress, manualPostalCode, manualCity, eventDate, numberOfGuests, budgetPerPerson, cartItems, cartTotal } = body;
+        const { firstName, lastName, entreprise, email, phone, motif, message, selectedAddress, manualAddress, manualPostalCode, manualCity, eventDate, numberOfGuests, budgetPerPerson, cartItems, cartTotal, restaurantName, kitchenStaff } = body;
 
         if (!firstName || !lastName || !email || !motif || !message) {
             return NextResponse.json(
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
         `;
 
         // Ajouter l'adresse (soit depuis la DB, soit manuelle)
-        if (motif === 'commande' || motif === 'collaboration-entreprise' || motif === 'collaboration-particulier') {
+        if (motif === 'commande' || motif === 'collaboration-entreprise' || motif === 'collaboration-particulier' || motif === 'prestation-domicile' || motif === 'consulting') {
             if (selectedAddress) {
                 // Récupérer les détails de l'adresse depuis la base de données
                 const address = db.prepare('SELECT * FROM addresses WHERE id = ?').get(selectedAddress) as any;
@@ -62,8 +62,10 @@ export async function POST(request: NextRequest) {
                 // Utiliser l'adresse saisie manuellement
                 emailContent += `
                     <h3>Adresse de l'événement / livraison (Saisie manuelle):</h3>
+                    ${restaurantName ? `<p><strong>Nom du restaurant:</strong> ${restaurantName}</p>` : ''}
                     <p>${manualAddress}<br>
                     ${manualPostalCode} ${manualCity}</p>
+                    ${kitchenStaff ? `<p><strong>Employés en cuisine:</strong> ${kitchenStaff}</p>` : ''}
                 `;
             }
         }
@@ -161,6 +163,8 @@ function getMotifLabel(motif: string): string {
         'commande': 'Commande / Devis',
         'collaboration-entreprise': 'Collaboration - Entreprise',
         'collaboration-particulier': 'Collaboration - Particulier',
+        'prestation-domicile': 'Prestation à domicile',
+        'consulting': 'Consulting',
         'autre': 'Autre (renseignements, etc.)'
     };
     return labels[motif] || motif;

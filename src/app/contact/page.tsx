@@ -38,7 +38,9 @@ export default function Contact() {
         numberOfGuests: '',
         manualAddress: '',
         manualPostalCode: '',
-        manualCity: ''
+        manualCity: '',
+        restaurantName: '',
+        kitchenStaff: ''
     });
     const [isManualAddress, setIsManualAddress] = useState(false);
     const [addresses, setAddresses] = useState<Address[]>([]);
@@ -47,11 +49,19 @@ export default function Contact() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showToast, setShowToast] = useState(false);
 
-    // Vérifier si on vient du panier (pour pré-sélectionner "Commande")
+    // Vérifier si on vient du panier ou avec un motif pré-sélectionné
     useEffect(() => {
         const fromCart = searchParams.get('from') === 'cart';
+        const motifParam = searchParams.get('motif');
+        
         if (fromCart) {
             setFormData(prev => ({ ...prev, motif: 'commande' }));
+        } else if (motifParam) {
+            // Valider que le motif est valide
+            const validMotifs = ['commande', 'collaboration-entreprise', 'collaboration-particulier', 'prestation-domicile', 'consulting', 'autre'];
+            if (validMotifs.includes(motifParam)) {
+                setFormData(prev => ({ ...prev, motif: motifParam }));
+            }
         }
     }, [searchParams]);
 
@@ -60,7 +70,8 @@ export default function Contact() {
     useEffect(() => {
         if (user) {
             const isCollaboration = formData.motif === 'collaboration-entreprise' || formData.motif === 'collaboration-particulier';
-            if (formData.motif === 'commande' || isCollaboration) {
+            const requiresAddress = formData.motif === 'commande' || isCollaboration || formData.motif === 'prestation-domicile' || formData.motif === 'consulting';
+            if (requiresAddress) {
                 loadAddresses();
             }
             // Pré-remplir les données utilisateur si non déjà remplies
@@ -151,10 +162,12 @@ export default function Contact() {
                     phone: formData.phone || null,
                     motif: formData.motif,
                     message: formData.message,
-                    selectedAddress: (formData.motif === 'commande' || isCollaboration) ? formData.selectedAddress : null,
+                    selectedAddress: (formData.motif === 'commande' || isCollaboration || formData.motif === 'prestation-domicile' || formData.motif === 'consulting') ? formData.selectedAddress : null,
                     manualAddress: isManualAddress ? formData.manualAddress : null,
                     manualPostalCode: isManualAddress ? formData.manualPostalCode : null,
                     manualCity: isManualAddress ? formData.manualCity : null,
+                    restaurantName: (formData.motif === 'consulting' && isManualAddress) ? formData.restaurantName : null,
+                    kitchenStaff: (formData.motif === 'consulting' && isManualAddress) ? formData.kitchenStaff : null,
                     eventDate: (isCollaboration) 
                         ? `${formData.eventDate.year}-${formData.eventDate.month.padStart(2, '0')}-${formData.eventDate.day.padStart(2, '0')}`
                         : null,
@@ -188,7 +201,12 @@ export default function Contact() {
                 selectedAddress: '',
                 eventDate: { day: '', month: '', year: '' },
                 budgetPerPerson: '',
-                numberOfGuests: ''
+                numberOfGuests: '',
+                manualAddress: '',
+                manualPostalCode: '',
+                manualCity: '',
+                restaurantName: '',
+                kitchenStaff: ''
             });
             setTimeout(() => {
                 setShowToast(false);
@@ -335,6 +353,8 @@ export default function Contact() {
                             <option value="commande">{t('contact.reasons.order')}</option>
                             <option value="collaboration-entreprise">{t('contact.reasons.collab_company')}</option>
                             <option value="collaboration-particulier">{t('contact.reasons.collab_individual')}</option>
+                            <option value="prestation-domicile">{t('contact.reasons.prestation_domicile')}</option>
+                            <option value="consulting">{t('contact.reasons.consulting')}</option>
                             <option value="autre">{t('contact.reasons.other')}</option>
                         </select>
                     </div>
@@ -488,8 +508,8 @@ export default function Contact() {
                         </>
                     )}
 
-                    {/* Adresse de l'événement / Leiu de livraison */}
-                    {(isCollaboration || formData.motif === 'commande') && user && (
+                    {/* Adresse de l'événement / Lieu de livraison */}
+                    {(isCollaboration || formData.motif === 'commande' || formData.motif === 'prestation-domicile' || formData.motif === 'consulting') && user && (
                                 <div className={styles.inputGroup}>
                                     <label style={{ 
                                         fontSize: '0.9rem', 
@@ -538,6 +558,17 @@ export default function Contact() {
                                         </>
                                     ) : (
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                            {/* Champs supplémentaires pour Consulting en mode manuel */}
+                                            {formData.motif === 'consulting' && isManualAddress && (
+                                                <input
+                                                    type="text"
+                                                    placeholder={t('contact.restaurant_name')}
+                                                    value={formData.restaurantName}
+                                                    onChange={e => setFormData(prev => ({ ...prev, restaurantName: e.target.value }))}
+                                                    className={styles.input}
+                                                    required={isManualAddress}
+                                                />
+                                            )}
                                             {/* Manual Address Fields */}
                                             <input
                                                 type="text"
@@ -565,6 +596,18 @@ export default function Contact() {
                                                     required={isManualAddress}
                                                 />
                                             </div>
+                                            {/* Champ supplémentaire pour Consulting en mode manuel */}
+                                            {formData.motif === 'consulting' && isManualAddress && (
+                                                <input
+                                                    type="number"
+                                                    placeholder={t('contact.kitchen_staff')}
+                                                    value={formData.kitchenStaff}
+                                                    onChange={e => setFormData(prev => ({ ...prev, kitchenStaff: e.target.value }))}
+                                                    className={styles.input}
+                                                    min="0"
+                                                    required={isManualAddress}
+                                                />
+                                            )}
                                             <button
                                                 type="button"
                                                 onClick={() => setIsManualAddress(false)}

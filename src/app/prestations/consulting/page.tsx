@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function Consulting() {
@@ -13,9 +14,28 @@ export default function Consulting() {
             
             <div style={{ padding: '4rem', border: '1px solid #eee', backgroundColor: '#fcfcfc' }}>
                 <h2 style={{ fontFamily: 'serif', marginBottom: '1.5rem' }}>{t('consulting.establishments')}</h2>
-                <p style={{ fontStyle: 'italic', color: '#888' }}>
+                <p style={{ fontStyle: 'italic', color: '#888', marginBottom: '2rem' }}>
                     {t('consulting.coming_soon')}
                 </p>
+                <Link 
+                    href="/contact?motif=consulting" 
+                    style={{
+                        display: 'inline-block',
+                        padding: '1rem 2rem',
+                        backgroundColor: '#111',
+                        color: '#fff',
+                        textDecoration: 'none',
+                        borderRadius: '4px',
+                        fontSize: '1rem',
+                        fontWeight: '500',
+                        transition: 'background-color 0.2s',
+                        marginTop: '1rem'
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#333'}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#111'}
+                >
+                    {t('consulting.book_consultation')}
+                </Link>
             </div>
         </div>
     );

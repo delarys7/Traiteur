@@ -195,7 +195,7 @@ export default function ChefADomicile() {
                         <p className={styles.experienceDesc}>
                             {t('chef_domicile.experience_02_desc')}
                         </p>
-                        <Link href="/contact" className={styles.discoverLink} style={{ color: '#111', borderBottom: '1px solid #111', textDecoration: 'none', paddingBottom: '2px', fontSize: '1rem' }}>
+                        <Link href="/contact?motif=prestation-domicile" className={styles.discoverLink} style={{ color: '#111', borderBottom: '1px solid #111', textDecoration: 'none', paddingBottom: '2px', fontSize: '1rem' }}>
                             {t('chef_domicile.experience_02_link')}
                         </Link>
                     </div>
@@ -213,7 +213,7 @@ export default function ChefADomicile() {
             {/* 7. CTA */}
             <section className={styles.ctaSection}>
                 <h2 className={styles.ctaTitle}>{t('chef_domicile.cta_title')}</h2>
-                <Link href="/contact" className={styles.ctaButton}>
+                <Link href="/contact?motif=prestation-domicile" className={styles.ctaButton}>
                     {t('chef_domicile.cta_button')}
                 </Link>
             </section>
