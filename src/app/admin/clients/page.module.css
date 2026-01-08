@@ -5,6 +5,57 @@
     padding: 2rem;
 }
 
+.toolbar {
+    max-width: 1400px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.searchBar {
+    flex: 1;
+    min-width: 250px;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-family: var(--font-inter);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.searchInput:focus {
+    border-color: #111;
+}
+
+.filters {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.filterSelect {
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-family: var(--font-inter);
+    background-color: #fff;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.filterSelect:focus {
+    border-color: #111;
+}
+
 .tableContainer {
     max-width: 1400px;
     margin: 0 auto;
@@ -48,6 +99,16 @@
 
 .table th:last-child {
     border-top-right-radius: 12px;
+}
+
+.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s;
+}
+
+.sortable:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .table td {
@@ -108,6 +169,72 @@
 
 .viewButton:hover {
     background-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.statusTag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background-color: #fff3cd;
+    color: #856404;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.groupHeader {
+    background-color: #f8f9fa;
+}
+
+.groupTitle {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #555;
+    padding: 0.75rem 1rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.actionButtons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.detailButton,
+.messageButton {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.detailButton {
+    background-color: #111;
+    color: #fff;
+}
+
+.detailButton:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.messageButton {
+    background-color: #0066cc;
+    color: #fff;
+}
+
+.messageButton:hover {
+    background-color: #0052a3;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }

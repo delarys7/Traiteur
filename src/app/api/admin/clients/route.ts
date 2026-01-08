@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
                 u.firstName ASC
         `).all() as any[];
 
-        // Pour chaque client, récupérer les statistiques de commandes
+        // Pour chaque client, récupérer les statistiques de commandes et le statut des messages
         const clientsWithStats = clients.map(client => {
             // Récupérer toutes les commandes du client
             const orders = db.prepare(`
@@ -64,6 +64,15 @@ export async function GET(request: NextRequest) {
                 ? orders.reduce((sum, order) => sum + (order.total || 0), 0) / orderCount 
                 : 0;
 
+            // Récupérer le dernier message en attente de réponse
+            const pendingMessage = db.prepare(`
+                SELECT motif, createdAt
+                FROM contact_messages
+                WHERE userId = ? AND status = 'pending'
+                ORDER BY createdAt DESC
+                LIMIT 1
+            `).get(client.id) as any;
+
             return {
                 id: client.id,
                 firstName: client.firstName || '',
@@ -76,7 +85,8 @@ export async function GET(request: NextRequest) {
                 orderCount,
                 lastOrderDate: lastOrder ? lastOrder.createdAt : null,
                 lastOrderType: lastOrder ? (lastOrder.type === 'product' ? 'Produits' : (lastOrder.serviceType || 'Prestation')) : null,
-                averageOrderPrice: averagePrice
+                averageOrderPrice: averagePrice,
+                pendingMessageMotif: pendingMessage ? pendingMessage.motif : null
             };
         });
 

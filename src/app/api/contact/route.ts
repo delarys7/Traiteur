@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { Resend } from 'resend';
 import db from '@/lib/db';
+import { randomUUID } from 'crypto';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -143,7 +144,29 @@ export async function POST(request: NextRequest) {
             }
         }
 
-        // TODO: Optionnellement, sauvegarder le message en base de données
+        // Sauvegarder le message en base de données
+        const messageId = randomUUID();
+        const now = new Date().toISOString();
+        
+        db.prepare(`
+            INSERT INTO contact_messages (
+                id, userId, firstName, lastName, email, phone, entreprise, 
+                motif, message, status, createdAt, updatedAt
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?)
+        `).run(
+            messageId,
+            session.user.id,
+            firstName,
+            lastName,
+            email,
+            phone || null,
+            entreprise || null,
+            motif,
+            message,
+            now,
+            now
+        );
 
         return NextResponse.json({
             success: true,
