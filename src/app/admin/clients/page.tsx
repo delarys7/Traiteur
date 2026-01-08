@@ -73,7 +73,7 @@ function ClientsContent() {
     if (isLoading || loading) {
         return (
             <div className={styles.container}>
-                <div className={styles.loading}>{t('admin.clients.loading')}</div>
+                <div className={styles.loading}>Chargement des clients...</div>
             </div>
         );
     }
@@ -92,34 +92,29 @@ function ClientsContent() {
 
     return (
         <div className={styles.container}>
-            <div className={styles.header}>
-                <h1 className={styles.title}>{t('admin.clients.title')}</h1>
-                <p className={styles.subtitle}>{t('admin.clients.subtitle')}</p>
-            </div>
-
             <div className={styles.tableContainer}>
                 <table className={styles.table}>
                     <thead>
                         <tr>
-                            <th>{t('admin.clients.name')}</th>
-                            <th>{t('admin.clients.firstname')}</th>
-                            <th>{t('admin.clients.email')}</th>
-                            <th>{t('admin.clients.phone')}</th>
-                            <th>{t('admin.clients.type')}</th>
-                            <th>{t('admin.clients.entreprise')}</th>
-                            <th>{t('admin.clients.allergies')}</th>
-                            <th>{t('admin.clients.order_count')}</th>
-                            <th>{t('admin.clients.last_order_date')}</th>
-                            <th>{t('admin.clients.last_order_type')}</th>
-                            <th>{t('admin.clients.avg_price')}</th>
-                            <th>{t('admin.clients.actions')}</th>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Mail</th>
+                            <th>Téléphone</th>
+                            <th>Type</th>
+                            <th>Entreprise</th>
+                            <th>Allergies</th>
+                            <th>Nb commandes</th>
+                            <th>Dernière commande</th>
+                            <th>Type dernière commande</th>
+                            <th>Prix moyen</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {clients.length === 0 ? (
                             <tr>
                                 <td colSpan={12} className={styles.empty}>
-                                    {t('admin.clients.no_clients')}
+                                    Aucun client trouvé
                                 </td>
                             </tr>
                         ) : (
@@ -131,7 +126,7 @@ function ClientsContent() {
                                     <td>{client.phone || '-'}</td>
                                     <td>
                                         <span className={client.type === 'entreprise' ? styles.badgeEnterprise : styles.badgeParticulier}>
-                                            {client.type === 'entreprise' ? t('admin.clients.type_enterprise') : t('admin.clients.type_particulier')}
+                                            {client.type === 'entreprise' ? 'Entreprise' : 'Particulier'}
                                         </span>
                                     </td>
                                     <td>{client.entreprise || '-'}</td>
@@ -159,7 +154,7 @@ function ClientsContent() {
                                             href={`/admin/clients/${client.id}/orders`}
                                             className={styles.viewButton}
                                         >
-                                            {t('admin.clients.view_orders')}
+                                            Voir l'historique
                                         </Link>
                                     </td>
                                 </tr>

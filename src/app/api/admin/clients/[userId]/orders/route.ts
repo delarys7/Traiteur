@@ -4,7 +4,7 @@ import db from '@/lib/db';
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { userId: string } }
+    { params }: { params: Promise<{ userId: string }> }
 ) {
     try {
         // Vérifier l'authentification
@@ -27,7 +27,7 @@ export async function GET(
             );
         }
 
-        const { userId } = params;
+        const { userId } = await params;
 
         // Récupérer les informations du client
         const client = db.prepare('SELECT * FROM user WHERE id = ?').get(userId) as any;

@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import Link from 'next/link';
-import styles from '../page.module.css';
+import styles from '../../page.module.css';
 
 interface Order {
     id: string;
@@ -85,7 +85,7 @@ function OrdersContent() {
     if (isLoading || loading) {
         return (
             <div className={styles.container}>
-                <div className={styles.loading}>{t('admin.orders.loading')}</div>
+                <div className={styles.loading}>Chargement des commandes...</div>
             </div>
         );
     }
@@ -95,7 +95,7 @@ function OrdersContent() {
             <div className={styles.container}>
                 <div className={styles.error}>{error}</div>
                 <Link href="/admin/clients" className={styles.viewButton} style={{ marginTop: '1rem', display: 'inline-block' }}>
-                    {t('admin.orders.back')}
+                    Retour à la liste
                 </Link>
             </div>
         );
@@ -109,17 +109,17 @@ function OrdersContent() {
         <div className={styles.container}>
             <div className={styles.header}>
                 <Link href="/admin/clients" className={styles.backLink}>
-                    ← {t('admin.orders.back')}
+                    ← Retour à la liste
                 </Link>
                 <h1 className={styles.title}>
-                    {t('admin.orders.title')} - {client?.firstName} {client?.lastName}
+                    Historique des commandes - {client?.firstName} {client?.lastName}
                 </h1>
                 <p className={styles.subtitle}>{client?.email}</p>
             </div>
 
             {orders.length === 0 ? (
                 <div className={styles.empty}>
-                    {t('admin.orders.no_orders')}
+                    Aucune commande pour ce client
                 </div>
             ) : (
                 <div className={styles.ordersList}>
@@ -128,7 +128,7 @@ function OrdersContent() {
                             <div className={styles.orderHeader}>
                                 <div>
                                     <h3 className={styles.orderId}>
-                                        {t('admin.orders.order')} #{order.id.substring(0, 8)}
+                                        Commande #{order.id.substring(0, 8)}
                                     </h3>
                                     <p className={styles.orderDate}>
                                         {new Date(order.createdAt).toLocaleDateString('fr-FR', {
@@ -142,7 +142,7 @@ function OrdersContent() {
                                 </div>
                                 <div className={styles.orderInfo}>
                                     <span className={styles.orderType}>
-                                        {order.type === 'product' ? t('admin.orders.type_product') : (order.serviceType || t('admin.orders.type_service'))}
+                                        {order.type === 'product' ? 'Produits' : (order.serviceType || 'Prestation')}
                                     </span>
                                     <span className={styles.orderStatus}>
                                         {order.status}
@@ -154,7 +154,7 @@ function OrdersContent() {
                             </div>
                             {order.items && Array.isArray(order.items) && order.items.length > 0 && (
                                 <div className={styles.orderItems}>
-                                    <h4>{t('admin.orders.items')}:</h4>
+                                    <h4>Articles :</h4>
                                     <ul>
                                         {order.items.map((item: any, index: number) => (
                                             <li key={index}>
