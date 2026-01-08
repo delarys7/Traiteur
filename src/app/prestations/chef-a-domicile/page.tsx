@@ -146,68 +146,58 @@ export default function ChefADomicile() {
                 className={`${styles.gallerySection} ${styles.reveal}`}
                 ref={el => { sectionRefs.current[1] = el; }}
             >
-                {/* First row - scrolls left to right */}
+                {/* First row - scrolls left to right (5 images) */}
                 <div className={styles.galleryMarquee}>
                     <div className={styles.marqueeContent}>
                         {[
-                            '/images/hero.jpg',
-                            '/images/main_hero.jpg',
-                            '/images/dessert_hero.jpg',
-                            '/images/cocktail_hero.jpg',
-                            '/images/hero.jpg',
-                            '/images/main_hero.jpg',
-                            '/images/dessert_hero.jpg',
-                            '/images/cocktail_hero.jpg'
+                            '/images/chef-domicile/kitchen-prep-1.jpg',      // Position 1: Préparation en cuisine
+                            '/images/chef-domicile/dessert-prep-1.jpg',      // Position 2: Dessert élaboré
+                            '/images/chef-domicile/chef-presenting-1.jpg',    // Position 3: Chef présentant un plat
+                            '/images/chef-domicile/wine-service-1.jpg',      // Position 4: Service du vin
+                            '/images/chef-domicile/dinner-party-1.jpg'       // Position 5: Table dressée avec invités
                         ].map((src, i) => (
-                            <div key={`gallery-1-${i}`} className={styles.galleryItem}>
-                                <Image src={src} alt={`Galerie ${i + 1}`} width={400} height={300} className={styles.galleryImage} />
+                            <div key={`gallery-1-${i}-${src}`} className={styles.galleryItem}>
+                                <Image src={src} alt={`Galerie ${i + 1}`} width={400} height={300} className={styles.galleryImage} unoptimized />
                             </div>
                         ))}
+                        {/* Duplicate for seamless loop */}
                         {[
-                            '/images/hero.jpg',
-                            '/images/main_hero.jpg',
-                            '/images/dessert_hero.jpg',
-                            '/images/cocktail_hero.jpg',
-                            '/images/hero.jpg',
-                            '/images/main_hero.jpg',
-                            '/images/dessert_hero.jpg',
-                            '/images/cocktail_hero.jpg'
+                            '/images/chef-domicile/kitchen-prep-1.jpg',
+                            '/images/chef-domicile/dessert-prep-1.jpg',
+                            '/images/chef-domicile/chef-presenting-1.jpg',
+                            '/images/chef-domicile/wine-service-1.jpg',
+                            '/images/chef-domicile/dinner-party-1.jpg'
                         ].map((src, i) => (
-                            <div key={`gallery-1-dup-${i}`} className={styles.galleryItem}>
-                                <Image src={src} alt={`Galerie ${i + 1}`} width={400} height={300} className={styles.galleryImage} />
+                            <div key={`gallery-1-dup-${i}-${src}`} className={styles.galleryItem}>
+                                <Image src={src} alt={`Galerie ${i + 1}`} width={400} height={300} className={styles.galleryImage} unoptimized />
                             </div>
                         ))}
                     </div>
                 </div>
-                {/* Second row - scrolls right to left */}
+                {/* Second row - scrolls right to left (5 images) */}
                 <div className={styles.galleryMarquee}>
                     <div className={`${styles.marqueeContent} ${styles.marqueeContentReverse}`}>
                         {[
-                            '/images/cocktail_hero.jpg',
-                            '/images/dessert_hero.jpg',
-                            '/images/main_hero.jpg',
-                            '/images/hero.jpg',
-                            '/images/cocktail_hero.jpg',
-                            '/images/dessert_hero.jpg',
-                            '/images/main_hero.jpg',
-                            '/images/hero.jpg'
+                            '/images/chef-domicile/kitchen-prep-2.jpg',
+                            '/images/chef-domicile/reception-1.jpg',
+                            '/images/chef-domicile/chef-serving-1.jpg',
+                            '/images/chef-domicile/wine-tasting-1.jpg',
+                            '/images/chef-domicile/main-course-1.jpg.png'
                         ].map((src, i) => (
                             <div key={`gallery-2-${i}`} className={styles.galleryItem}>
-                                <Image src={src} alt={`Galerie ${i + 1}`} width={400} height={300} className={styles.galleryImage} />
+                                <Image src={src} alt={`Galerie ${i + 6}`} width={400} height={300} className={styles.galleryImage} unoptimized />
                             </div>
                         ))}
+                        {/* Duplicate for seamless loop */}
                         {[
-                            '/images/cocktail_hero.jpg',
-                            '/images/dessert_hero.jpg',
-                            '/images/main_hero.jpg',
-                            '/images/hero.jpg',
-                            '/images/cocktail_hero.jpg',
-                            '/images/dessert_hero.jpg',
-                            '/images/main_hero.jpg',
-                            '/images/hero.jpg'
+                            '/images/chef-domicile/kitchen-prep-2.jpg',
+                            '/images/chef-domicile/reception-1.jpg',
+                            '/images/chef-domicile/chef-serving-1.jpg',
+                            '/images/chef-domicile/wine-tasting-1.jpg',
+                            '/images/chef-domicile/main-course-1.jpg.png'
                         ].map((src, i) => (
-                            <div key={`gallery-2-dup-${i}`} className={styles.galleryItem}>
-                                <Image src={src} alt={`Galerie ${i + 1}`} width={400} height={300} className={styles.galleryImage} />
+                            <div key={`gallery-2-dup-${i}-${src}`} className={styles.galleryItem}>
+                                <Image src={src} alt={`Galerie ${i + 6}`} width={400} height={300} className={styles.galleryImage} unoptimized />
                             </div>
                         ))}
                     </div>
