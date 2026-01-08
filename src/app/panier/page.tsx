@@ -95,12 +95,37 @@ export default function CartPage() {
                 <div className={styles.summary}>
                     <h2 className={styles.summaryTitle}>{t('cart.summary')}</h2>
                     <div className={styles.summaryRow}>
-                        <span>{t('cart.subtotal')}</span>
-                        <span>{total.toFixed(2)}€</span>
+                        <span>{t('cart.groups.buffets')}</span>
+                        <span>
+                            {items
+                                .filter(i => i.category?.toLowerCase() === 'buffet')
+                                .reduce((sum, item) => sum + (item.price * item.quantity), 0)
+                                .toFixed(2)}€
+                        </span>
                     </div>
                     <div className={styles.summaryRow}>
-                        <span>{t('cart.delivery')}</span>
-                        <span>{t('cart.delivery_note')}</span>
+                        <span>{t('cart.groups.plateaux')}</span>
+                        <span>
+                            {items
+                                .filter(i => i.category?.toLowerCase() === 'plateau')
+                                .reduce((sum, item) => sum + (item.price * item.quantity), 0)
+                                .toFixed(2)}€
+                        </span>
+                    </div>
+                    <div className={styles.summaryRow}>
+                        <span>{t('cart.groups.cocktails')}</span>
+                        <span>
+                            {items
+                                .filter(i => i.category?.toLowerCase() === 'cocktail')
+                                .reduce((sum, item) => sum + (item.price * item.quantity), 0)
+                                .toFixed(2)}€
+                        </span>
+                    </div>
+                    <div className={styles.summaryRow}>
+                        <span>Nombre de produits</span>
+                        <span>
+                            {items.reduce((sum, item) => sum + item.quantity, 0)}
+                        </span>
                     </div>
                     <div className={`${styles.summaryRow} ${styles.total}`}>
                         <span>{t('cart.total')}</span>
@@ -110,7 +135,7 @@ export default function CartPage() {
                         className={styles.checkoutButton} 
                         onClick={() => router.push('/contact?from=cart')}
                     >
-                        {t('cart.checkout')}
+                        Étape suivante
                     </button>
                 </div>
             </div>
