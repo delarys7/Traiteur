@@ -281,13 +281,51 @@ export const translations = {
             hero_subtitle: 'L\'Intimité du Goût',
             hero_title: 'L\'Excellence s\'invite dans votre Demeure',
             selections: 'Sélections du Chef',
-            menus_title: 'Menus déjà préparés',
-            menu_signature: 'Menu Signature',
-            menu_signature_desc: 'Une immersion dans l\'univers créatif du Chef.',
-            menu_degustation: 'Menu Dégustation',
-            menu_degustation_desc: '7 étapes gastronomiques pour les gourmets exigeants.',
-            menu_saison: 'Menu Saison',
-            menu_saison_desc: 'Le meilleur du terroir à l\'instant présent.',
+            menus_title: 'Choix du menu',
+            menu_signature: {
+                title: 'Menu Signature',
+                price: 'À partir de 95€ / pers',
+                courses: {
+                    entree: 'Amuse-bouche',
+                    entree_desc: 'Mousse de foie gras au Porto, tuile de sésame',
+                    plat1: 'Premier service',
+                    plat1_desc: 'Saint-Jacques poêlées, purée de panais à la truffe noire',
+                    plat2: 'Second service',
+                    plat2_desc: 'Pigeon rôti, jus au vin rouge, légumes de saison',
+                    dessert: 'Dessert',
+                    dessert_desc: 'Soufflé au Grand Marnier, sorbet agrumes'
+                }
+            },
+            menu_degustation: {
+                title: 'Menu Dégustation',
+                price: 'À partir de 135€ / pers',
+                courses: {
+                    entree: 'Mise en bouche',
+                    entree_desc: 'Oeuf de caille mollet, crème de champignons',
+                    plat1: 'Premier service',
+                    plat1_desc: 'Homard bleu, beurre blanc citronné, légumes croquants',
+                    plat2: 'Second service',
+                    plat2_desc: 'Côte de bœuf Wagyu, pommes sarladaises, sauce au poivre',
+                    intermezzo: 'Intermezzo',
+                    intermezzo_desc: 'Granité de thé vert, litchi',
+                    dessert: 'Dessert',
+                    dessert_desc: 'Tarte fine aux pommes, glace vanille, caramel beurre salé',
+                    mignardises: 'Mignardises',
+                    mignardises_desc: 'Macarons, chocolats maison'
+                }
+            },
+            menu_saison: {
+                title: 'Menu Saison',
+                price: 'À partir de 85€ / pers',
+                courses: {
+                    entree: 'Entrée',
+                    entree_desc: 'Velouté de potiron, huile de noisette, croutons',
+                    plat1: 'Plat principal',
+                    plat1_desc: 'Filet de bar, risotto crémeux aux cèpes, émulsion citron',
+                    dessert: 'Dessert',
+                    dessert_desc: 'Tarte tatin revisitée, glace vanille de Madagascar'
+                }
+            },
             price_from: 'À partir de',
             per_person: '/ pers',
             gallery_label: 'Immersion',
@@ -667,13 +705,51 @@ export const translations = {
             hero_subtitle: 'The Intimacy of Taste',
             hero_title: 'Excellence Comes to Your Home',
             selections: 'Chef\'s Selections',
-            menus_title: 'Pre-prepared Menus',
-            menu_signature: 'Signature Menu',
-            menu_signature_desc: 'An immersion into the Chef\'s creative universe.',
-            menu_degustation: 'Tasting Menu',
-            menu_degustation_desc: '7 gastronomic courses for demanding gourmets.',
-            menu_saison: 'Seasonal Menu',
-            menu_saison_desc: 'The best of the terroir at the present moment.',
+            menus_title: 'Menu Selection',
+            menu_signature: {
+                title: 'Signature Menu',
+                price: 'From 95€ / person',
+                courses: {
+                    entree: 'Amuse-bouche',
+                    entree_desc: 'Port wine foie gras mousse, sesame tuile',
+                    plat1: 'First course',
+                    plat1_desc: 'Pan-seared scallops, black truffle parsnip purée',
+                    plat2: 'Second course',
+                    plat2_desc: 'Roasted pigeon, red wine jus, seasonal vegetables',
+                    dessert: 'Dessert',
+                    dessert_desc: 'Grand Marnier soufflé, citrus sorbet'
+                }
+            },
+            menu_degustation: {
+                title: 'Tasting Menu',
+                price: 'From 135€ / person',
+                courses: {
+                    entree: 'Amuse-bouche',
+                    entree_desc: 'Soft quail egg, mushroom cream',
+                    plat1: 'First course',
+                    plat1_desc: 'Blue lobster, lemon butter sauce, crisp vegetables',
+                    plat2: 'Second course',
+                    plat2_desc: 'Wagyu beef rib, sarladaise potatoes, peppercorn sauce',
+                    intermezzo: 'Intermezzo',
+                    intermezzo_desc: 'Green tea granita, lychee',
+                    dessert: 'Dessert',
+                    dessert_desc: 'Fine apple tart, vanilla ice cream, salted butter caramel',
+                    mignardises: 'Petit fours',
+                    mignardises_desc: 'Macarons, house-made chocolates'
+                }
+            },
+            menu_saison: {
+                title: 'Seasonal Menu',
+                price: 'From 85€ / person',
+                courses: {
+                    entree: 'Starter',
+                    entree_desc: 'Pumpkin velouté, hazelnut oil, croutons',
+                    plat1: 'Main course',
+                    plat1_desc: 'Sea bass fillet, creamy porcini risotto, lemon emulsion',
+                    dessert: 'Dessert',
+                    dessert_desc: 'Revisited tarte tatin, Madagascar vanilla ice cream'
+                }
+            },
             price_from: 'From',
             per_person: '/ person',
             gallery_label: 'Immersion',

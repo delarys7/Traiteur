@@ -11,6 +11,11 @@
     transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 .visible {
     opacity: 1;
     transform: translateY(0);
@@ -93,7 +98,7 @@
 
 /* --- MANIFESTO SECTION --- */
 .manifesto {
-    padding: 12rem 4rem;
+    padding: 8rem 4rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -124,50 +129,7 @@
     font-style: italic;
 }
 
-/* --- EXPERIENCE SECTION (ORIGINAL GRID) --- */
-.experience {
-    padding: 8rem 4rem;
-    background-color: #fcfcfc;
-}
-
-.experienceGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12rem;
-    max-width: 1600px;
-    margin: 0 auto;
-    align-items: center;
-}
-
-.experienceImageWrapper {
-    position: relative;
-    width: 100%;
-    height: 700px;
-    overflow: hidden;
-}
-
-.experienceImage {
-    object-fit: cover;
-    transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-.experienceItem:hover .experienceImage {
-    transform: scale(1.05);
-}
-
-.experienceContent {
-    padding-right: 4rem;
-}
-
-.experienceNumber {
-    font-family: var(--font-playfair);
-    font-size: 5rem;
-    color: #eee;
-    margin-bottom: -2rem;
-    position: relative;
-    z-index: -1;
-}
-
+/* --- EXPERIENCE TITLE (reused for section headers) --- */
 .experienceTitle {
     font-family: var(--font-playfair);
     font-size: 3.5rem;
@@ -176,82 +138,9 @@
     color: #111;
 }
 
-.experienceDesc {
-    font-family: var(--font-inter);
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: #555;
-    margin-bottom: 4rem;
-}
-
-/* --- ASYMMETRIC IMAGE STACK --- */
-.showcase {
-    padding: 15rem 4rem;
-    background-color: #fff;
-    position: relative;
-}
-
-.stackContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-width: 1400px;
-    margin: 0 auto;
-    position: relative;
-    height: 800px;
-}
-
-.stackItemMain {
-    width: 50%;
-    height: 100%;
-    position: relative;
-    z-index: 2;
-    box-shadow: 0 50px 100px rgba(0,0,0,0.1);
-}
-
-.stackItemFloating {
-    width: 35%;
-    height: 60%;
-    position: absolute;
-    top: -10%;
-    right: 5%;
-    z-index: 3;
-    box-shadow: 0 40px 80px rgba(0,0,0,0.15);
-}
-
-.stackItemBackground {
-    width: 40%;
-    height: 30%;
-    position: absolute;
-    bottom: -13%;
-    left: 10%;
-    z-index: 1;
-    background-color: #f7f7f7;
-    display: flex;
-    align-items: flex-end;
-    padding: 2rem;
-}
-
-.stackInfo {
-    max-width: 500px;
-}
-
-.stackInfo h4 {
-    font-family: var(--font-playfair);
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.stackInfo p {
-    font-family: var(--font-inter);
-    font-size: 0.9rem;
-    color: #888;
-    line-height: 1.6;
-}
-
 /* --- QUOTE SECTION --- */
 .quoteSection {
-    padding: 10rem 0;
+    padding: 4rem 0;
     background-color: #111;
     color: #fff;
     text-align: center;
@@ -278,7 +167,7 @@
 
 /* --- CALL TO ACTION --- */
 .ctaSection {
-    padding: 15rem 4rem;
+    padding: 8rem 4rem;
     text-align: center;
 }
 
@@ -341,6 +230,7 @@
 .menusSection {
     padding: 10rem 4rem;
     background-color: #fff;
+    min-height: 500px; /* Ensure section has height */
 }
 
 .sectionHeader {
@@ -350,10 +240,37 @@
 
 .menusGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 3rem;
     max-width: 1400px;
     margin: 0 auto;
+}
+
+/* When screen is too small for 3 columns, use 2 columns */
+@media (max-width: 1024px) {
+    .menusGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* Center the third menu when it's alone on a row (only at this breakpoint) */
+    .menusGrid > .menuCard:nth-child(3) {
+        grid-column: 1 / -1;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+}
+
+/* When screen is too small for 2 columns, use 1 column */
+@media (max-width: 768px) {
+    .menusGrid {
+        grid-template-columns: 1fr;
+    }
+    
+    .menusGrid > .menuCard:nth-child(3) {
+        grid-column: 1;
+        max-width: 100%;
+        margin: 0;
+    }
 }
 
 .menuCard {
@@ -362,6 +279,8 @@
     border: 1px solid #eee;
     text-align: center;
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .menuCard:hover {
@@ -373,15 +292,47 @@
 .menuCard h3 {
     font-family: var(--font-playfair);
     font-size: 1.8rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2.5rem;
     color: #111;
+    text-align: center;
 }
 
-.menuCard p {
+.menuCourses {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.menuCourse {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+.menuCourse:last-child {
+    border-bottom: none;
+}
+
+.courseLabel {
     font-family: var(--font-inter);
-    color: #666;
-    margin-bottom: 2rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #AA8B55;
+    margin-bottom: 0.25rem;
+}
+
+.courseDesc {
+    font-family: var(--font-inter);
+    color: #555;
     line-height: 1.6;
+    font-size: 0.95rem;
+    margin: 0;
 }
 
 .menuPrice {
@@ -391,80 +342,107 @@
     text-transform: uppercase;
     letter-spacing: 0.1em;
     font-size: 0.9rem;
+    text-align: center;
+    display: block;
+    margin-top: 2rem;
 }
 
-/* --- GALLERY SECTION --- */
+/* --- GALLERY SECTION - MARQUEE --- */
 .gallerySection {
-    padding: 10rem 4rem;
+    padding: 2rem 0;
     background-color: #fcfcfc;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
-.galleryGrid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 400px;
-    gap: 1.5rem;
-    max-width: 1600px;
-    margin: 0 auto;
+.galleryMarquee {
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+}
+
+.marqueeContent {
+    display: inline-flex;
+    align-items: center;
+    gap: 2rem;
+    animation: scrollGallery 30s linear infinite;
+    padding-left: 2rem;
+}
+
+.marqueeContentReverse {
+    animation: scrollGalleryReverse 30s linear infinite;
+}
+
+.galleryMarquee:hover .marqueeContent,
+.galleryMarquee:hover .marqueeContentReverse {
+    animation-play-state: paused;
 }
 
 .galleryItem {
+    flex-shrink: 0;
+    width: 400px;
+    height: 300px;
     position: relative;
     overflow: hidden;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.galleryItem:hover {
+    transform: scale(1.05);
 }
 
 .galleryImage {
     object-fit: cover;
-    transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+    width: 100%;
+    height: 100%;
 }
 
-.galleryItem:hover .galleryImage {
-    transform: scale(1.1);
+@keyframes scrollGallery {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes scrollGalleryReverse {
+    0% {
+        transform: translateX(-50%);
+    }
+    100% {
+        transform: translateX(0);
+    }
 }
 
 /* --- RESPONSIVE --- */
 @media (max-width: 1024px) {
-    .experienceGrid {
-        grid-template-columns: 1fr;
-        gap: 6rem;
-    }
-    
-    .experienceContent {
-        padding-right: 0;
-        order: -1;
-    }
-
-    .stackContainer {
-        flex-direction: column;
-        height: auto;
-    }
-
-    .stackItemMain, .stackItemFloating, .stackItemBackground {
-        width: 100%;
-        position: relative;
-        inset: auto;
-        margin-bottom: 2rem;
-    }
-    
-    .stackItemBackground {
-        padding: 2rem;
-    }
-
     .manifesto {
         padding: 8rem 2rem;
     }
 
-    .galleryGrid {
-        grid-template-columns: repeat(2, 1fr);
+    .galleryItem {
+        width: 300px;
+        height: 225px;
     }
 }
 
 @media (max-width: 768px) {
-    .galleryGrid {
-        grid-template-columns: 1fr;
-    }
-    
     .menusSection, .gallerySection {
-        padding: 6rem 2rem;
+        padding: 4rem 2rem;
+    }
+
+    .galleryItem {
+        width: 250px;
+        height: 188px;
+    }
+
+    .experienceTitle {
+        font-size: 2.5rem;
     }
 }

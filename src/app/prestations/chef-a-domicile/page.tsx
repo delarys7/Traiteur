@@ -18,11 +18,18 @@ export default function ChefADomicile() {
                     entry.target.classList.add(styles.visible);
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.01, rootMargin: '50px' }); // Lower threshold and add margin
 
         sectionRefs.current.forEach(section => {
             if (section) observer.observe(section);
         });
+
+        // Force visibility for menus section after a short delay as fallback
+        setTimeout(() => {
+            if (sectionRefs.current[0] && !sectionRefs.current[0].classList.contains(styles.visible)) {
+                sectionRefs.current[0].classList.add(styles.visible);
+            }
+        }, 500);
 
         return () => observer.disconnect();
     }, []);
@@ -49,10 +56,12 @@ export default function ChefADomicile() {
                 </div>
             </section>
 
-            {/* NEW: MENUS SECTION */}
+            {/* MENUS SECTION */}
             <section 
                 className={`${styles.menusSection} ${styles.reveal}`}
-                ref={el => { sectionRefs.current[4] = el; }}
+                ref={el => { 
+                    sectionRefs.current[0] = el;
+                }}
             >
                 <div className={styles.sectionHeader}>
                     <span className={styles.manifestoLabel}>{t('chef_domicile.selections')}</span>
@@ -60,52 +69,155 @@ export default function ChefADomicile() {
                 </div>
                 <div className={styles.menusGrid}>
                     <div className={styles.menuCard}>
-                        <h3>{t('chef_domicile.menu_signature')}</h3>
-                        <p>{t('chef_domicile.menu_signature_desc')}</p>
-                        <span className={styles.menuPrice}>{t('chef_domicile.price_from')} 95€ {t('chef_domicile.per_person')}</span>
+                        <h3>{t('chef_domicile.menu_signature.title')}</h3>
+                        <div className={styles.menuCourses}>
+                            <div className={styles.menuCourse}>
+                                <span className={styles.courseLabel}>{t('chef_domicile.menu_signature.courses.entree')}</span>
+                                <p className={styles.courseDesc}>{t('chef_domicile.menu_signature.courses.entree_desc')}</p>
+                            </div>
+                            <div className={styles.menuCourse}>
+                                <span className={styles.courseLabel}>{t('chef_domicile.menu_signature.courses.plat1')}</span>
+                                <p className={styles.courseDesc}>{t('chef_domicile.menu_signature.courses.plat1_desc')}</p>
+                            </div>
+                            <div className={styles.menuCourse}>
+                                <span className={styles.courseLabel}>{t('chef_domicile.menu_signature.courses.plat2')}</span>
+                                <p className={styles.courseDesc}>{t('chef_domicile.menu_signature.courses.plat2_desc')}</p>
+                            </div>
+                            <div className={styles.menuCourse}>
+                                <span className={styles.courseLabel}>{t('chef_domicile.menu_signature.courses.dessert')}</span>
+                                <p className={styles.courseDesc}>{t('chef_domicile.menu_signature.courses.dessert_desc')}</p>
+                            </div>
+                        </div>
+                        <span className={styles.menuPrice}>{t('chef_domicile.menu_signature.price')}</span>
                     </div>
                     <div className={styles.menuCard}>
-                        <h3>{t('chef_domicile.menu_degustation')}</h3>
-                        <p>{t('chef_domicile.menu_degustation_desc')}</p>
-                        <span className={styles.menuPrice}>{t('chef_domicile.price_from')} 135€ {t('chef_domicile.per_person')}</span>
+                        <h3>{t('chef_domicile.menu_degustation.title')}</h3>
+                        <div className={styles.menuCourses}>
+                            <div className={styles.menuCourse}>
+                                <span className={styles.courseLabel}>{t('chef_domicile.menu_degustation.courses.entree')}</span>
+                                <p className={styles.courseDesc}>{t('chef_domicile.menu_degustation.courses.entree_desc')}</p>
+                            </div>
+                            <div className={styles.menuCourse}>
+                                <span className={styles.courseLabel}>{t('chef_domicile.menu_degustation.courses.plat1')}</span>
+                                <p className={styles.courseDesc}>{t('chef_domicile.menu_degustation.courses.plat1_desc')}</p>
+                            </div>
+                            <div className={styles.menuCourse}>
+                                <span className={styles.courseLabel}>{t('chef_domicile.menu_degustation.courses.plat2')}</span>
+                                <p className={styles.courseDesc}>{t('chef_domicile.menu_degustation.courses.plat2_desc')}</p>
+                            </div>
+                            <div className={styles.menuCourse}>
+                                <span className={styles.courseLabel}>{t('chef_domicile.menu_degustation.courses.intermezzo')}</span>
+                                <p className={styles.courseDesc}>{t('chef_domicile.menu_degustation.courses.intermezzo_desc')}</p>
+                            </div>
+                            <div className={styles.menuCourse}>
+                                <span className={styles.courseLabel}>{t('chef_domicile.menu_degustation.courses.dessert')}</span>
+                                <p className={styles.courseDesc}>{t('chef_domicile.menu_degustation.courses.dessert_desc')}</p>
+                            </div>
+                            <div className={styles.menuCourse}>
+                                <span className={styles.courseLabel}>{t('chef_domicile.menu_degustation.courses.mignardises')}</span>
+                                <p className={styles.courseDesc}>{t('chef_domicile.menu_degustation.courses.mignardises_desc')}</p>
+                            </div>
+                        </div>
+                        <span className={styles.menuPrice}>{t('chef_domicile.menu_degustation.price')}</span>
                     </div>
                     <div className={styles.menuCard}>
-                        <h3>{t('chef_domicile.menu_saison')}</h3>
-                        <p>{t('chef_domicile.menu_saison_desc')}</p>
-                        <span className={styles.menuPrice}>{t('chef_domicile.price_from')} 85€ {t('chef_domicile.per_person')}</span>
+                        <h3>{t('chef_domicile.menu_saison.title')}</h3>
+                        <div className={styles.menuCourses}>
+                            <div className={styles.menuCourse}>
+                                <span className={styles.courseLabel}>{t('chef_domicile.menu_saison.courses.entree')}</span>
+                                <p className={styles.courseDesc}>{t('chef_domicile.menu_saison.courses.entree_desc')}</p>
+                            </div>
+                            <div className={styles.menuCourse}>
+                                <span className={styles.courseLabel}>{t('chef_domicile.menu_saison.courses.plat1')}</span>
+                                <p className={styles.courseDesc}>{t('chef_domicile.menu_saison.courses.plat1_desc')}</p>
+                            </div>
+                            <div className={styles.menuCourse}>
+                                <span className={styles.courseLabel}>{t('chef_domicile.menu_saison.courses.dessert')}</span>
+                                <p className={styles.courseDesc}>{t('chef_domicile.menu_saison.courses.dessert_desc')}</p>
+                            </div>
+                        </div>
+                        <span className={styles.menuPrice}>{t('chef_domicile.menu_saison.price')}</span>
                     </div>
                 </div>
             </section>
 
-            {/* NEW: GALLERY SECTION */}
+            {/* GALLERY SECTION - MARQUEE */}
             <section 
                 className={`${styles.gallerySection} ${styles.reveal}`}
-                ref={el => { sectionRefs.current[5] = el; }}
+                ref={el => { sectionRefs.current[1] = el; }}
             >
-                <div className={styles.sectionHeader}>
-                    <span className={styles.manifestoLabel}>{t('chef_domicile.gallery_label')}</span>
-                    <h2 className={styles.experienceTitle}>{t('chef_domicile.gallery_title')}</h2>
+                {/* First row - scrolls left to right */}
+                <div className={styles.galleryMarquee}>
+                    <div className={styles.marqueeContent}>
+                        {[
+                            '/images/hero.jpg',
+                            '/images/main_hero.jpg',
+                            '/images/dessert_hero.jpg',
+                            '/images/cocktail_hero.jpg',
+                            '/images/hero.jpg',
+                            '/images/main_hero.jpg',
+                            '/images/dessert_hero.jpg',
+                            '/images/cocktail_hero.jpg'
+                        ].map((src, i) => (
+                            <div key={`gallery-1-${i}`} className={styles.galleryItem}>
+                                <Image src={src} alt={`Galerie ${i + 1}`} width={400} height={300} className={styles.galleryImage} />
+                            </div>
+                        ))}
+                        {[
+                            '/images/hero.jpg',
+                            '/images/main_hero.jpg',
+                            '/images/dessert_hero.jpg',
+                            '/images/cocktail_hero.jpg',
+                            '/images/hero.jpg',
+                            '/images/main_hero.jpg',
+                            '/images/dessert_hero.jpg',
+                            '/images/cocktail_hero.jpg'
+                        ].map((src, i) => (
+                            <div key={`gallery-1-dup-${i}`} className={styles.galleryItem}>
+                                <Image src={src} alt={`Galerie ${i + 1}`} width={400} height={300} className={styles.galleryImage} />
+                            </div>
+                        ))}
+                    </div>
                 </div>
-                <div className={styles.galleryGrid}>
-                    <div className={styles.galleryItem}>
-                        <Image src="/images/hero.jpg" alt="Galerie 1" fill className={styles.galleryImage} />
-                    </div>
-                    <div className={styles.galleryItem}>
-                        <Image src="/images/main_hero.jpg" alt="Galerie 2" fill className={styles.galleryImage} />
-                    </div>
-                    <div className={styles.galleryItem}>
-                        <Image src="/images/dessert_hero.jpg" alt="Galerie 3" fill className={styles.galleryImage} />
-                    </div>
-                    <div className={styles.galleryItem}>
-                        <Image src="/images/cocktail_hero.jpg" alt="Galerie 4" fill className={styles.galleryImage} />
+                {/* Second row - scrolls right to left */}
+                <div className={styles.galleryMarquee}>
+                    <div className={`${styles.marqueeContent} ${styles.marqueeContentReverse}`}>
+                        {[
+                            '/images/cocktail_hero.jpg',
+                            '/images/dessert_hero.jpg',
+                            '/images/main_hero.jpg',
+                            '/images/hero.jpg',
+                            '/images/cocktail_hero.jpg',
+                            '/images/dessert_hero.jpg',
+                            '/images/main_hero.jpg',
+                            '/images/hero.jpg'
+                        ].map((src, i) => (
+                            <div key={`gallery-2-${i}`} className={styles.galleryItem}>
+                                <Image src={src} alt={`Galerie ${i + 1}`} width={400} height={300} className={styles.galleryImage} />
+                            </div>
+                        ))}
+                        {[
+                            '/images/cocktail_hero.jpg',
+                            '/images/dessert_hero.jpg',
+                            '/images/main_hero.jpg',
+                            '/images/hero.jpg',
+                            '/images/cocktail_hero.jpg',
+                            '/images/dessert_hero.jpg',
+                            '/images/main_hero.jpg',
+                            '/images/hero.jpg'
+                        ].map((src, i) => (
+                            <div key={`gallery-2-dup-${i}`} className={styles.galleryItem}>
+                                <Image src={src} alt={`Galerie ${i + 1}`} width={400} height={300} className={styles.galleryImage} />
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
 
-            {/* 2. MANIFESTO */}
+            {/* MANIFESTO / VISION */}
             <section 
                 className={`${styles.manifesto} ${styles.reveal}`}
-                ref={el => { sectionRefs.current[0] = el; }}
+                ref={el => { sectionRefs.current[2] = el; }}
             >
                 <span className={styles.manifestoLabel}>{t('chef_domicile.vision_label')}</span>
                 <p className={styles.manifestoText}>
@@ -113,96 +225,7 @@ export default function ChefADomicile() {
                 </p>
             </section>
 
-            {/* 3. EXPERIENCE - ITEM 1 (Chef) */}
-            <section 
-                className={`${styles.experience} ${styles.reveal}`}
-                ref={el => { sectionRefs.current[1] = el; }}
-            >
-                <div className={styles.experienceGrid}>
-                    <div className={styles.experienceItemImage}>
-                        <div className={styles.experienceImageWrapper}>
-                            <Image
-                                src="/images/hero.jpg"
-                                alt="La cuisine d'exception"
-                                fill
-                                className={styles.experienceImage}
-                            />
-                        </div>
-                    </div>
-                    <div className={styles.experienceContent}>
-                        <span className={styles.experienceNumber}>01</span>
-                        <h2 className={styles.experienceTitle}>{t('chef_domicile.experience_01_title')}</h2>
-                        <p className={styles.experienceDesc}>
-                            {t('chef_domicile.experience_01_desc')}
-                        </p>
-                        <div className={styles.luxuryTypography}>{t('chef_domicile.experience_01_tag')}</div>
-                    </div>
-                </div>
-            </section>
-
-            {/* 4. ASYMMETRIC SHOWCASE */}
-            <section 
-                className={`${styles.showcase} ${styles.reveal}`}
-                ref={el => { sectionRefs.current[2] = el; }}
-            >
-                <div className={styles.stackContainer}>
-                    <div className={styles.stackItemMain}>
-                        <Image
-                            src="/images/main_hero.jpg"
-                            alt="Plat signature"
-                            fill
-                            className={styles.experienceImage}
-                        />
-                    </div>
-                    <div className={styles.stackItemFloating}>
-                        <Image
-                            src="/images/cocktail_hero.jpg"
-                            alt="Détail culinaire"
-                            fill
-                            className={styles.experienceImage}
-                        />
-                    </div>
-                    <div className={styles.stackItemBackground}>
-                        <div className={styles.stackInfo}>
-                            <h4>{t('chef_domicile.detail_title')}</h4>
-                            <p>
-                                {t('chef_domicile.detail_desc')}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* 5. EXPERIENCE - ITEM 2 (Menu) */}
-            <section 
-                className={`${styles.experience} ${styles.reveal}`}
-                ref={el => { sectionRefs.current[3] = el; }}
-            >
-                <div className={styles.experienceGrid} style={{ direction: 'rtl' }}>
-                    <div className={styles.experienceItemImage} style={{ direction: 'ltr' }}>
-                        <div className={styles.experienceImageWrapper}>
-                            <Image
-                                src="/images/dessert_hero.jpg"
-                                alt="Menu sur-mesure"
-                                fill
-                                className={styles.experienceImage}
-                            />
-                        </div>
-                    </div>
-                    <div className={styles.experienceContent} style={{ direction: 'ltr' }}>
-                        <span className={styles.experienceNumber}>02</span>
-                        <h2 className={styles.experienceTitle}>{t('chef_domicile.experience_02_title')}</h2>
-                        <p className={styles.experienceDesc}>
-                            {t('chef_domicile.experience_02_desc')}
-                        </p>
-                        <Link href="/contact?motif=prestation-domicile" className={styles.discoverLink} style={{ color: '#111', borderBottom: '1px solid #111', textDecoration: 'none', paddingBottom: '2px', fontSize: '1rem' }}>
-                            {t('chef_domicile.experience_02_link')}
-                        </Link>
-                    </div>
-                </div>
-            </section>
-
-            {/* 6. QUOTE */}
+            {/* QUOTE */}
             <section className={styles.quoteSection}>
                 <div className={styles.quote}>
                     &quot;{t('chef_domicile.quote')}&quot;
@@ -210,7 +233,7 @@ export default function ChefADomicile() {
                 <div className={styles.quoteAuthor}>{t('chef_domicile.quote_author')}</div>
             </section>
 
-            {/* 7. CTA */}
+            {/* CTA */}
             <section className={styles.ctaSection}>
                 <h2 className={styles.ctaTitle}>{t('chef_domicile.cta_title')}</h2>
                 <Link href="/contact?motif=prestation-domicile" className={styles.ctaButton}>

@@ -22,6 +22,11 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         let value: any = translations[language];
         for (const k of keys) {
             value = value?.[k];
+            if (value === undefined) break;
+        }
+        // Si la valeur est un objet, retourner la clé pour éviter les erreurs
+        if (typeof value === 'object' && value !== null) {
+            return key;
         }
         return value || key;
     };
