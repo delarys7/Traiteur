@@ -1,0 +1,253 @@
+.container {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #fcfcfc;
+    padding: 4rem 2rem;
+}
+
+.header {
+    max-width: 1400px;
+    margin: 0 auto 3rem;
+    text-align: center;
+}
+
+.title {
+    font-family: var(--font-playfair);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 300;
+    margin-bottom: 1rem;
+    color: #111;
+}
+
+.subtitle {
+    font-family: var(--font-inter);
+    font-size: 1.1rem;
+    color: #666;
+}
+
+.tableContainer {
+    max-width: 1400px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-inter);
+    font-size: 0.9rem;
+}
+
+.table thead {
+    background-color: #f9f9f9;
+    border-bottom: 2px solid #eee;
+}
+
+.table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.75rem;
+    color: #555;
+    white-space: nowrap;
+}
+
+.table td {
+    padding: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    color: #333;
+}
+
+.table tbody tr:hover {
+    background-color: #fafafa;
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.badgeEnterprise,
+.badgeParticulier {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badgeEnterprise {
+    background-color: #e8f4f8;
+    color: #0066cc;
+}
+
+.badgeParticulier {
+    background-color: #f0f8e8;
+    color: #669900;
+}
+
+.viewButton {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #111;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.viewButton:hover {
+    background-color: #333;
+    transform: translateY(-1px);
+}
+
+.empty {
+    text-align: center;
+    padding: 3rem;
+    color: #999;
+    font-style: italic;
+}
+
+.loading,
+.error {
+    text-align: center;
+    padding: 3rem;
+    font-size: 1.1rem;
+}
+
+.error {
+    color: #d32f2f;
+}
+
+.backLink {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: #666;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.backLink:hover {
+    color: #111;
+}
+
+.ordersList {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.orderCard {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.orderHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.orderId {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #111;
+}
+
+.orderDate {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0;
+}
+
+.orderInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+.orderType,
+.orderStatus,
+.orderTotal {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.orderType {
+    background-color: #f0f0f0;
+    color: #555;
+}
+
+.orderStatus {
+    background-color: #e8f4f8;
+    color: #0066cc;
+}
+
+.orderTotal {
+    background-color: #111;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.orderItems {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.orderItems h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #555;
+}
+
+.orderItems ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.orderItems li {
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    color: #666;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.orderItems li:last-child {
+    border-bottom: none;
+}
+
+@media (max-width: 1024px) {
+    .table {
+        font-size: 0.8rem;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.75rem 0.5rem;
+    }
+}

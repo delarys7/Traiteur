@@ -6,10 +6,12 @@ import Image from 'next/image';
 import styles from './Header.module.css';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Header() {
     const { count } = useCart();
     const { language, setLanguage, t } = useLanguage();
+    const { user } = useAuth();
     const [isLogoHidden, setIsLogoHidden] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
@@ -177,10 +179,11 @@ export default function Header() {
                                 {t('header.services')}
                             </a>
                             <div className={styles.dropdown}>
-                                <Link href="/prestations/grands-evenements" className={styles.dropdownLink}>{t('header.dropdown.grands_evenements')}</Link>
-                                <Link href="/prestations/reception-entreprise" className={styles.dropdownLink}>{t('header.dropdown.reception_entreprise')}</Link>
-                                <Link href="/prestations/consulting" className={styles.dropdownLink}>{t('header.dropdown.consulting')}</Link>
                                 <Link href="/prestations/chef-a-domicile" className={styles.dropdownLink}>{t('header.dropdown.chef_domicile')}</Link>
+                                <Link href="/prestations/consulting" className={styles.dropdownLink}>{t('header.dropdown.consulting')}</Link>
+                                <Link href="/prestations/evenements?section=grands-evenements" className={styles.dropdownLink}>{t('header.dropdown.grands_evenements')}</Link>
+                                <Link href="/prestations/evenements?section=reception-entreprise" className={styles.dropdownLink}>{t('header.dropdown.reception_entreprise')}</Link>
+                                <Link href="/prestations/evenements?section=reception-privee" className={styles.dropdownLink}>{t('header.dropdown.reception_privee')}</Link>
                             </div>
                         </div>
                         <div className={styles.navItem}>
@@ -199,6 +202,9 @@ export default function Header() {
                             </div>
                         </div>
                         <Link href="/contact" className={styles.link}>{t('header.contact')}</Link>
+                        {isMounted && user?.type === 'administrateur' && (
+                            <Link href="/admin/clients" className={styles.link}>{t('header.clients')}</Link>
+                        )}
                     </nav>
                 </div>
             </header>
@@ -229,10 +235,11 @@ export default function Header() {
 
                         <div className={styles.mobileCategory}>
                             <div className={styles.mobileCategoryTitle}>{t('header.services')}</div>
-                            <Link href="/prestations/grands-evenements" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.grands_evenements')}</Link>
-                            <Link href="/prestations/reception-entreprise" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.reception_entreprise')}</Link>
-                            <Link href="/prestations/consulting" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.consulting')}</Link>
                             <Link href="/prestations/chef-a-domicile" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.chef_domicile')}</Link>
+                            <Link href="/prestations/consulting" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.consulting')}</Link>
+                            <Link href="/prestations/evenements?section=grands-evenements" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.grands_evenements')}</Link>
+                            <Link href="/prestations/evenements?section=reception-entreprise" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.reception_entreprise')}</Link>
+                            <Link href="/prestations/evenements?section=reception-privee" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.reception_privee')}</Link>
                         </div>
                         
                         <div className={styles.mobileCategory}>
@@ -243,6 +250,10 @@ export default function Header() {
                         </div>
 
                         <Link href="/contact" className={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>{t('header.contact')}</Link>
+                        
+                        {isMounted && user?.type === 'administrateur' && (
+                            <Link href="/admin/clients" className={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>{t('header.clients')}</Link>
+                        )}
                         
                         <div className={styles.mobileDivider}></div>
                         
