@@ -79,8 +79,36 @@ function EvenementsContent() {
         }
     }, [searchParams]);
 
+    // Fonctions de navigation pour les carousels
+    const goToPrevious = (section: 'grands' | 'entreprise' | 'privee') => {
+        if (section === 'grands') {
+            setGrandsEvenementsIndex((prev) => (prev - 1 + grandsEvenementsImages.length) % grandsEvenementsImages.length);
+        } else if (section === 'entreprise') {
+            setReceptionEntrepriseIndex((prev) => (prev - 1 + receptionEntrepriseImages.length) % receptionEntrepriseImages.length);
+        } else {
+            setReceptionPriveeIndex((prev) => (prev - 1 + receptionPriveeImages.length) % receptionPriveeImages.length);
+        }
+    };
+
+    const goToNext = (section: 'grands' | 'entreprise' | 'privee') => {
+        if (section === 'grands') {
+            setGrandsEvenementsIndex((prev) => (prev + 1) % grandsEvenementsImages.length);
+        } else if (section === 'entreprise') {
+            setReceptionEntrepriseIndex((prev) => (prev + 1) % receptionEntrepriseImages.length);
+        } else {
+            setReceptionPriveeIndex((prev) => (prev + 1) % receptionPriveeImages.length);
+        }
+    };
+
     return (
         <div className={styles.container}>
+            {/* Header Section */}
+            <div className={styles.headerSection}>
+                <h1 className={styles.headerTitle}>{t('evenements.header.title')}</h1>
+                <div className={styles.headerSeparator}></div>
+                <p className={styles.headerDescription}>{t('evenements.header.description')}</p>
+            </div>
+
             {/* Section Grands événements - Texte à gauche */}
             <section 
                 id="grands-evenements" 
@@ -110,21 +138,40 @@ function EvenementsContent() {
                 </div>
                 <div className={`${styles.textOverlay} ${styles.textLeft}`}>
                     <h1 className={styles.title}>{t('evenements.grands_evenements.title')}</h1>
-                    <div className={styles.separator}></div>
-                    <p className={styles.description}>
-                        {t('evenements.grands_evenements.description')}
-                    </p>
-                    <div className={styles.carouselIndicators}>
-                        {grandsEvenementsImages.map((_, index) => (
-                            <button
-                                key={index}
-                                className={`${styles.indicator} ${
-                                    index === grandsEvenementsIndex ? styles.active : ''
-                                }`}
-                                onClick={() => setGrandsEvenementsIndex(index)}
-                                aria-label={`Image ${index + 1}`}
-                            />
-                        ))}
+                    <div className={styles.descriptionWrapper}>
+                        <div className={styles.descriptionLine}></div>
+                        <p className={styles.description}>
+                            {t('evenements.grands_evenements.description')}
+                        </p>
+                        <div className={styles.descriptionLine}></div>
+                    </div>
+                    <div className={styles.carouselControls}>
+                        <button
+                            className={styles.carouselArrow}
+                            onClick={() => goToPrevious('grands')}
+                            aria-label="Image précédente"
+                        >
+                            ‹
+                        </button>
+                        <div className={styles.carouselIndicators}>
+                            {grandsEvenementsImages.map((_, index) => (
+                                <button
+                                    key={index}
+                                    className={`${styles.indicator} ${
+                                        index === grandsEvenementsIndex ? styles.active : ''
+                                    }`}
+                                    onClick={() => setGrandsEvenementsIndex(index)}
+                                    aria-label={`Image ${index + 1}`}
+                                />
+                            ))}
+                        </div>
+                        <button
+                            className={styles.carouselArrow}
+                            onClick={() => goToNext('grands')}
+                            aria-label="Image suivante"
+                        >
+                            ›
+                        </button>
                     </div>
                 </div>
             </section>
@@ -158,21 +205,40 @@ function EvenementsContent() {
                 </div>
                 <div className={`${styles.textOverlay} ${styles.textRight}`}>
                     <h1 className={styles.title}>{t('evenements.reception_entreprise.title')}</h1>
-                    <div className={styles.separator}></div>
-                    <p className={styles.description}>
-                        {t('evenements.reception_entreprise.description')}
-                    </p>
-                    <div className={styles.carouselIndicators}>
-                        {receptionEntrepriseImages.map((_, index) => (
-                            <button
-                                key={index}
-                                className={`${styles.indicator} ${
-                                    index === receptionEntrepriseIndex ? styles.active : ''
-                                }`}
-                                onClick={() => setReceptionEntrepriseIndex(index)}
-                                aria-label={`Image ${index + 1}`}
-                            />
-                        ))}
+                    <div className={styles.descriptionWrapper}>
+                        <div className={styles.descriptionLine}></div>
+                        <p className={styles.description}>
+                            {t('evenements.reception_entreprise.description')}
+                        </p>
+                        <div className={styles.descriptionLine}></div>
+                    </div>
+                    <div className={styles.carouselControls}>
+                        <button
+                            className={styles.carouselArrow}
+                            onClick={() => goToPrevious('entreprise')}
+                            aria-label="Image précédente"
+                        >
+                            ‹
+                        </button>
+                        <div className={styles.carouselIndicators}>
+                            {receptionEntrepriseImages.map((_, index) => (
+                                <button
+                                    key={index}
+                                    className={`${styles.indicator} ${
+                                        index === receptionEntrepriseIndex ? styles.active : ''
+                                    }`}
+                                    onClick={() => setReceptionEntrepriseIndex(index)}
+                                    aria-label={`Image ${index + 1}`}
+                                />
+                            ))}
+                        </div>
+                        <button
+                            className={styles.carouselArrow}
+                            onClick={() => goToNext('entreprise')}
+                            aria-label="Image suivante"
+                        >
+                            ›
+                        </button>
                     </div>
                 </div>
             </section>
@@ -206,21 +272,40 @@ function EvenementsContent() {
                 </div>
                 <div className={`${styles.textOverlay} ${styles.textLeft}`}>
                     <h1 className={styles.title}>{t('evenements.reception_privee.title')}</h1>
-                    <div className={styles.separator}></div>
-                    <p className={styles.description}>
-                        {t('evenements.reception_privee.description')}
-                    </p>
-                    <div className={styles.carouselIndicators}>
-                        {receptionPriveeImages.map((_, index) => (
-                            <button
-                                key={index}
-                                className={`${styles.indicator} ${
-                                    index === receptionPriveeIndex ? styles.active : ''
-                                }`}
-                                onClick={() => setReceptionPriveeIndex(index)}
-                                aria-label={`Image ${index + 1}`}
-                            />
-                        ))}
+                    <div className={styles.descriptionWrapper}>
+                        <div className={styles.descriptionLine}></div>
+                        <p className={styles.description}>
+                            {t('evenements.reception_privee.description')}
+                        </p>
+                        <div className={styles.descriptionLine}></div>
+                    </div>
+                    <div className={styles.carouselControls}>
+                        <button
+                            className={styles.carouselArrow}
+                            onClick={() => goToPrevious('privee')}
+                            aria-label="Image précédente"
+                        >
+                            ‹
+                        </button>
+                        <div className={styles.carouselIndicators}>
+                            {receptionPriveeImages.map((_, index) => (
+                                <button
+                                    key={index}
+                                    className={`${styles.indicator} ${
+                                        index === receptionPriveeIndex ? styles.active : ''
+                                    }`}
+                                    onClick={() => setReceptionPriveeIndex(index)}
+                                    aria-label={`Image ${index + 1}`}
+                                />
+                            ))}
+                        </div>
+                        <button
+                            className={styles.carouselArrow}
+                            onClick={() => goToNext('privee')}
+                            aria-label="Image suivante"
+                        >
+                            ›
+                        </button>
                     </div>
                 </div>
             </section>

@@ -350,6 +350,10 @@ export const translations = {
             cta_button: 'Réserver une Consultation'
         },
         evenements: {
+            header: {
+                title: 'Nos Prestations',
+                description: 'Une expertise gastronomique au service de vos événements les plus prestigieux. Chaque moment devient une expérience d\'exception, où l\'art culinaire rencontre l\'excellence du service.'
+            },
             grands_evenements: {
                 label: 'Événements d\'Exception',
                 title: 'Grands événements',
@@ -792,6 +796,10 @@ export const translations = {
             cta_button: 'Book a Consultation'
         },
         evenements: {
+            header: {
+                title: 'Our Services',
+                description: 'A gastronomic expertise at the service of your most prestigious events. Each moment becomes an exceptional experience, where culinary art meets service excellence.'
+            },
             grands_evenements: {
                 label: 'Exceptional Events',
                 title: 'Grand Events',
@@ -1483,6 +1491,10 @@ export const translations = {
             cta_button: 'Book a Consultation'
         },
         evenements: {
+            header: {
+                title: 'Our Services',
+                description: 'A gastronomic expertise at the service of your most prestigious events. Each moment becomes an exceptional experience, where culinary art meets service excellence.'
+            },
             grands_evenements: {
                 label: 'Exceptional Events',
                 title: 'Grand Events',
