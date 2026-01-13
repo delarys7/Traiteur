@@ -1352,7 +1352,28 @@ export const translations = {
             sending_resend: 'Sending...',
             error_email_not_verified: 'Email not verified, please check your inbox',
             error_invalid_credentials: 'Invalid email or password',
-            error_user_exists: 'This email is already in use'
+            error_user_exists: 'This email is already in use',
+            order_status: {
+                pending_confirmation: 'Pending',
+                validated: 'Validated',
+                paid: 'Paid',
+                received: 'Received',
+                refused: 'Refused'
+            },
+            order_actions: {
+                pay: 'Pay',
+                leave_review: 'Leave a review',
+                view_refusal_reason: 'Refusal reason'
+            },
+            review: {
+                title: 'Leave a review',
+                rate_order: 'Rate the overall order',
+                rate_items: 'Rate each product',
+                general_comment: 'General review',
+                product_comment: 'Your review of this product',
+                submit: 'Submit review',
+                success: 'Thank you for your review!'
+            }
         },
         cart: {
             title: 'Your Cart',
