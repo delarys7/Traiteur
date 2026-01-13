@@ -1153,6 +1153,7 @@
     display: flex;
     gap: 0.5rem;
     align-items: baseline;
+    margin-top: 1rem;
 }
 
 .totalLabel {
@@ -1180,6 +1181,7 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
+    margin-top: 1rem;
 }
 
 .payButton:hover, .reviewButton:hover {
@@ -1195,6 +1197,7 @@
     font-weight: 500;
     cursor: not-allowed;
     border: 1px solid #e5e7eb;
+    margin-top: 1rem;
 }
 
 /* Review Modal Styles */
