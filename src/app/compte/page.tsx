@@ -683,9 +683,9 @@ export default function AccountPage() {
                     </div>
 
                     {/* Section Commandes - Pleine largeur */}
-                    <div className={styles.premiumCard}>
-                        <div className={styles.cardHeader}>
-                            <h2 className={styles.cardTitle}>{t('account.orders')}</h2>
+                    <div className={styles.ordersSection}>
+                        <div className={styles.sectionHeader}>
+                            <h2 className={styles.sectionTitle}>{t('account.orders')}</h2>
                         </div>
                         <div className={styles.galleryWrapper}>
                             <button 

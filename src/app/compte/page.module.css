@@ -1011,6 +1011,8 @@
     min-width: 320px;
     max-width: 320px;
     flex-shrink: 0;
+    height: auto;
+    align-self: stretch;
 }
 
 .orderCard:hover {
@@ -1037,14 +1039,6 @@
     font-size: 1.1rem;
 }
 
-.orderItemEllipsis {
-    display: flex;
-    justify-content: center;
-    font-size: 1.2rem;
-    color: #9ca3af;
-    line-height: 1;
-    padding-top: 0.25rem;
-}
 
 .orderDate {
     font-size: 0.8rem;
@@ -1095,14 +1089,15 @@
 
 .orderBody {
     flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .orderItemsList {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    height: 160px; /* Espace pour exactement 6 lignes */
-    overflow: hidden;
+    flex: 1;
 }
 
 .orderItem, .orderItemEllipsis {
@@ -1151,7 +1146,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 1.25rem;
     border-top: 1px solid #f3f4f6;
 }
 
