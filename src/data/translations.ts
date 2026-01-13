@@ -219,6 +219,9 @@ export const translations = {
         product: {
             add_to_cart: 'Ajouter au panier',
             added_to_cart: 'Ajouté au panier !',
+            review_singular: 'avis',
+            review_plural: 'avis',
+            no_reviews: 'Pas encore d\'avis',
             descriptions: {
                 'Symphonie Océane': 'Plateau de fruits de mer royal: homard bleu, huîtres Gillardeau n°2, langoustines royales et caviar Osciètre (30g).',
                 'L\'Apogée Terroir': 'Buffet campagnard chic: Foie gras de canard mi-cuit, jambon Pata Negra Bellota, fromages affinés.',
@@ -671,6 +674,8 @@ export const translations = {
         product: {
             add_to_cart: 'Add to Cart',
             added_to_cart: 'Added to Cart!',
+            review_singular: 'review',
+            review_plural: 'reviews',
             descriptions: {
                 'Symphonie Océane': 'Royal seafood platter: blue lobster, Gillardeau n°2 oysters, royal langoustines, and Osciètre caviar (30g).',
                 'L\'Apogée Terroir': 'Chic country buffet: half-cooked duck foie gras, Pata Negra Bellota ham, aged cheeses.',
@@ -1372,6 +1377,8 @@ export const translations = {
         product: {
             add_to_cart: 'Add to Cart',
             added_to_cart: 'Added to Cart!',
+            review_singular: 'review',
+            review_plural: 'reviews',
             descriptions: {
                 'Symphonie Océane': 'Royal seafood platter: blue lobster, Gillardeau n°2 oysters, royal langoustines, and Osciètre caviar (30g).',
                 'L\'Apogée Terroir': 'Chic country buffet: half-cooked duck foie gras, Pata Negra Bellota ham, aged cheeses.',

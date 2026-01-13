@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import styles from './ProductCard.module.css';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/context/LanguageContext';
+import StarRating from './StarRating';
 
 interface Product {
     id: number;
@@ -17,11 +18,31 @@ interface Product {
     allergies?: string;
 }
 
+interface ReviewStats {
+    averageRating: number;
+    reviewCount: number;
+}
+
 export default function ProductCard({ product }: { product: Product }) {
     const { addToCart } = useCart();
     const { t } = useLanguage();
     const [quantity, setQuantity] = useState(1);
     const [addedStatus, setAddedStatus] = useState<'idle' | 'confirming' | 'added' | 'exiting'>('idle');
+    const [reviewStats, setReviewStats] = useState<ReviewStats | null>(null);
+    
+    // Charger les statistiques d'avis
+    useEffect(() => {
+        async function fetchReviewStats() {
+            try {
+                const res = await fetch(`/api/products/${product.id}/reviews`);
+                const data = await res.json();
+                setReviewStats(data);
+            } catch (error) {
+                console.error('Failed to fetch review stats', error);
+            }
+        }
+        fetchReviewStats();
+    }, [product.id]);
     
     // Fonction pour traduire les tags
     const translateTag = (tag: string, type: 'cuisine' | 'dietary' | 'allergies') => {
@@ -97,6 +118,13 @@ export default function ProductCard({ product }: { product: Product }) {
                             : product.description;
                     })()}
                 </p>
+                
+                {/* Affichage de la note et des avis */}
+                <StarRating 
+                    rating={reviewStats?.averageRating || 0} 
+                    reviewCount={reviewStats?.reviewCount || 0}
+                    size="small"
+                />
                 
                 <div className={styles.actions}>
                     <button 

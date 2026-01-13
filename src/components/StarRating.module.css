@@ -1,0 +1,68 @@
+.container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.stars {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+}
+
+.star {
+    color: #111;
+    flex-shrink: 0;
+}
+
+.star.empty {
+    color: #ddd;
+}
+
+.halfStarWrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.halfStar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    overflow: hidden;
+}
+
+/* Tailles */
+.star.small {
+    width: 14px;
+    height: 14px;
+}
+
+.star.medium {
+    width: 18px;
+    height: 18px;
+}
+
+.star.large {
+    width: 22px;
+    height: 22px;
+}
+
+.ratingText {
+    font-family: var(--font-inter);
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 400;
+}
+
+.reviewCount {
+    color: #999;
+    font-weight: 300;
+}
+
+.noReviews {
+    color: #999;
+    font-weight: 300;
+    font-style: italic;
+}
