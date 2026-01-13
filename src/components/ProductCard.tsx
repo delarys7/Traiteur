@@ -47,6 +47,13 @@ export default function ProductCard({ product }: { product: Product }) {
     // Fonction pour traduire les tags
     const translateTag = (tag: string, type: 'cuisine' | 'dietary' | 'allergies') => {
         const key = tag.toLowerCase().trim();
+        
+        // Mapping spécifique pour les types de viande qui sont stockés dans 'dietary' ou ailleurs
+        if (key === 'viande rouge' || key === 'viande blanche') {
+            const translated = t(`filters.dietary.${key}`);
+            return translated === `filters.dietary.${key}` ? tag : translated;
+        }
+
         const translationKey = `filters.${type}.${key}`;
         const translated = t(translationKey);
         // Si la traduction retourne la clé elle-même, c'est qu'elle n'existe pas, on retourne le tag original
@@ -93,7 +100,14 @@ export default function ProductCard({ product }: { product: Product }) {
             </div>
             <div className={styles.info}>
                 <div className={styles.cardHeader}>
-                    <h3 className={styles.name}>{product.name}</h3>
+                    <h3 className={styles.name}>
+                        {(() => {
+                            const translatedName = t(`product.names.${product.name}`);
+                            return translatedName && translatedName !== `product.names.${product.name}`
+                                ? translatedName
+                                : product.name;
+                        })()}
+                    </h3>
                     <span className={styles.price}>{product.price.toFixed(2)}€</span>
                 </div>
                 
