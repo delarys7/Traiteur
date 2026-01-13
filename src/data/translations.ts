@@ -250,34 +250,34 @@ export const translations = {
         },
         filters: {
             cuisine: {
-                italienne: 'Italian',
-                française: 'French',
-                espagnole: 'Spanish',
-                mexicaine: 'Mexican',
-                libanaise: 'Lebanese',
-                marocaine: 'Moroccan',
-                japonaise: 'Japanese',
-                chinoise: 'Chinese',
-                russe: 'Russian',
-                américaine: 'American'
+                italienne: 'Italienne',
+                française: 'Française',
+                espagnole: 'Espagnole',
+                mexicaine: 'Mexicaine',
+                libanaise: 'Libanaise',
+                marocaine: 'Marocaine',
+                japonaise: 'Japonaise',
+                chinoise: 'Chinoise',
+                russe: 'Russe',
+                américaine: 'Américaine'
             },
             dietary: {
-                végétarien: 'Vegetarian',
-                végétalien: 'Vegan',
+                végétarien: 'Végétarien',
+                végétalien: 'Végétalien',
                 vegan: 'Vegan',
                 carnivore: 'Carnivore',
-                poisson: 'Fish'
+                poisson: 'Poisson'
             },
             allergies: {
                 gluten: 'Gluten',
                 lactose: 'Lactose',
-                'fruits à coque': 'Nuts',
-                crustacés: 'Shellfish',
-                sésame: 'Sesame'
+                'fruits à coque': 'Fruits à coque',
+                crustacés: 'Crustacés',
+                sésame: 'Sésame'
             },
             meat: {
-                'viande rouge': 'Red Meat',
-                'viande blanche': 'White Meat'
+                'viande rouge': 'Viande rouge',
+                'viande blanche': 'Viande blanche'
             }
         },
         consulting: {

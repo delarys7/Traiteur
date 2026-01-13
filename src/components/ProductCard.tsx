@@ -89,7 +89,13 @@ export default function ProductCard({ product }: { product: Product }) {
                 </div>
 
                 <p className={styles.description}>
-                    {t(`product.descriptions.${product.name}`) || product.description}
+                    {(() => {
+                        const translatedDesc = t(`product.descriptions.${product.name}`);
+                        // Si la traduction retourne la clé elle-même (pas de traduction trouvée), utiliser la description de la base de données
+                        return translatedDesc && translatedDesc !== `product.descriptions.${product.name}` 
+                            ? translatedDesc 
+                            : product.description;
+                    })()}
                 </p>
                 
                 <div className={styles.actions}>
