@@ -6,23 +6,23 @@ import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 import styles from './page.module.css';
 
-// Images pour chaque section (à remplacer par les vraies images plus tard)
+// Images pour chaque section
 const grandsEvenementsImages = [
-    '/images/buffet_hero.jpg',
-    '/images/cocktail_hero.jpg',
-    '/images/dessert_hero.jpg'
+    '/images/Grands événements/Indoor.png',
+    '/images/Grands événements/Jardin.png',
+    '/images/Grands événements/Jardin2.png'
 ];
 
 const receptionEntrepriseImages = [
-    '/images/buffet_hero.jpg',
-    '/images/cocktail_hero.jpg',
-    '/images/dessert_hero.jpg'
+    '/images/Réceptions d\'enreprise/seminaire.png',
+    '/images/Réceptions d\'enreprise/cocktail.png',
+    '/images/Réceptions d\'enreprise/lancement_produit.png'
 ];
 
 const receptionPriveeImages = [
-    '/images/buffet_hero.jpg',
-    '/images/cocktail_hero.jpg',
-    '/images/dessert_hero.jpg'
+    '/images/Réceptions privées/Mariage.png',
+    '/images/Réceptions privées/Mariage2.png',
+    '/images/Réceptions privées/Exposition_art.png'
 ];
 
 function EvenementsContent() {
