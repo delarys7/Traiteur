@@ -63,13 +63,18 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onLeaveReview }) => {
 
             <div className={styles.orderBody}>
                 <div className={styles.orderItemsList}>
-                    {order.items.map((item, idx) => (
+                    {order.items.slice(0, 5).map((item, idx) => (
                         <div key={idx} className={styles.orderItem}>
                             <span className={styles.itemName}>{item.name}</span>
                             <span className={styles.itemQty}>x{item.quantity}</span>
                             <span className={styles.itemPrice}>{item.price.toFixed(2)}€</span>
                         </div>
                     ))}
+                    {order.items.length > 5 && (
+                        <div className={styles.orderItemEllipsis}>
+                            <span>...</span>
+                        </div>
+                    )}
                 </div>
                 {order.status === 'refused' && order.refusalReason && (
                     <div className={styles.refusalReasonBox}>

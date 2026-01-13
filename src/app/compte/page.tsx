@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { signUp, signIn, authClient } from '@/lib/auth-client';
@@ -74,6 +74,22 @@ export default function AccountPage() {
     const [showReviewModal, setShowReviewModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
+
+    const galleryRef = useRef<HTMLDivElement>(null);
+
+    const scrollGallery = (direction: 'left' | 'right') => {
+        if (galleryRef.current) {
+            const scrollAmount = 350;
+            galleryRef.current.scrollBy({
+                left: direction === 'left' ? -scrollAmount : scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+    };
+
+    const sortedOrders = [...orders].sort((a, b) => 
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -671,23 +687,37 @@ export default function AccountPage() {
                         <div className={styles.cardHeader}>
                             <h2 className={styles.cardTitle}>{t('account.orders')}</h2>
                         </div>
-                        <div className={styles.ordersGallery}>
-                            {isLoadingOrders ? (
-                                <p className={styles.empty}>{t('account.loading')}</p>
-                            ) : orders.length === 0 ? (
-                                <p className={styles.empty}>{t('account.no_orders')}</p>
-                            ) : (
-                                orders.map(order => (
-                                    <OrderCard 
-                                        key={order.id} 
-                                        order={order} 
-                                        onLeaveReview={(ord) => {
-                                            setSelectedOrder(ord);
-                                            setShowReviewModal(true);
-                                        }}
-                                    />
-                                ))
-                            )}
+                        <div className={styles.galleryWrapper}>
+                            <button 
+                                className={`${styles.scrollArrow} ${styles.leftArrow}`}
+                                onClick={() => scrollGallery('left')}
+                            >
+                                ‹
+                            </button>
+                            <div className={styles.ordersGallery} ref={galleryRef}>
+                                {isLoadingOrders ? (
+                                    <p className={styles.empty}>{t('account.loading')}</p>
+                                ) : sortedOrders.length === 0 ? (
+                                    <p className={styles.empty}>{t('account.no_orders')}</p>
+                                ) : (
+                                    sortedOrders.map(order => (
+                                        <OrderCard 
+                                            key={order.id} 
+                                            order={order} 
+                                            onLeaveReview={(ord) => {
+                                                setSelectedOrder(ord);
+                                                setShowReviewModal(true);
+                                            }}
+                                        />
+                                    ))
+                                )}
+                            </div>
+                            <button 
+                                className={`${styles.scrollArrow} ${styles.rightArrow}`}
+                                onClick={() => scrollGallery('right')}
+                            >
+                                ›
+                            </button>
                         </div>
 
                     </div>
