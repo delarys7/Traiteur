@@ -953,3 +953,279 @@
         justify-content: flex-start;
     }
 }
+
+/* Orders Styles */
+.orderCard {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    transition: all 0.2s ease;
+}
+
+.orderCard:hover {
+    border-color: #d1d5db;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.orderHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.orderIdGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.orderLabel {
+    font-weight: 600;
+    color: #111;
+    font-size: 1.1rem;
+}
+
+.orderDate {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.statusTag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    white-space: nowrap;
+}
+
+.status_pending_confirmation {
+    background-color: #fefce8;
+    color: #854d0e;
+    border: 1px solid #fef08a;
+}
+
+.status_validated {
+    background-color: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+
+.status_paid {
+    background-color: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.status_received {
+    background-color: #f9fafb;
+    color: #374151;
+    border: 1px solid #e5e7eb;
+}
+
+.status_refused {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.orderBody {
+    flex: 1;
+}
+
+.orderItemsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.orderItem {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #4b5563;
+}
+
+.itemName {
+    flex: 1;
+}
+
+.itemQty {
+    margin: 0 1rem;
+    color: #9ca3af;
+}
+
+.itemPrice {
+    font-weight: 500;
+}
+
+.refusalReasonBox {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: #fef2f2;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #991b1b;
+}
+
+.orderFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.25rem;
+    border-top: 1px solid #f3f4f6;
+}
+
+.orderTotal {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+}
+
+.totalLabel {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.totalValue {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #111;
+}
+
+.orderActions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.payButton, .reviewButton {
+    background-color: #111;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.payButton:hover, .reviewButton:hover {
+    background-color: #333;
+}
+
+.disabledButton {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: not-allowed;
+    border: 1px solid #e5e7eb;
+}
+
+/* Review Modal Styles */
+.reviewForm {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.reviewTypeToggle {
+    display: flex;
+    gap: 1rem;
+    padding: 0 2rem;
+    margin-top: 1rem;
+}
+
+.reviewTypeBtn {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.reviewTypeBtn.active {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+}
+
+.starRating {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+.star {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #e5e7eb;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.1s;
+}
+
+.starActive {
+    color: #f59e0b;
+}
+
+.reviewLabel {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.reviewTextarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    resize: vertical;
+}
+
+.itemReviewCard {
+    border: 1px solid #f3f4f6;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: #fafafa;
+}
+
+.itemReviewHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.itemReviewName {
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.itemReviewTextarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 0.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    background: #fff;
+}
+

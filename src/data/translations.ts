@@ -151,7 +151,28 @@ export const translations = {
             sending_resend: 'Envoi...',
             error_email_not_verified: 'Email non vérifié, veuillez consulter votre boîte mail',
             error_invalid_credentials: 'Email ou mot de passe invalide',
-            error_user_exists: 'Cet email est déjà utilisé'
+            error_user_exists: 'Cet email est déjà utilisé',
+            order_status: {
+                pending_confirmation: 'En attente de confirmation',
+                validated: 'Validée',
+                paid: 'Payée',
+                received: 'Réceptionnée',
+                refused: 'Refusée'
+            },
+            order_actions: {
+                pay: 'Payer',
+                leave_review: 'Laisser un avis',
+                view_refusal_reason: 'Motif de refus'
+            },
+            review: {
+                title: 'Laisser un avis',
+                rate_order: 'Noter la commande globalement',
+                rate_items: 'Noter chaque produit',
+                general_comment: 'Avis général',
+                product_comment: 'Votre avis sur ce produit',
+                submit: 'Envoyer l\'avis',
+                success: 'Merci pour votre avis !'
+            }
         },
         cart: {
             title: 'Votre Panier',
@@ -607,7 +628,28 @@ export const translations = {
             sending_resend: 'Sending...',
             error_email_not_verified: 'Email not verified, please check your inbox',
             error_invalid_credentials: 'Invalid email or password',
-            error_user_exists: 'This email is already in use'
+            error_user_exists: 'This email is already in use',
+            order_status: {
+                pending_confirmation: 'Pending confirmation',
+                validated: 'Validated',
+                paid: 'Paid',
+                received: 'Received',
+                refused: 'Refused'
+            },
+            order_actions: {
+                pay: 'Pay',
+                leave_review: 'Leave a review',
+                view_refusal_reason: 'Refusal reason'
+            },
+            review: {
+                title: 'Leave a review',
+                rate_order: 'Rate the overall order',
+                rate_items: 'Rate each product',
+                general_comment: 'General review',
+                product_comment: 'Your review of this product',
+                submit: 'Submit review',
+                success: 'Thank you for your review!'
+            }
         },
         cart: {
             title: 'Your Cart',
@@ -1825,8 +1867,6 @@ export const translations = {
             'VN': 'Vietnam',
             'WF': 'Wallis and Futuna',
             'YE': 'Yemen',
-            'YT': 'Mayotte',
-            'ZA': 'South Africa',
             'ZM': 'Zambia',
             'ZW': 'Zimbabwe'
         },

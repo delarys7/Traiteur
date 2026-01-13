@@ -7,6 +7,10 @@ import { signUp, signIn, authClient } from '@/lib/auth-client';
 import PhoneInput from '@/components/PhoneInput';
 import { useLanguage } from '@/context/LanguageContext';
 import styles from './page.module.css';
+import OrderCard, { Order } from '@/components/OrderCard';
+import ReviewModal from '@/components/ReviewModal';
+
+
 
 interface Address {
     id: string;
@@ -64,6 +68,12 @@ export default function AccountPage() {
     const [isSavingAddress, setIsSavingAddress] = useState(false);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
+
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [isLoadingOrders, setIsLoadingOrders] = useState(false);
+    const [showReviewModal, setShowReviewModal] = useState(false);
+    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -212,6 +222,7 @@ export default function AccountPage() {
     useEffect(() => {
         if (user) {
             loadAddresses();
+            loadOrders();
             if (!isEditing) {
                 const currentUser = displayUser || user;
                 setEditFormData({
@@ -224,6 +235,26 @@ export default function AccountPage() {
             }
         }
     }, [user, displayUser]);
+
+    const loadOrders = async () => {
+        setIsLoadingOrders(true);
+        try {
+            console.log('[AccountPage] Loading orders...');
+            const response = await fetch('/api/orders');
+            if (response.ok) {
+                const data = await response.json();
+                console.log('[AccountPage] Orders loaded:', data.orders);
+                setOrders(data.orders || []);
+            } else {
+                console.error('[AccountPage] Failed to fetch orders:', response.status);
+            }
+        } catch (error) {
+            console.error('Erreur lors du chargement des commandes:', error);
+        } finally {
+            setIsLoadingOrders(false);
+        }
+    };
+
 
     const loadAddresses = async () => {
         setIsLoadingAddresses(true);
@@ -641,8 +672,24 @@ export default function AccountPage() {
                             <h2 className={styles.cardTitle}>{t('account.orders')}</h2>
                         </div>
                         <div className={styles.ordersGallery}>
-                            <p className={styles.empty}>{t('account.no_orders')}</p>
+                            {isLoadingOrders ? (
+                                <p className={styles.empty}>{t('account.loading')}</p>
+                            ) : orders.length === 0 ? (
+                                <p className={styles.empty}>{t('account.no_orders')}</p>
+                            ) : (
+                                orders.map(order => (
+                                    <OrderCard 
+                                        key={order.id} 
+                                        order={order} 
+                                        onLeaveReview={(ord) => {
+                                            setSelectedOrder(ord);
+                                            setShowReviewModal(true);
+                                        }}
+                                    />
+                                ))
+                            )}
                         </div>
+
                     </div>
 
                     <button onClick={logout} className={styles.logoutButton}>{t('account.logout')}</button>
@@ -746,8 +793,21 @@ export default function AccountPage() {
                                     </button>
                                 </div>
                             </form>
-                </div>
+                        </div>
                     </div>
+                )}
+
+                {showReviewModal && selectedOrder && (
+                    <ReviewModal 
+                        order={selectedOrder}
+                        onClose={() => setShowReviewModal(false)}
+                        onSuccess={() => {
+                            setToastMessage(t('account.review.success'));
+                            setShowToast(true);
+                            setTimeout(() => setShowToast(false), 3000);
+                            loadOrders();
+                        }}
+                    />
                 )}
             </div>
         );
