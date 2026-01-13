@@ -81,25 +81,41 @@ export default function Header() {
 
                     {/* TOP ROW: Logo & Icons */}
                     <div className={styles.topRow}>
-                        <div className={styles.spacerLeft}>
-                            {/* Burger Menu for mobile (Left aligned or kept as spacer) */}
-                            <button
-                                onClick={() => setLanguage(language === 'fr' ? 'en' : 'fr')}
-                                style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    cursor: 'pointer',
-                                    fontFamily: 'var(--font-inter)',
-                                    fontSize: '0.9rem',
-                                    fontWeight: '500',
-                                    color: '#111',
-                                    letterSpacing: '1px'
-                                }}
-                            >
-                                <span style={{ opacity: language === 'fr' ? 1 : 0.5 }}>FR</span>
-                                <span style={{ margin: '0 5px' }}>|</span>
-                                <span style={{ opacity: language === 'en' ? 1 : 0.5 }}>EN</span>
-                            </button>
+                        <div className={styles.actionsLeft}>
+                            {/* Icons hidden on mobile */}
+                            <div className={styles.desktopIcons}>
+                                <a 
+                                    href="INSTAGRAM_LINK_HERE" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className={styles.iconLink}
+                                    aria-label="Instagram"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                    </svg>
+                                </a>
+                                <button
+                                    onClick={() => setLanguage(language === 'fr' ? 'en' : 'fr')}
+                                    style={{
+                                        background: 'none',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        fontFamily: 'var(--font-inter)',
+                                        fontSize: '0.9rem',
+                                        fontWeight: '500',
+                                        color: '#111',
+                                        letterSpacing: '1px',
+                                        padding: 0
+                                    }}
+                                >
+                                    <span style={{ opacity: language === 'fr' ? 1 : 0.5 }}>FR</span>
+                                    <span style={{ margin: '0 5px' }}>|</span>
+                                    <span style={{ opacity: language === 'en' ? 1 : 0.5 }}>EN</span>
+                                </button>
+                            </div>
                         </div>
                         
                         <div className={styles.logoCenter}>
