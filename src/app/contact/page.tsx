@@ -685,11 +685,11 @@ export default function Contact() {
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                                     {(() => {
                                         const groups = {
-                                            'Buffets': items.filter(i => i.category?.toLowerCase() === 'buffet'),
-                                            'Plateaux Repas': items.filter(i => i.category?.toLowerCase() === 'plateau'),
-                                            'Pièces Cocktails': items.filter(i => i.category?.toLowerCase() === 'cocktail'),
-                                            'Boutique Professionnelle': items.filter(i => i.category?.toLowerCase() === 'boutique'),
-                                            'Autres': items.filter(i => !['buffet', 'plateau', 'cocktail', 'boutique'].includes(i.category?.toLowerCase() || ''))
+                                            [t('cart.groups.buffets')]: items.filter(i => i.category?.toLowerCase() === 'buffet'),
+                                            [t('cart.groups.plateaux')]: items.filter(i => i.category?.toLowerCase() === 'plateau'),
+                                            [t('cart.groups.cocktails')]: items.filter(i => i.category?.toLowerCase() === 'cocktail'),
+                                            [t('cart.groups.boutique')]: items.filter(i => i.category?.toLowerCase() === 'boutique'),
+                                            [t('cart.groups.autres')]: items.filter(i => !['buffet', 'plateau', 'cocktail', 'boutique'].includes(i.category?.toLowerCase() || ''))
                                         };
 
                                         return Object.entries(groups).map(([groupName, groupItems]) => {
@@ -719,7 +719,7 @@ export default function Contact() {
                                                                 alignItems: 'center',
                                                                 fontSize: '0.9rem'
                                                             }}>
-                                                                <span style={{ fontWeight: '500' }}>{item.name}</span>
+                                                                <span style={{ fontWeight: '500' }}>{t('product.names.' + (item.name?.trim() || ''))}</span>
                                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                                                                     <span style={{ color: '#666' }}>
                                                                         {item.quantity} × {item.price.toFixed(2)} €

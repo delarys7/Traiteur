@@ -61,7 +61,7 @@ export default function CartPage() {
                                             <div className={styles.itemInfo}>
                                                 <div className={styles.itemImagePlaceholder}>{item.name.charAt(0)}</div>
                                                 <div>
-                                                    <h3 className={styles.itemName}>{item.name}</h3>
+                                                    <h3 className={styles.itemName}>{t('product.names.' + item.name)}</h3>
                                                     <p className={styles.itemPrice}>{item.price.toFixed(2)}€</p>
                                                     {/* Debug info for Autres */}
                                                     {groupName === 'Autres' && (

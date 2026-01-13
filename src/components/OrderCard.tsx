@@ -28,7 +28,7 @@ interface OrderCardProps {
 }
 
 const OrderCard: React.FC<OrderCardProps> = ({ order, onLeaveReview }) => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
 
     const getStatusTagClass = (status: string) => {
         switch (status) {
@@ -42,11 +42,16 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onLeaveReview }) => {
     };
 
     const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('fr-FR', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-        });
+        try {
+            const date = new Date(dateString);
+            return new Intl.DateTimeFormat(language === 'en' ? 'en-GB' : 'fr-FR', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            }).format(date);
+        } catch (e) {
+            return dateString;
+        }
     };
 
     return (
@@ -65,7 +70,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onLeaveReview }) => {
                 <div className={styles.orderItemsList}>
                     {order.items.slice(0, 5).map((item, idx) => (
                         <div key={idx} className={styles.orderItem}>
-                            <span className={styles.itemName}>{item.name}</span>
+                            <span className={styles.itemName}>{t('product.names.' + (item.name?.trim() || ''))}</span>
                             <span className={styles.itemQty}>x{item.quantity}</span>
                             <span className={styles.itemPrice}>{item.price.toFixed(2)}€</span>
                         </div>
