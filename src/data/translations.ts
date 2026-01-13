@@ -153,7 +153,7 @@ export const translations = {
             error_invalid_credentials: 'Email ou mot de passe invalide',
             error_user_exists: 'Cet email est déjà utilisé',
             order_status: {
-                pending_confirmation: 'En attente de confirmation',
+                pending_confirmation: 'En attente',
                 validated: 'Validée',
                 paid: 'Payée',
                 received: 'Réceptionnée',
@@ -630,7 +630,7 @@ export const translations = {
             error_invalid_credentials: 'Invalid email or password',
             error_user_exists: 'This email is already in use',
             order_status: {
-                pending_confirmation: 'Pending confirmation',
+                pending_confirmation: 'Pending',
                 validated: 'Validated',
                 paid: 'Paid',
                 received: 'Received',
