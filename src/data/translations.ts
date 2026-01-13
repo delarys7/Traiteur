@@ -13,6 +13,7 @@ export const translations = {
                 buffets: 'Buffets',
                 plateaux: 'Plateaux repas',
                 cocktails: 'Pièces cocktails',
+                boutique: 'Boutique Professionnelle',
                 chef_domicile: 'Chef à domicile',
                 consulting: 'Consulting',
                 grands_evenements: 'Grands événements',
@@ -168,6 +169,7 @@ export const translations = {
                 buffets: 'Buffets',
                 plateaux: 'Plateaux Repas',
                 cocktails: 'Pièces Cocktails',
+                boutique: 'Boutique Professionnelle',
                 autres: 'Autres'
             }
         },
@@ -175,12 +177,14 @@ export const translations = {
             title_buffets: 'Buffets & Banquets',
             title_plateaux: 'Plateaux Repas',
             title_cocktails: 'Pièces Cocktails',
+            title_boutique: 'Boutique Professionnelle',
             results: 'résultats',
             filter_by: 'Filtrer par :',
             price: 'Prix',
             cuisine: 'Cuisine',
             dietary: 'Régime',
             allergies: 'Allergies',
+            meat: 'Viande',
             reset: 'Réinitialiser',
             clear: 'Effacer',
             min_price: 'Min €',
@@ -270,6 +274,10 @@ export const translations = {
                 'fruits à coque': 'Nuts',
                 crustacés: 'Shellfish',
                 sésame: 'Sesame'
+            },
+            meat: {
+                'viande rouge': 'Red Meat',
+                'viande blanche': 'White Meat'
             }
         },
         consulting: {
@@ -614,6 +622,7 @@ export const translations = {
                 buffets: 'Buffets',
                 plateaux: 'Business Trays',
                 cocktails: 'Cocktail Pieces',
+                boutique: 'Professional Boutique',
                 autres: 'Others'
             }
         },
@@ -621,6 +630,7 @@ export const translations = {
             title_buffets: 'Buffets & Banquets',
             title_plateaux: 'Business Trays',
             title_cocktails: 'Cocktail Pieces',
+            title_boutique: 'Professional Boutique',
             results: 'results',
             filter_by: 'Filter by:',
             price: 'Price',
@@ -716,6 +726,10 @@ export const translations = {
                 'fruits à coque': 'Nuts',
                 crustacés: 'Shellfish',
                 sésame: 'Sesame'
+            },
+            meat: {
+                'viande rouge': 'Red Meat',
+                'viande blanche': 'White Meat'
             }
         },
         consulting: {
@@ -1309,6 +1323,7 @@ export const translations = {
                 buffets: 'Buffets',
                 plateaux: 'Business Trays',
                 cocktails: 'Cocktail Pieces',
+                boutique: 'Professional Boutique',
                 autres: 'Others'
             }
         },
@@ -1316,6 +1331,7 @@ export const translations = {
             title_buffets: 'Buffets & Banquets',
             title_plateaux: 'Business Trays',
             title_cocktails: 'Cocktail Pieces',
+            title_boutique: 'Professional Boutique',
             results: 'results',
             filter_by: 'Filter by:',
             price: 'Price',
@@ -1411,6 +1427,10 @@ export const translations = {
                 'fruits à coque': 'Nuts',
                 crustacés: 'Shellfish',
                 sésame: 'Sesame'
+            },
+            meat: {
+                'viande rouge': 'Red Meat',
+                'viande blanche': 'White Meat'
             }
         },
         consulting: {

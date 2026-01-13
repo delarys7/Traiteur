@@ -688,7 +688,8 @@ export default function Contact() {
                                             'Buffets': items.filter(i => i.category?.toLowerCase() === 'buffet'),
                                             'Plateaux Repas': items.filter(i => i.category?.toLowerCase() === 'plateau'),
                                             'Pièces Cocktails': items.filter(i => i.category?.toLowerCase() === 'cocktail'),
-                                            'Autres': items.filter(i => !['buffet', 'plateau', 'cocktail'].includes(i.category?.toLowerCase() || ''))
+                                            'Boutique Professionnelle': items.filter(i => i.category?.toLowerCase() === 'boutique'),
+                                            'Autres': items.filter(i => !['buffet', 'plateau', 'cocktail', 'boutique'].includes(i.category?.toLowerCase() || ''))
                                         };
 
                                         return Object.entries(groups).map(([groupName, groupItems]) => {

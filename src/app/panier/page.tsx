@@ -35,7 +35,8 @@ export default function CartPage() {
                             [t('cart.groups.buffets')]: items.filter(i => i.category?.toLowerCase() === 'buffet'),
                             [t('cart.groups.plateaux')]: items.filter(i => i.category?.toLowerCase() === 'plateau'),
                             [t('cart.groups.cocktails')]: items.filter(i => i.category?.toLowerCase() === 'cocktail'),
-                            [t('cart.groups.autres')]: items.filter(i => !['buffet', 'plateau', 'cocktail'].includes(i.category?.toLowerCase() || ''))
+                            [t('cart.groups.boutique')]: items.filter(i => i.category?.toLowerCase() === 'boutique'),
+                            [t('cart.groups.autres')]: items.filter(i => !['buffet', 'plateau', 'cocktail', 'boutique'].includes(i.category?.toLowerCase() || ''))
                         };
 
                         return Object.entries(groups).map(([groupName, groupItems]) => {
@@ -117,6 +118,15 @@ export default function CartPage() {
                         <span>
                             {items
                                 .filter(i => i.category?.toLowerCase() === 'cocktail')
+                                .reduce((sum, item) => sum + (item.price * item.quantity), 0)
+                                .toFixed(2)}€
+                        </span>
+                    </div>
+                    <div className={styles.summaryRow}>
+                        <span>{t('cart.groups.boutique')}</span>
+                        <span>
+                            {items
+                                .filter(i => i.category?.toLowerCase() === 'boutique')
                                 .reduce((sum, item) => sum + (item.price * item.quantity), 0)
                                 .toFixed(2)}€
                         </span>

@@ -167,6 +167,7 @@ export default function Header() {
                                 <Link href="/traiteur?category=buffet" className={styles.dropdownLink}>{t('header.dropdown.buffets')}</Link>
                                 <Link href="/traiteur?category=plateau" className={styles.dropdownLink}>{t('header.dropdown.plateaux')}</Link>
                                 <Link href="/traiteur?category=cocktail" className={styles.dropdownLink}>{t('header.dropdown.cocktails')}</Link>
+                                <Link href="/traiteur?category=boutique" className={styles.dropdownLink}>{t('header.dropdown.boutique')}</Link>
                             </div>
                         </div>
                         <div className={styles.navItem}>
@@ -231,6 +232,7 @@ export default function Header() {
                             <Link href="/traiteur?category=buffet" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.buffets')}</Link>
                             <Link href="/traiteur?category=plateau" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.plateaux')}</Link>
                             <Link href="/traiteur?category=cocktail" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.cocktails')}</Link>
+                            <Link href="/traiteur?category=boutique" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.dropdown.boutique')}</Link>
                         </div>
 
                         <div className={styles.mobileCategory}>

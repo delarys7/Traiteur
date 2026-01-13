@@ -37,6 +37,7 @@ function TraiteurContent() {
     const [selectedCuisine, setSelectedCuisine] = useState<string>('all');
     const [selectedDietary, setSelectedDietary] = useState<string>('all');
     const [selectedAllergy, setSelectedAllergy] = useState<string>('all');
+    const [selectedMeat, setSelectedMeat] = useState<string>('all'); // Pour la boutique
     
     // UI states
     const [showPricePopup, setShowPricePopup] = useState(false);
@@ -45,16 +46,20 @@ function TraiteurContent() {
     // Options for filters (valeurs en français pour la base de données, mais affichage traduit)
     const cuisineOptions = ['italienne', 'française', 'espagnole', 'mexicaine', 'libanaise', 'marocaine', 'japonaise', 'chinoise', 'russe', 'américaine'];
     const dietaryOptions = ['végétarien', 'végétalien', 'vegan', 'carnivore', 'poisson'];
+    const meatOptions = ['viande rouge', 'viande blanche']; // Pour la boutique
     const allergyOptions = ['gluten', 'lactose', 'fruits à coque', 'crustacés', 'sésame'];
     
     // Fonction pour traduire les options de filtres
-    const translateFilterOption = (value: string, type: 'cuisine' | 'dietary' | 'allergies') => {
+    const translateFilterOption = (value: string, type: 'cuisine' | 'dietary' | 'allergies' | 'meat') => {
         if (value === 'all') return value;
         const key = value.toLowerCase().trim();
         const translationKey = `filters.${type}.${key}`;
         const translated = t(translationKey);
         return translated === translationKey ? value : translated;
     };
+    
+    // Détermine si on est dans la catégorie boutique
+    const isBoutique = activeTab === 'boutique';
 
     useEffect(() => {
         async function fetchProducts() {
@@ -89,18 +94,28 @@ function TraiteurContent() {
         if (priceMax) {
             result = result.filter(p => p.price <= parseFloat(priceMax));
         }
-        if (selectedCuisine !== 'all') {
-            result = result.filter(p => p.cuisine?.toLowerCase().includes(selectedCuisine.toLowerCase()));
+        
+        if (isBoutique) {
+            // Filtres spécifiques à la boutique
+            if (selectedMeat !== 'all') {
+                result = result.filter(p => p.dietary?.toLowerCase().includes(selectedMeat.toLowerCase()));
+            }
+        } else {
+            // Filtres pour les autres catégories
+            if (selectedCuisine !== 'all') {
+                result = result.filter(p => p.cuisine?.toLowerCase().includes(selectedCuisine.toLowerCase()));
+            }
+            if (selectedDietary !== 'all') {
+                result = result.filter(p => p.dietary?.toLowerCase().includes(selectedDietary.toLowerCase()));
+            }
         }
-        if (selectedDietary !== 'all') {
-            result = result.filter(p => p.dietary?.toLowerCase().includes(selectedDietary.toLowerCase()));
-        }
+        
         if (selectedAllergy !== 'all') {
             result = result.filter(p => p.allergies?.toLowerCase().includes(selectedAllergy.toLowerCase()));
         }
 
         setFilteredProducts(result);
-    }, [allProducts, priceMin, priceMax, selectedCuisine, selectedDietary, selectedAllergy]);
+    }, [allProducts, priceMin, priceMax, selectedCuisine, selectedDietary, selectedAllergy, selectedMeat, isBoutique]);
 
     // Close popup on outside click
     useEffect(() => {
@@ -120,6 +135,7 @@ function TraiteurContent() {
             case 'cocktail':
                 const sub = activeSubTab.charAt(0).toUpperCase() + activeSubTab.slice(1);
                 return `${t('traiteur.title_cocktails')} ${sub}`;
+            case 'boutique': return t('traiteur.title_boutique');
             default: return t('header.caterer');
         }
     };
@@ -211,6 +227,7 @@ function TraiteurContent() {
                             setSelectedCuisine('all');
                             setSelectedDietary('all');
                             setSelectedAllergy('all');
+                            setSelectedMeat('all');
                         }}
                     >
                         {t('traiteur.reset')}
@@ -236,6 +253,7 @@ function TraiteurContent() {
                                     setSelectedCuisine('all');
                                     setSelectedDietary('all');
                                     setSelectedAllergy('all');
+                                    setSelectedMeat('all');
                                 }}
                             >
                                 {t('traiteur.see_all')}
