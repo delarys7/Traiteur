@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
 
         if (motif === 'commande' && cartItems && cartItems.length > 0) {
             orderType = 'product';
-            orderTotal = (cartTotal || 0) / 100; // Conversion centimes -> euros
+            orderTotal = cartTotal || 0; // Les prix sont déjà en euros
             orderItems = cartItems;
         } else {
             // Pour les services, on peut calculer un total estimé basé sur le budget
@@ -398,76 +398,6 @@ export async function POST(request: NextRequest) {
         } else if (adminEmails.length === 0) {
             console.warn('[API] Aucun administrateur trouvé pour l\'envoi de l\'email');
         }
-
-        // Sauvegarder le message en base de données
-        const messageId = randomUUID();
-        const now = new Date().toISOString();
-        
-        db.prepare(`
-            INSERT INTO contact_messages (
-                id, userId, firstName, lastName, email, phone, entreprise, 
-                motif, message, status, createdAt, updatedAt
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?)
-        `).run(
-            messageId,
-            session.user.id,
-            firstName,
-            lastName,
-            email,
-            phone || null,
-            entreprise || null,
-            motif,
-            message,
-            now,
-            now,
-            now
-        );
-
-        // Créer une commande pour TOUS les motifs (pas seulement 'commande')
-        const orderId = `ORD-${Date.now().toString().slice(-6)}`;
-        const initialHistory = [{
-            status: 'pending_confirmation',
-            date: now,
-            label: 'En attente'
-        }];
-
-        // Déterminer le type et le total
-        let orderType = 'service'; // Par défaut, c'est une prestation de service
-        let orderTotal = 0;
-        let orderItems: any[] = [];
-
-        if (motif === 'commande' && cartItems && cartItems.length > 0) {
-            orderType = 'product';
-            orderTotal = (cartTotal || 0) / 100; // Conversion centimes -> euros
-            orderItems = cartItems;
-        } else {
-            // Pour les services, on peut calculer un total estimé basé sur le budget
-            if (budgetPerPerson && numberOfGuests) {
-                orderTotal = parseFloat(budgetPerPerson) * parseInt(numberOfGuests);
-            }
-        }
-
-        // Créer l'entrée dans la table orders
-        db.prepare(`
-            INSERT INTO orders (
-                id, userId, type, status, total, items, serviceType, history, createdAt, updatedAt
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `).run(
-            orderId,
-            session.user.id,
-            orderType,
-            'pending_confirmation',
-            orderTotal,
-            JSON.stringify(orderItems),
-            motif,
-            JSON.stringify(initialHistory),
-            now,
-            now
-        );
-        
-        console.log(`[API] Commande créée: ${orderId} (type: ${orderType}, motif: ${motif})`);
 
         return NextResponse.json({
             success: true,
