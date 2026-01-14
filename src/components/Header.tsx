@@ -220,7 +220,21 @@ export default function Header() {
                         </div>
                         <Link href="/contact" className={styles.link}>{t('header.contact')}</Link>
                         {isMounted && user?.type === 'administrateur' && (
-                            <Link href="/admin/clients" className={styles.link}>{t('header.clients')}</Link>
+                            <div className={styles.navItem}>
+                                <a 
+                                    href="#" 
+                                    className={styles.link} 
+                                    onClick={(e) => e.preventDefault()}
+                                    style={{ cursor: 'default' }}
+                                >
+                                    {t('header.admin.data')}
+                                </a>
+                                <div className={styles.dropdown}>
+                                    <Link href="/admin/clients" className={styles.dropdownLink}>{t('header.admin.clients')}</Link>
+                                    <Link href="/admin/commandes" className={styles.dropdownLink}>{t('header.admin.orders')}</Link>
+                                    <Link href="/admin/statistiques" className={styles.dropdownLink}>{t('header.admin.stats')}</Link>
+                                </div>
+                            </div>
                         )}
                     </nav>
                 </div>
@@ -270,7 +284,12 @@ export default function Header() {
                         <Link href="/contact" className={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>{t('header.contact')}</Link>
                         
                         {isMounted && user?.type === 'administrateur' && (
-                            <Link href="/admin/clients" className={styles.mobileLink} onClick={() => setIsMenuOpen(false)}>{t('header.clients')}</Link>
+                            <div className={styles.mobileCategory}>
+                                <div className={styles.mobileCategoryTitle}>{t('header.admin.data')}</div>
+                                <Link href="/admin/clients" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.admin.clients')}</Link>
+                                <Link href="/admin/commandes" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.admin.orders')}</Link>
+                                <Link href="/admin/statistiques" className={styles.mobileSubLink} onClick={() => setIsMenuOpen(false)}>{t('header.admin.stats')}</Link>
+                            </div>
                         )}
                         
                         <div className={styles.mobileDivider}></div>

@@ -165,8 +165,39 @@ export async function POST(request: NextRequest) {
             motif,
             message,
             now,
+            now,
             now
         );
+
+        // Si c'est une commande, créer également une entrée dans la table orders
+        if (motif === 'commande' && cartItems && cartItems.length > 0) {
+            const orderId = `ORD-${Date.now().toString().slice(-6)}`;
+            const initialHistory = [{
+                status: 'pending_confirmation',
+                date: now,
+                label: 'En attente'
+            }];
+
+            db.prepare(`
+                INSERT INTO orders (
+                    id, userId, type, status, total, items, serviceType, history, createdAt, updatedAt
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `).run(
+                orderId,
+                session.user.id,
+                'traiteur',
+                'pending_confirmation',
+                (cartTotal || 0) / 100, // Conversion centimes -> euros
+                JSON.stringify(cartItems),
+                motif,
+                JSON.stringify(initialHistory),
+                now,
+                now
+            );
+            
+            console.log(`[API] Commande créée: ${orderId}`);
+        }
 
         return NextResponse.json({
             success: true,

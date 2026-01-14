@@ -24,7 +24,13 @@ export const translations = {
                 collaborations: 'Collaborations'
             },
             close_menu: 'Fermer le menu',
-            clients: 'Clients'
+            clients: 'Clients',
+            admin: {
+                data: 'Données',
+                clients: 'Clients',
+                orders: 'Commandes',
+                stats: 'Statistiques'
+            }
         },
         home: {
             hero_title: 'L\'Art de Recevoir',
@@ -152,9 +158,13 @@ export const translations = {
             error_email_not_verified: 'Email non vérifié, veuillez consulter votre boîte mail',
             error_invalid_credentials: 'Email ou mot de passe invalide',
             error_user_exists: 'Cet email est déjà utilisé',
+            order_details: 'Détail de la commande',
+            your_selection: 'Votre sélection',
+            order_history: 'Historique',
+            order_created: 'Commande créée',
             order_status: {
                 pending_confirmation: 'En attente',
-                validated: 'Validée',
+                validated: 'Approuvée',
                 paid: 'Payée',
                 received: 'Réceptionnée',
                 refused: 'Refusée'
@@ -557,7 +567,13 @@ export const translations = {
                 collaborations: 'Collaborations'
             },
             close_menu: 'Close menu',
-            clients: 'Clients'
+            clients: 'Clients',
+            admin: {
+                data: 'Data',
+                clients: 'Clients',
+                orders: 'Orders',
+                stats: 'Statistics'
+            }
         },
         home: {
             hero_title: 'The Art of Entertaining',
@@ -685,8 +701,12 @@ export const translations = {
             error_email_not_verified: 'Email not verified, please check your inbox',
             error_invalid_credentials: 'Invalid email or password',
             error_user_exists: 'This email is already in use',
+            order_details: 'Order Details',
+            your_selection: 'Your Selection',
+            order_history: 'History',
+            order_created: 'Order Created',
             order_status: {
-                pending_confirmation: 'Pending',
+                pending_confirmation: 'Pending Confirmation',
                 validated: 'Validated',
                 paid: 'Paid',
                 received: 'Received',

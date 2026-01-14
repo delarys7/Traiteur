@@ -109,7 +109,6 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ order, onClose, onSuccess }) 
 
                     {reviewType === 'global' ? (
                         <div className={styles.globalReviewSection}>
-                            <label className={styles.reviewLabel}>{t('account.review.rate_order')}</label>
                             <StarRating rating={globalRating} onChange={setGlobalRating} />
                             
                             <div className={styles.inputGroup}>
@@ -127,7 +126,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ order, onClose, onSuccess }) 
                             {order.items.map((item) => (
                                 <div key={item.id} className={styles.itemReviewCard}>
                                     <div className={styles.itemReviewHeader}>
-                                        <span className={styles.itemReviewName}>{item.name}</span>
+                                        <span className={styles.itemReviewName}>{t('product.names.' + (item.name?.trim() || ''))}</span>
                                         <StarRating 
                                             rating={itemReviews[item.id].rating} 
                                             onChange={(r) => setItemReviews({

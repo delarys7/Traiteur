@@ -9,6 +9,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import styles from './page.module.css';
 import OrderCard, { Order } from '@/components/OrderCard';
 import ReviewModal from '@/components/ReviewModal';
+import { OrderDetailModal } from '@/components/OrderDetailModal';
 
 
 
@@ -73,6 +74,8 @@ export default function AccountPage() {
     const [isLoadingOrders, setIsLoadingOrders] = useState(false);
     const [showReviewModal, setShowReviewModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+    const [showDetailModal, setShowDetailModal] = useState(false);
+    const [selectedDetailOrder, setSelectedDetailOrder] = useState<Order | null>(null);
 
 
     const galleryRef = useRef<HTMLDivElement>(null);
@@ -708,6 +711,10 @@ export default function AccountPage() {
                                                 setSelectedOrder(ord);
                                                 setShowReviewModal(true);
                                             }}
+                                            onClick={(ord) => {
+                                                setSelectedDetailOrder(ord);
+                                                setShowDetailModal(true);
+                                            }}
                                         />
                                     ))
                                 )}
@@ -836,6 +843,17 @@ export default function AccountPage() {
                             setShowToast(true);
                             setTimeout(() => setShowToast(false), 3000);
                             loadOrders();
+                        }}
+                    />
+                )}
+
+                {showDetailModal && selectedDetailOrder && (
+                    <OrderDetailModal 
+                        order={selectedDetailOrder}
+                        onClose={() => setShowDetailModal(false)}
+                        onLeaveReview={(ord) => {
+                            setSelectedOrder(ord);
+                            setShowReviewModal(true);
                         }}
                     />
                 )}

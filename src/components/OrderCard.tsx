@@ -5,10 +5,11 @@ import styles from '@/app/compte/page.module.css';
 import { useLanguage } from '@/context/LanguageContext';
 
 export interface OrderItem {
-    id: number;
+    id: string; // ou productId
     name: string;
-    price: number;
     quantity: number;
+    price: number;
+    category?: string;
 }
 
 export interface Order {
@@ -20,14 +21,16 @@ export interface Order {
     items: OrderItem[];
     refusalReason?: string;
     createdAt: string;
+    history?: { status: string; date: string; label?: string }[];
 }
 
 interface OrderCardProps {
     order: Order;
     onLeaveReview: (order: Order) => void;
+    onClick?: (order: Order) => void;
 }
 
-const OrderCard: React.FC<OrderCardProps> = ({ order, onLeaveReview }) => {
+const OrderCard: React.FC<OrderCardProps> = ({ order, onLeaveReview, onClick }) => {
     const { t, language } = useLanguage();
 
     const getStatusTagClass = (status: string) => {
@@ -58,7 +61,11 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onLeaveReview }) => {
         <div className={styles.orderCard}>
             <div className={styles.orderHeader}>
                 <div className={styles.orderIdGroup}>
-                    <span className={styles.orderLabel}># {order.id}</span>
+                    <span 
+                        className={styles.orderLabel} 
+                        onClick={() => onClick && onClick(order)}
+                        style={{ cursor: onClick ? 'pointer' : 'default' }}
+                    ># {order.id}</span>
                     <span className={styles.orderDate}>{formatDate(order.createdAt)}</span>
                 </div>
                 <div className={`${styles.statusTag} ${getStatusTagClass(order.status)}`}>

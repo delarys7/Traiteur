@@ -21,10 +21,11 @@ export async function GET() {
             ORDER BY createdAt DESC
         `).all(session.user.id);
 
-        // Parser les items JSON
+        // Parser les items et l'historique JSON
         const parsedOrders = orders.map((order: any) => ({
             ...order,
-            items: order.items ? JSON.parse(order.items) : []
+            items: order.items ? JSON.parse(order.items) : [],
+            history: order.history ? JSON.parse(order.history) : []
         }));
 
         return NextResponse.json({ orders: parsedOrders });
