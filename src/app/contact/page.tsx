@@ -270,6 +270,7 @@ export default function Contact() {
                                         value={formData.company}
                                         onChange={e => setFormData({ ...formData, company: e.target.value })}
                                         placeholder={t('contact.company')}
+                                        required
                                     />
                                 </div>
                             )}
@@ -300,6 +301,7 @@ export default function Contact() {
                                     value={formData.email}
                                     onChange={e => setFormData({ ...formData, email: e.target.value })}
                                     placeholder={t('contact.email')}
+                                    required
                                 />
                             </div>
                         </>
@@ -496,6 +498,7 @@ export default function Contact() {
                                                 onChange={e => setFormData(prev => ({ ...prev, selectedAddress: e.target.value }))}
                                                 className={styles.select}
                                                 disabled={isLoadingAddresses}
+                                                required={!isManualAddress}
                                             >
                                                 <option value="">{t('contact.select_address')}</option>
                                                 {addresses.map((address) => (
@@ -593,11 +596,6 @@ export default function Contact() {
                                                 {t('contact.back_to_select')}
                                             </button>
                                         </div>
-                                    )}
-                                    {addresses.length === 0 && !isLoadingAddresses && (
-                                        <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.5rem' }}>
-                                            {t('contact.no_address')} <a href="/compte" style={{ color: '#111', textDecoration: 'underline' }}>{t('contact.add_address')}</a>
-                                        </p>
                                     )}
                                 </div>
                             )}
