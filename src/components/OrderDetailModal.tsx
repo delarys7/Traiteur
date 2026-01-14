@@ -34,21 +34,19 @@ export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ order, onClo
         return items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     };
 
-    const groupedItems = order.items.reduce((acc, item) => {
-        const category = item.category || 'Autres';
-        if (!acc[category]) acc[category] = [];
-        acc[category].push(item);
-        return acc;
-    }, {} as Record<string, OrderItem[]>);
-
-    const getCategoryName = (key: string) => {
-        const lowerKey = key.toLowerCase();
-        if (lowerKey === 'buffet') return t('cart.groups.buffets');
-        if (lowerKey === 'plateau') return t('cart.groups.plateaux');
-        if (lowerKey === 'cocktail') return t('cart.groups.cocktails');
-        if (lowerKey === 'boutique') return t('cart.groups.boutique');
-        return key;
+    // Grouping logic consistent with Cart and Contact pages
+    const getGroupedItems = () => {
+        const groups = {
+            [t('cart.groups.buffets')]: order.items.filter(i => i.category?.toLowerCase() === 'buffet'),
+            [t('cart.groups.plateaux')]: order.items.filter(i => i.category?.toLowerCase() === 'plateau'),
+            [t('cart.groups.cocktails')]: order.items.filter(i => i.category?.toLowerCase() === 'cocktail'),
+            [t('cart.groups.boutique')]: order.items.filter(i => i.category?.toLowerCase() === 'boutique'),
+            [t('cart.groups.autres')]: order.items.filter(i => !['buffet', 'plateau', 'cocktail', 'boutique'].includes(i.category?.toLowerCase() || ''))
+        };
+        return groups;
     };
+
+    const groupedItems = getGroupedItems();
 
     return (
         <div className={styles.modalOverlay}>
@@ -63,28 +61,34 @@ export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ order, onClo
                 <div className={styles.grid}>
                     {/* Left Column: Products */}
                     <div className={styles.itemList}>
-                        {Object.entries(groupedItems).map(([category, items]) => (
-                            <div key={category} className={styles.groupSection}>
-                                <h3 className={styles.groupTitle}>{getCategoryName(category)}</h3>
-                                {items.map((item, idx) => (
-                                    <div key={idx} className={styles.item}>
-                                        <div className={styles.itemInfo}>
-                                            <div className={styles.itemImagePlaceholder}>
-                                                {item.name.charAt(0)}
+                        {Object.entries(groupedItems).map(([categoryName, items]) => {
+                             if (items.length === 0) return null;
+                             
+                             const sortedItems = [...items].sort((a, b) => (b.price * b.quantity) - (a.price * a.quantity));
+                             
+                             return (
+                                <div key={categoryName} className={styles.groupSection}>
+                                    <h3 className={styles.groupTitle}>{categoryName}</h3>
+                                    {sortedItems.map((item, idx) => (
+                                        <div key={idx} className={styles.item}>
+                                            <div className={styles.itemInfo}>
+                                                <div className={styles.itemImagePlaceholder}>
+                                                    {item.name.charAt(0)}
+                                                </div>
+                                                <div>
+                                                    <div className={styles.itemName}>{t('product.names.' + (item.name?.trim() || ''))}</div>
+                                                    <div className={styles.itemPrice}>{item.price.toFixed(2)}€</div>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <div className={styles.itemName}>{t('product.names.' + (item.name?.trim() || ''))}</div>
-                                                <div className={styles.itemPrice}>{item.price.toFixed(2)}€</div>
+                                            <div className={styles.itemMeta}>
+                                                <div className={styles.itemQty}>x{item.quantity}</div>
+                                                <div style={{ fontWeight: 500 }}>{(item.price * item.quantity).toFixed(2)}€</div>
                                             </div>
                                         </div>
-                                        <div className={styles.itemMeta}>
-                                            <div className={styles.itemQty}>x{item.quantity}</div>
-                                            <div style={{ fontWeight: 500 }}>{(item.price * item.quantity).toFixed(2)}€</div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        ))}
+                                    ))}
+                                </div>
+                            );
+                        })}
                     </div>
 
                     {/* Right Column: Summary & History */}
@@ -93,12 +97,15 @@ export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ order, onClo
                             <h2 className={styles.summaryTitle}>{t('account.your_selection')}</h2>
                             
                             {/* Summary Rows by Category */}
-                            {Object.entries(groupedItems).map(([category, items]) => (
-                                <div key={category} className={styles.summaryRow}>
-                                    <span>{getCategoryName(category)}</span>
-                                    <span>{calculateGroupTotal(items).toFixed(2)}€</span>
-                                </div>
-                            ))}
+                            {Object.entries(groupedItems).map(([categoryName, items]) => {
+                                if (items.length === 0) return null;
+                                return (
+                                    <div key={categoryName} className={styles.summaryRow}>
+                                        <span>{categoryName}</span>
+                                        <span>{calculateGroupTotal(items).toFixed(2)}€</span>
+                                    </div>
+                                );
+                            })}
                             
                             <div className={styles.total}>
                                 <div className={styles.summaryRow} style={{ marginBottom: 0 }}>

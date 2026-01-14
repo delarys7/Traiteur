@@ -359,29 +359,6 @@ export default function Contact() {
                         </select>
                     </div>
 
-                    {/* Sélection d'adresse pour les commandes */}
-                    {formData.motif === 'commande' && user && (
-                        <div className={styles.inputGroup}>
-                            <select
-                                value={formData.selectedAddress}
-                                onChange={e => setFormData(prev => ({ ...prev, selectedAddress: e.target.value }))}
-                                className={styles.select}
-                                disabled={isLoadingAddresses}
-                            >
-                                <option value="">{t('contact.select_address')}</option>
-                                {addresses.map((address) => (
-                                    <option key={address.id} value={address.id}>
-                                        {address.name} - {address.address}, {address.postalCode} {address.city}
-                                    </option>
-                                ))}
-                            </select>
-                            {addresses.length === 0 && !isLoadingAddresses && (
-                                <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.5rem' }}>
-                                    {t('contact.no_address')} <a href="/compte" style={{ color: '#111', textDecoration: 'underline' }}>{t('contact.add_address')}</a>
-                                </p>
-                            )}
-                        </div>
-                    )}
 
                     {/* Date de l'événement et Budget pour les collaborations */}
                     {isCollaboration && (
@@ -511,15 +488,6 @@ export default function Contact() {
                     {/* Adresse de l'événement / Lieu de livraison */}
                     {(isCollaboration || formData.motif === 'commande' || formData.motif === 'prestation-domicile' || formData.motif === 'consulting') && user && (
                                 <div className={styles.inputGroup}>
-                                    <label style={{ 
-                                        fontSize: '0.9rem', 
-                                        fontWeight: '500', 
-                                        marginBottom: '0.5rem',
-                                        display: 'block',
-                                        color: '#333'
-                                    }}>
-                                        {t('contact.address')}
-                                    </label>
                                     {/* Toggle between Dropdown and Manual Entry */}
                                     {!isManualAddress ? (
                                         <>
