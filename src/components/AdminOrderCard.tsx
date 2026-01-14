@@ -3,6 +3,7 @@
 import React from 'react';
 import styles from './AdminOrderCard.module.css';
 import { useLanguage } from '@/context/LanguageContext';
+import OrderStatusTag from './OrderStatusTag';
 
 export interface AdminOrderItem {
     id: string;
@@ -51,71 +52,40 @@ const AdminOrderCard: React.FC<AdminOrderCardProps> = ({
 }) => {
     const { t, language } = useLanguage();
 
-    const getStatusTagClass = (status: string) => {
-        // Normaliser pending_confirmation en pending
-        const normalizedStatus = status === 'pending_confirmation' ? 'pending' : status;
-        switch (normalizedStatus) {
-            case 'pending': return styles.status_pending;
-            case 'validated': return styles.status_validated;
-            case 'paid': return styles.status_paid;
-            case 'received': return styles.status_received;
-            case 'refused': return styles.status_refused;
-            default: return '';
-        }
-    };
 
     const formatDate = (dateString: string) => {
         try {
             const date = new Date(dateString);
             return new Intl.DateTimeFormat(language === 'en' ? 'en-GB' : 'fr-FR', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
             }).format(date);
         } catch (e) {
             return dateString;
         }
     };
 
-    const getStatusLabel = (status: string) => {
-        // Normaliser pending_confirmation en pending
-        const normalizedStatus = status === 'pending_confirmation' ? 'pending' : status;
-        switch (normalizedStatus) {
-            case 'pending': return 'En attente';
-            case 'validated': return 'Approuvée';
-            case 'paid': return 'Payée';
-            case 'received': return 'Réceptionnée';
-            case 'refused': return 'Refusée';
-            default: return status;
-        }
-    };
 
     return (
         <div className={styles.orderCard}>
             <div className={styles.orderHeader}>
                 <div className={styles.orderIdGroup}>
-                    <span className={styles.orderLabel}># {order.id.substring(0, 8)}</span>
+                    <span 
+                        className={styles.orderLabel}
+                        onClick={() => onDetails(order)}
+                        style={{ cursor: 'pointer' }}
+                    >
+                        # {order.id.substring(0, 8)}
+                    </span>
                     <div className={styles.userInfo}>
                         <span className={styles.userName}>
-                            {order.firstName} {order.lastName}
+                            {order.firstName} {order.lastName} - {formatDate(order.createdAt)}
                         </span>
                     </div>
-                    <div className={styles.datesRow}>
-                        <div className={styles.dates}>
-                            <span className={styles.dateLabel}>Création:</span>
-                            <span className={styles.dateValue}>{formatDate(order.createdAt)}</span>
-                        </div>
-                        <div className={styles.dates}>
-                            <span className={styles.dateLabel}>Maj statut:</span>
-                            <span className={styles.dateValue}>{formatDate(order.updatedAt)}</span>
-                        </div>
-                    </div>
+                    <div className={styles.separator}></div>
                 </div>
-                <div className={`${styles.statusTag} ${getStatusTagClass(order.status)}`}>
-                    {getStatusLabel(order.status)}
-                </div>
+                <OrderStatusTag status={order.status} />
             </div>
 
             <div className={styles.orderBody}>
@@ -151,14 +121,21 @@ const AdminOrderCard: React.FC<AdminOrderCardProps> = ({
                             <button 
                                 className={styles.validateButton}
                                 onClick={() => onValidate && onValidate(order)}
+                                title="Valider"
                             >
-                                Valider
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
                             </button>
                             <button 
                                 className={styles.refuseButton}
                                 onClick={() => onRefuse && onRefuse(order)}
+                                title="Refuser"
                             >
-                                Refuser
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
                             </button>
                         </>
                     )}

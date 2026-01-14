@@ -19,7 +19,7 @@ export async function GET() {
             return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
         }
 
-        // Récupérer toutes les commandes avec les informations utilisateur
+        // Récupérer toutes les commandes avec les informations utilisateur et les messages de contact
         const orders = db.prepare(`
             SELECT 
                 o.id,
@@ -37,9 +37,17 @@ export async function GET() {
                 u.type as userType,
                 u.email,
                 u.phone,
-                u.raisonSociale as entreprise
+                u.raisonSociale as entreprise,
+                cm.motif,
+                cm.message as contactMessage,
+                cm.phone as contactPhone,
+                cm.entreprise as contactEntreprise,
+                cm.createdAt as contactCreatedAt
             FROM orders o
             LEFT JOIN user u ON o.userId = u.id
+            LEFT JOIN contact_messages cm ON cm.userId = o.userId 
+                AND cm.motif = o.serviceType 
+                AND DATE(cm.createdAt) = DATE(o.createdAt)
             ORDER BY o.updatedAt DESC
         `).all();
 
@@ -60,7 +68,13 @@ export async function GET() {
                 ...order,
                 items: order.items ? JSON.parse(order.items) : [],
                 history: history,
-                updatedAt: lastUpdateDate // Utiliser la date de l'historique
+                updatedAt: lastUpdateDate, // Utiliser la date de l'historique
+                contactData: {
+                    motif: order.motif,
+                    message: order.contactMessage,
+                    phone: order.contactPhone || order.phone,
+                    entreprise: order.contactEntreprise || order.entreprise
+                }
             };
         });
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import styles from './AdminOrderDetailModal.module.css';
+import styles from './OrderDetailModal.module.css';
 import { useLanguage } from '@/context/LanguageContext';
 import { AdminOrder, AdminOrderItem } from './AdminOrderCard';
 
@@ -31,28 +31,43 @@ const AdminOrderDetailModal: React.FC<AdminOrderDetailModalProps> = ({ order, is
         }
     };
 
+    // Calculate subtotal for each group
     const calculateGroupTotal = (items: AdminOrderItem[]) => {
         return items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     };
 
+    // Grouping logic consistent with Cart and Contact pages
     const getGroupedItems = () => {
         const groups = {
-            Buffets: order.items.filter(i => i.category?.toLowerCase() === 'buffet'),
-            Plateaux: order.items.filter(i => i.category?.toLowerCase() === 'plateau'),
-            Cocktails: order.items.filter(i => i.category?.toLowerCase() === 'cocktail'),
-            Boutique: order.items.filter(i => i.category?.toLowerCase() === 'boutique'),
-            Autres: order.items.filter(i => !['buffet', 'plateau', 'cocktail', 'boutique'].includes(i.category?.toLowerCase() || ''))
+            [t('cart.groups.buffets')]: order.items.filter(i => i.category?.toLowerCase() === 'buffet'),
+            [t('cart.groups.plateaux')]: order.items.filter(i => i.category?.toLowerCase() === 'plateau'),
+            [t('cart.groups.cocktails')]: order.items.filter(i => i.category?.toLowerCase() === 'cocktail'),
+            [t('cart.groups.boutique')]: order.items.filter(i => i.category?.toLowerCase() === 'boutique'),
+            [t('cart.groups.autres')]: order.items.filter(i => !['buffet', 'plateau', 'cocktail', 'boutique'].includes(i.category?.toLowerCase() || ''))
         };
         return groups;
     };
 
     const groupedItems = getGroupedItems();
 
+    const getMotifLabel = (motif?: string) => {
+        if (!motif) return '';
+        const labels: { [key: string]: string } = {
+            'commande': 'Commande / Devis',
+            'collaboration-entreprise': 'Collaboration - Entreprise',
+            'collaboration-particulier': 'Collaboration - Particulier',
+            'prestation-domicile': 'Prestation à domicile',
+            'consulting': 'Consulting',
+            'autre': 'Autre'
+        };
+        return labels[motif] || motif;
+    };
+
     return (
-        <div className={styles.modalOverlay} onClick={onClose}>
-            <div className={styles.container} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalOverlay}>
+            <div className={styles.container}>
                 <div className={styles.header}>
-                    <h1 className={styles.title}>Détails de la commande #{order.id.substring(0, 8)}</h1>
+                    <h1 className={styles.title}>Détail de la commande #{order.id}</h1>
                     <button onClick={onClose} className={styles.closeButton}>
                         ✕
                     </button>
@@ -62,11 +77,11 @@ const AdminOrderDetailModal: React.FC<AdminOrderDetailModalProps> = ({ order, is
                     {/* Left Column: Products */}
                     <div className={styles.itemList}>
                         {Object.entries(groupedItems).map(([categoryName, items]) => {
-                            if (items.length === 0) return null;
-                            
-                            const sortedItems = [...items].sort((a, b) => (b.price * b.quantity) - (a.price * a.quantity));
-                            
-                            return (
+                             if (items.length === 0) return null;
+                             
+                             const sortedItems = [...items].sort((a, b) => (b.price * b.quantity) - (a.price * a.quantity));
+                             
+                             return (
                                 <div key={categoryName} className={styles.groupSection}>
                                     <h3 className={styles.groupTitle}>{categoryName}</h3>
                                     {sortedItems.map((item, idx) => (
@@ -89,44 +104,61 @@ const AdminOrderDetailModal: React.FC<AdminOrderDetailModalProps> = ({ order, is
                                 </div>
                             );
                         })}
-                    </div>
 
-                    {/* Right Column: Summary & User Info */}
-                    <div className={styles.sidebar}>
-                        <div className={styles.summary}>
-                            <h2 className={styles.summaryTitle}>Informations client</h2>
+                        {/* Client Information Section - Full Width Below Products */}
+                        <div className={styles.clientInfoSection}>
+                            <h3 className={styles.groupTitle} style={{ marginTop: '2rem' }}>Informations client</h3>
                             
-                            <div className={styles.userInfoSection}>
-                                <div className={styles.infoRow}>
-                                    <span className={styles.infoLabel}>Nom:</span>
-                                    <span className={styles.infoValue}>{order.firstName} {order.lastName}</span>
+                            <div className={styles.clientInfoGrid}>
+                                <div className={styles.clientInfoRow}>
+                                    <span className={styles.clientInfoLabel}>Nom:</span>
+                                    <span className={styles.clientInfoValue}>{order.firstName} {order.lastName}</span>
                                 </div>
-                                <div className={styles.infoRow}>
-                                    <span className={styles.infoLabel}>Email:</span>
-                                    <span className={styles.infoValue}>{order.email}</span>
+                                <div className={styles.clientInfoRow}>
+                                    <span className={styles.clientInfoLabel}>Email:</span>
+                                    <span className={styles.clientInfoValue}>{order.email}</span>
                                 </div>
                                 {order.phone && (
-                                    <div className={styles.infoRow}>
-                                        <span className={styles.infoLabel}>Téléphone:</span>
-                                        <span className={styles.infoValue}>{order.phone}</span>
+                                    <div className={styles.clientInfoRow}>
+                                        <span className={styles.clientInfoLabel}>Téléphone:</span>
+                                        <span className={styles.clientInfoValue}>{order.phone}</span>
                                     </div>
                                 )}
-                                <div className={styles.infoRow}>
-                                    <span className={styles.infoLabel}>Type de compte:</span>
-                                    <span className={styles.infoValue}>
+                                <div className={styles.clientInfoRow}>
+                                    <span className={styles.clientInfoLabel}>Type de compte:</span>
+                                    <span className={styles.clientInfoValue}>
                                         {order.userType === 'entreprise' ? 'Professionnel' : 'Particulier'}
                                     </span>
                                 </div>
                                 {order.entreprise && (
-                                    <div className={styles.infoRow}>
-                                        <span className={styles.infoLabel}>Entreprise:</span>
-                                        <span className={styles.infoValue}>{order.entreprise}</span>
+                                    <div className={styles.clientInfoRow}>
+                                        <span className={styles.clientInfoLabel}>Entreprise:</span>
+                                        <span className={styles.clientInfoValue}>{order.entreprise}</span>
+                                    </div>
+                                )}
+                                {order.contactData?.motif && (
+                                    <div className={styles.clientInfoRow}>
+                                        <span className={styles.clientInfoLabel}>Motif:</span>
+                                        <span className={styles.clientInfoValue}>{getMotifLabel(order.contactData.motif)}</span>
+                                    </div>
+                                )}
+                                {order.contactData?.message && (
+                                    <div className={styles.clientInfoRow} style={{ gridColumn: '1 / -1' }}>
+                                        <span className={styles.clientInfoLabel}>Message:</span>
+                                        <span className={styles.clientInfoValue} style={{ whiteSpace: 'pre-wrap' }}>{order.contactData.message}</span>
                                     </div>
                                 )}
                             </div>
+                        </div>
+                    </div>
 
-                            <h2 className={styles.summaryTitle} style={{ marginTop: '2rem' }}>Récapitulatif</h2>
+                    {/* Right Column: Summary & History */}
+                    <div className={styles.sidebar}>
+                        {/* Summary Section */}
+                        <div className={styles.summary}>
+                            <h2 className={styles.summaryTitle}>{t('account.your_selection')}</h2>
                             
+                            {/* Summary Rows by Category */}
                             {Object.entries(groupedItems).map(([categoryName, items]) => {
                                 if (items.length === 0) return null;
                                 return (
@@ -145,14 +177,15 @@ const AdminOrderDetailModal: React.FC<AdminOrderDetailModalProps> = ({ order, is
                             </div>
                         </div>
 
+                        {/* Invoice Section for validated orders */}
                         {order.status === 'validated' && (
-                            <div className={styles.invoiceSection}>
+                            <div className={styles.historySection}>
                                 <h3 className={styles.summaryTitle} style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>
                                     Facture
                                 </h3>
-                                <div className={styles.invoiceActions}>
+                                <div className={styles.actions}>
                                     <button 
-                                        className={styles.downloadButton}
+                                        className={styles.reviewButton}
                                         onClick={() => {
                                             // TODO: Générer et télécharger la facture
                                             alert('Génération de la facture...');
@@ -164,25 +197,38 @@ const AdminOrderDetailModal: React.FC<AdminOrderDetailModalProps> = ({ order, is
                             </div>
                         )}
 
+                        {/* History Section */}
                         <div className={styles.historySection}>
                             <h3 className={styles.summaryTitle} style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>
-                                Dates
+                                {t('account.order_history')}
                             </h3>
                             <div className={styles.timeline}>
-                                <div className={styles.timelineEvent}>
-                                    <div className={styles.timelineDot}></div>
-                                    <div className={styles.timelineContent}>
-                                        <span className={styles.eventLabel}>Création de la commande</span>
-                                        <span className={styles.eventDate}>{formatDate(order.createdAt)}</span>
+                                {order.history && order.history.length > 0 ? (
+                                    order.history.map((event, idx) => (
+                                        <div key={idx} className={styles.timelineEvent}>
+                                            <div className={styles.timelineDot}></div>
+                                            <div className={styles.timelineContent}>
+                                                <span className={styles.eventLabel}>
+                                                    {event.status === 'validated' ? 'Approuvée' : 
+                                                     event.status === 'pending' || event.status === 'pending_confirmation' ? 'En attente' :
+                                                     event.status === 'paid' ? 'Payée' :
+                                                     event.status === 'received' ? 'Réceptionnée' :
+                                                     event.status === 'refused' ? 'Refusée' :
+                                                     event.label || event.status}
+                                                </span>
+                                                <span className={styles.eventDate}>{formatDate(event.date)}</span>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className={styles.timelineEvent}>
+                                        <div className={styles.timelineDot}></div>
+                                        <div className={styles.timelineContent}>
+                                            <span className={styles.eventLabel}>Création de la commande</span>
+                                            <span className={styles.eventDate}>{formatDate(order.createdAt)}</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className={styles.timelineEvent}>
-                                    <div className={styles.timelineDot}></div>
-                                    <div className={styles.timelineContent}>
-                                        <span className={styles.eventLabel}>Dernière mise à jour</span>
-                                        <span className={styles.eventDate}>{formatDate(order.updatedAt)}</span>
-                                    </div>
-                                </div>
+                                )}
                             </div>
                         </div>
                     </div>

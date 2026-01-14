@@ -3,6 +3,7 @@
 import React from 'react';
 import styles from '@/app/compte/page.module.css';
 import { useLanguage } from '@/context/LanguageContext';
+import OrderStatusTag from './OrderStatusTag';
 
 export interface OrderItem {
     id: string; // ou productId
@@ -33,16 +34,6 @@ interface OrderCardProps {
 const OrderCard: React.FC<OrderCardProps> = ({ order, onLeaveReview, onClick }) => {
     const { t, language } = useLanguage();
 
-    const getStatusTagClass = (status: string) => {
-        switch (status) {
-            case 'pending_confirmation': return styles.status_pending_confirmation;
-            case 'validated': return styles.status_validated;
-            case 'paid': return styles.status_paid;
-            case 'received': return styles.status_received;
-            case 'refused': return styles.status_refused;
-            default: return '';
-        }
-    };
 
     const formatDate = (dateString: string) => {
         try {
@@ -68,9 +59,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onLeaveReview, onClick }) 
                     ># {order.id}</span>
                     <span className={styles.orderDate}>{formatDate(order.createdAt)}</span>
                 </div>
-                <div className={`${styles.statusTag} ${getStatusTagClass(order.status)}`}>
-                    {t(`account.order_status.${order.status}`)}
-                </div>
+                <OrderStatusTag status={order.status} />
             </div>
 
             <div className={styles.orderBody}>
