@@ -520,10 +520,16 @@ export default function AccountPage() {
                                         <label>{t('account.allergies')}</label>
                                         <div className={styles.allergiesContainer}>
                                             <div className={styles.selectedTags}>
-                                                {editFormData.allergies.split(',').filter(Boolean).map((allergy) => (
-                                                    <span key={allergy} className={styles.allergyTag}>
-                                                        {allergy.charAt(0).toUpperCase() + allergy.slice(1)}
-                                                        <button
+                                                {editFormData.allergies.split(',').filter(Boolean).map((allergy) => {
+                                                    const allergyKey = allergy.trim().toLowerCase();
+                                                    const translatedAllergy = t(`filters.allergies.${allergyKey}`);
+                                                    const displayText = translatedAllergy && translatedAllergy !== `filters.allergies.${allergyKey}` 
+                                                        ? translatedAllergy 
+                                                        : allergy.charAt(0).toUpperCase() + allergy.slice(1);
+                                                    return (
+                                                        <span key={allergy} className={styles.allergyTag}>
+                                                            {displayText}
+                                                            <button
                                                             type="button"
                                                             onClick={() => {
                                                                 const newAllergies = editFormData.allergies
@@ -537,7 +543,8 @@ export default function AccountPage() {
                                                             ×
                                                         </button>
                                                     </span>
-                                                ))}
+                                                    );
+                                                })}
                                             </div>
                                             <select
                                                 value=""
@@ -556,11 +563,18 @@ export default function AccountPage() {
                                                 <option value="">{t('account.add_allergy')}</option>
                                                 {['gluten', 'lactose', 'fruits à coque', 'crustacés', 'sésame']
                                                     .filter(a => !editFormData.allergies.split(',').includes(a))
-                                                    .map(opt => (
-                                                        <option key={opt} value={opt}>
-                                                            {opt.charAt(0).toUpperCase() + opt.slice(1)}
-                                                        </option>
-                                                    ))
+                                                    .map(opt => {
+                                                        const allergyKey = opt.trim().toLowerCase();
+                                                        const translatedAllergy = t(`filters.allergies.${allergyKey}`);
+                                                        const displayText = translatedAllergy && translatedAllergy !== `filters.allergies.${allergyKey}` 
+                                                            ? translatedAllergy 
+                                                            : opt.charAt(0).toUpperCase() + opt.slice(1);
+                                                        return (
+                                                            <option key={opt} value={opt}>
+                                                                {displayText}
+                                                            </option>
+                                                        );
+                                                    })
                                                 }
                                             </select>
                                         </div>
@@ -622,11 +636,18 @@ export default function AccountPage() {
                                         <span className={styles.infoValue}>
                                             {(displayUser?.allergies || user?.allergies) ? (
                                                 <div className={styles.displayTags}>
-                                                    {(displayUser?.allergies || user?.allergies || '').split(',').filter(Boolean).map((allergy: string) => (
-                                                        <span key={allergy} className={styles.displayTag}>
-                                                            {allergy.charAt(0).toUpperCase() + allergy.slice(1)}
-                                                        </span>
-                                                    ))}
+                                                    {(displayUser?.allergies || user?.allergies || '').split(',').filter(Boolean).map((allergy: string) => {
+                                                        const allergyKey = allergy.trim().toLowerCase();
+                                                        const translatedAllergy = t(`filters.allergies.${allergyKey}`);
+                                                        const displayText = translatedAllergy && translatedAllergy !== `filters.allergies.${allergyKey}` 
+                                                            ? translatedAllergy 
+                                                            : allergy.charAt(0).toUpperCase() + allergy.slice(1);
+                                                        return (
+                                                            <span key={allergy} className={styles.displayTag}>
+                                                                {displayText}
+                                                            </span>
+                                                        );
+                                                    })}
                                                 </div>
                                             ) : '-'}
                                         </span>

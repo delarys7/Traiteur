@@ -83,7 +83,6 @@ const AdminOrderCard: React.FC<AdminOrderCardProps> = ({
                             {order.firstName} {order.lastName} - {formatDate(order.createdAt)}
                         </span>
                     </div>
-                    <div className={styles.separator}></div>
                 </div>
                 <OrderStatusTag status={order.status} />
             </div>

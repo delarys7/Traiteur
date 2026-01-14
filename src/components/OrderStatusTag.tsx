@@ -9,7 +9,7 @@ interface OrderStatusTagProps {
 }
 
 const OrderStatusTag: React.FC<OrderStatusTagProps> = ({ status }) => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
 
     const getStatusTagClass = () => {
         // Normaliser pending_confirmation en pending
@@ -36,9 +36,9 @@ const OrderStatusTag: React.FC<OrderStatusTagProps> = ({ status }) => {
                 translated = t(statusKey);
             }
             
-            // Si toujours pas de traduction, utiliser un fallback
+            // Si toujours pas de traduction, utiliser un fallback basé sur la langue
             if (translated === statusKey || translated === statusKey.toUpperCase()) {
-                const statusLabels: { [key: string]: string } = {
+                const statusLabelsFr: { [key: string]: string } = {
                     'pending': 'En attente',
                     'pending_confirmation': 'En attente',
                     'validated': 'Approuvée',
@@ -46,7 +46,16 @@ const OrderStatusTag: React.FC<OrderStatusTagProps> = ({ status }) => {
                     'received': 'Réceptionnée',
                     'refused': 'Refusée'
                 };
-                return statusLabels[status] || status;
+                const statusLabelsEn: { [key: string]: string } = {
+                    'pending': 'Pending',
+                    'pending_confirmation': 'Pending',
+                    'validated': 'Approved',
+                    'paid': 'Paid',
+                    'received': 'Received',
+                    'refused': 'Refused'
+                };
+                const labels = language === 'en' ? statusLabelsEn : statusLabelsFr;
+                return labels[status] || status;
             }
         }
         return translated;
