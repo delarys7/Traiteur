@@ -79,6 +79,31 @@ export default function AccountPage() {
 
 
     const galleryRef = useRef<HTMLDivElement>(null);
+    const [showArrows, setShowArrows] = useState(false);
+
+    const sortedOrders = [...orders].sort((a, b) => 
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+
+    // Check if gallery is scrollable
+    useEffect(() => {
+        const checkScrollable = () => {
+            if (galleryRef.current) {
+                const isScrollable = galleryRef.current.scrollWidth > galleryRef.current.clientWidth;
+                setShowArrows(isScrollable);
+            }
+        };
+        
+        checkScrollable();
+        window.addEventListener('resize', checkScrollable);
+        
+        // Check after orders load
+        if (!isLoadingOrders && sortedOrders.length > 0) {
+            setTimeout(checkScrollable, 100);
+        }
+        
+        return () => window.removeEventListener('resize', checkScrollable);
+    }, [isLoadingOrders, sortedOrders.length]);
 
     const scrollGallery = (direction: 'left' | 'right') => {
         if (galleryRef.current) {
@@ -89,10 +114,6 @@ export default function AccountPage() {
             });
         }
     };
-
-    const sortedOrders = [...orders].sort((a, b) => 
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -712,12 +733,14 @@ export default function AccountPage() {
                             <h2 className={styles.sectionTitle}>{t('account.orders')}</h2>
                         </div>
                         <div className={styles.galleryWrapper}>
-                            <button 
-                                className={`${styles.scrollArrow} ${styles.leftArrow}`}
-                                onClick={() => scrollGallery('left')}
-                            >
-                                ‹
-                            </button>
+                            {showArrows && (
+                                <button 
+                                    className={`${styles.scrollArrow} ${styles.leftArrow}`}
+                                    onClick={() => scrollGallery('left')}
+                                >
+                                    ‹
+                                </button>
+                            )}
                             <div className={styles.ordersGallery} ref={galleryRef}>
                                 {isLoadingOrders ? (
                                     <p className={styles.empty}>{t('account.loading')}</p>
@@ -740,12 +763,14 @@ export default function AccountPage() {
                                     ))
                                 )}
                             </div>
-                            <button 
-                                className={`${styles.scrollArrow} ${styles.rightArrow}`}
-                                onClick={() => scrollGallery('right')}
-                            >
-                                ›
-                            </button>
+                            {showArrows && (
+                                <button 
+                                    className={`${styles.scrollArrow} ${styles.rightArrow}`}
+                                    onClick={() => scrollGallery('right')}
+                                >
+                                    ›
+                                </button>
+                            )}
                         </div>
 
                     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useSession } from '@/lib/auth-client';
 
 export interface CartItem {
     id: number;
@@ -25,6 +26,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
     const [items, setItems] = useState<CartItem[]>([]);
+    const { data: session } = useSession();
 
     // Load cart from localStorage on mount
     useEffect(() => {
@@ -39,10 +41,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
         }
     }, []);
 
-    // Save cart to localStorage on change
+    // Clear cart when user logs out
     useEffect(() => {
-        localStorage.setItem('cart', JSON.stringify(items));
-    }, [items]);
+        if (!session?.user) {
+            setItems([]);
+            localStorage.removeItem('cart');
+        }
+    }, [session]);
+
+    // Save cart to localStorage on change (only if user is logged in)
+    useEffect(() => {
+        if (session?.user) {
+            localStorage.setItem('cart', JSON.stringify(items));
+        }
+    }, [items, session]);
 
     const addToCart = (product: { id: number; name: string; price: number; image: string; category?: string }) => {
         console.log('CartContext addToCart received:', product);
