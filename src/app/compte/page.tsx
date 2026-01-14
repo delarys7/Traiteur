@@ -79,6 +79,31 @@ export default function AccountPage() {
 
 
     const galleryRef = useRef<HTMLDivElement>(null);
+    const [showArrows, setShowArrows] = useState(false);
+
+    const sortedOrders = [...orders].sort((a, b) => 
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+
+    // Check if gallery is scrollable
+    useEffect(() => {
+        const checkScrollable = () => {
+            if (galleryRef.current) {
+                const isScrollable = galleryRef.current.scrollWidth > galleryRef.current.clientWidth;
+                setShowArrows(isScrollable);
+            }
+        };
+        
+        checkScrollable();
+        window.addEventListener('resize', checkScrollable);
+        
+        // Check after orders load
+        if (!isLoadingOrders && sortedOrders.length > 0) {
+            setTimeout(checkScrollable, 100);
+        }
+        
+        return () => window.removeEventListener('resize', checkScrollable);
+    }, [isLoadingOrders, sortedOrders.length]);
 
     const scrollGallery = (direction: 'left' | 'right') => {
         if (galleryRef.current) {
@@ -89,10 +114,6 @@ export default function AccountPage() {
             });
         }
     };
-
-    const sortedOrders = [...orders].sort((a, b) => 
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -520,10 +541,16 @@ export default function AccountPage() {
                                         <label>{t('account.allergies')}</label>
                                         <div className={styles.allergiesContainer}>
                                             <div className={styles.selectedTags}>
-                                                {editFormData.allergies.split(',').filter(Boolean).map((allergy) => (
-                                                    <span key={allergy} className={styles.allergyTag}>
-                                                        {allergy.charAt(0).toUpperCase() + allergy.slice(1)}
-                                                        <button
+                                                {editFormData.allergies.split(',').filter(Boolean).map((allergy) => {
+                                                    const allergyKey = allergy.trim().toLowerCase();
+                                                    const translatedAllergy = t(`filters.allergies.${allergyKey}`);
+                                                    const displayText = translatedAllergy && translatedAllergy !== `filters.allergies.${allergyKey}` 
+                                                        ? translatedAllergy 
+                                                        : allergy.charAt(0).toUpperCase() + allergy.slice(1);
+                                                    return (
+                                                        <span key={allergy} className={styles.allergyTag}>
+                                                            {displayText}
+                                                            <button
                                                             type="button"
                                                             onClick={() => {
                                                                 const newAllergies = editFormData.allergies
@@ -537,7 +564,8 @@ export default function AccountPage() {
                                                             ×
                                                         </button>
                                                     </span>
-                                                ))}
+                                                    );
+                                                })}
                                             </div>
                                             <select
                                                 value=""
@@ -556,11 +584,18 @@ export default function AccountPage() {
                                                 <option value="">{t('account.add_allergy')}</option>
                                                 {['gluten', 'lactose', 'fruits à coque', 'crustacés', 'sésame']
                                                     .filter(a => !editFormData.allergies.split(',').includes(a))
-                                                    .map(opt => (
-                                                        <option key={opt} value={opt}>
-                                                            {opt.charAt(0).toUpperCase() + opt.slice(1)}
-                                                        </option>
-                                                    ))
+                                                    .map(opt => {
+                                                        const allergyKey = opt.trim().toLowerCase();
+                                                        const translatedAllergy = t(`filters.allergies.${allergyKey}`);
+                                                        const displayText = translatedAllergy && translatedAllergy !== `filters.allergies.${allergyKey}` 
+                                                            ? translatedAllergy 
+                                                            : opt.charAt(0).toUpperCase() + opt.slice(1);
+                                                        return (
+                                                            <option key={opt} value={opt}>
+                                                                {displayText}
+                                                            </option>
+                                                        );
+                                                    })
                                                 }
                                             </select>
                                         </div>
@@ -622,11 +657,18 @@ export default function AccountPage() {
                                         <span className={styles.infoValue}>
                                             {(displayUser?.allergies || user?.allergies) ? (
                                                 <div className={styles.displayTags}>
-                                                    {(displayUser?.allergies || user?.allergies || '').split(',').filter(Boolean).map((allergy: string) => (
-                                                        <span key={allergy} className={styles.displayTag}>
-                                                            {allergy.charAt(0).toUpperCase() + allergy.slice(1)}
-                                                        </span>
-                                                    ))}
+                                                    {(displayUser?.allergies || user?.allergies || '').split(',').filter(Boolean).map((allergy: string) => {
+                                                        const allergyKey = allergy.trim().toLowerCase();
+                                                        const translatedAllergy = t(`filters.allergies.${allergyKey}`);
+                                                        const displayText = translatedAllergy && translatedAllergy !== `filters.allergies.${allergyKey}` 
+                                                            ? translatedAllergy 
+                                                            : allergy.charAt(0).toUpperCase() + allergy.slice(1);
+                                                        return (
+                                                            <span key={allergy} className={styles.displayTag}>
+                                                                {displayText}
+                                                            </span>
+                                                        );
+                                                    })}
                                                 </div>
                                             ) : '-'}
                                         </span>
@@ -691,12 +733,14 @@ export default function AccountPage() {
                             <h2 className={styles.sectionTitle}>{t('account.orders')}</h2>
                         </div>
                         <div className={styles.galleryWrapper}>
-                            <button 
-                                className={`${styles.scrollArrow} ${styles.leftArrow}`}
-                                onClick={() => scrollGallery('left')}
-                            >
-                                ‹
-                            </button>
+                            {showArrows && (
+                                <button 
+                                    className={`${styles.scrollArrow} ${styles.leftArrow}`}
+                                    onClick={() => scrollGallery('left')}
+                                >
+                                    ‹
+                                </button>
+                            )}
                             <div className={styles.ordersGallery} ref={galleryRef}>
                                 {isLoadingOrders ? (
                                     <p className={styles.empty}>{t('account.loading')}</p>
@@ -719,12 +763,14 @@ export default function AccountPage() {
                                     ))
                                 )}
                             </div>
-                            <button 
-                                className={`${styles.scrollArrow} ${styles.rightArrow}`}
-                                onClick={() => scrollGallery('right')}
-                            >
-                                ›
-                            </button>
+                            {showArrows && (
+                                <button 
+                                    className={`${styles.scrollArrow} ${styles.rightArrow}`}
+                                    onClick={() => scrollGallery('right')}
+                                >
+                                    ›
+                                </button>
+                            )}
                         </div>
 
                     </div>

@@ -666,6 +666,8 @@
 }
 
 .empty {
+    text-align: center;
+    width: 100%;
     color: #999;
     font-style: italic;
     text-align: center;
@@ -777,7 +779,7 @@
 .ordersGallery {
     display: flex;
     gap: 1.5rem;
-    overflow-x: hidden;
+    overflow-x: auto;
     scroll-behavior: smooth;
     padding: 1rem 0.5rem;
     width: 100%;
@@ -794,26 +796,23 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #fff;
-    border: 1px solid #eee;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    width: auto;
+    height: auto;
+    background: transparent;
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     z-index: 10;
-    font-size: 1.5rem;
-    transition: all 0.2s;
+    font-size: 2rem;
+    transition: opacity 0.2s;
     color: #111;
+    padding: 0.5rem;
 }
 
 .scrollArrow:hover {
-    background: #111;
-    color: #fff;
-    border-color: #111;
+    opacity: 0.7;
 }
 
 .leftArrow {

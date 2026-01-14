@@ -1,9 +1,11 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useSession } from '@/lib/auth-client';
 
 export interface CartItem {
     id: number;
+    productId: number;
     name: string;
     price: number;
     quantity: number;
@@ -19,76 +21,188 @@ interface CartContextType {
     clearCart: () => void;
     total: number;
     count: number;
+    isLoading: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
     const [items, setItems] = useState<CartItem[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const { data: session } = useSession();
+    const previousUserIdRef = React.useRef<string | null>(null);
 
-    // Load cart from localStorage on mount
-    useEffect(() => {
-        const savedCart = localStorage.getItem('cart');
-        if (savedCart) {
-            try {
-                // eslint-disable-next-line react-hooks/set-state-in-effect
-                setItems(JSON.parse(savedCart));
-            } catch (e) {
-                console.error('Failed to parse cart', e);
-            }
-        }
-    }, []);
-
-    // Save cart to localStorage on change
-    useEffect(() => {
-        localStorage.setItem('cart', JSON.stringify(items));
-    }, [items]);
-
-    const addToCart = (product: { id: number; name: string; price: number; image: string; category?: string }) => {
-        console.log('CartContext addToCart received:', product);
-        setItems(currentItems => {
-            const existingItem = currentItems.find(item => item.id === product.id);
-            if (existingItem) {
-                return currentItems.map(item =>
-                    item.id === product.id
-                        ? { ...item, quantity: item.quantity + 1 }
-                        : item
-                );
-            }
-            return [...currentItems, {
-                id: product.id,
-                name: product.name,
-                price: product.price,
-                image: product.image,
-                category: product.category,
-                quantity: 1
-            }];
-        });
-    };
-
-    const removeFromCart = (id: number) => {
-        setItems(currentItems => currentItems.filter(item => item.id !== id));
-    };
-
-    const updateQuantity = (id: number, quantity: number) => {
-        if (quantity < 1) {
-            removeFromCart(id);
+    // Load cart from API
+    const loadCart = async () => {
+        if (!session?.user?.id) {
+            setItems([]);
             return;
         }
-        setItems(currentItems =>
-            currentItems.map(item =>
-                item.id === id ? { ...item, quantity } : item
-            )
-        );
+
+        setIsLoading(true);
+        try {
+            const response = await fetch('/api/cart');
+            if (response.ok) {
+                const cartItems = await response.json();
+                // Transform API response to match CartItem interface
+                const transformedItems = cartItems.map((item: any) => ({
+                    id: item.productId, // Use productId as id for compatibility
+                    productId: item.productId,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    image: item.image,
+                    category: item.category
+                }));
+                setItems(transformedItems);
+            } else if (response.status === 401) {
+                // Not logged in, clear cart
+                setItems([]);
+            }
+        } catch (error) {
+            console.error('Error loading cart:', error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    const clearCart = () => setItems([]);
+    // Load cart on mount and when user changes
+    useEffect(() => {
+        const currentUserId = session?.user?.id || null;
+        const previousUserId = previousUserIdRef.current;
+
+        // Load cart when user logs in or switches accounts
+        if (currentUserId !== previousUserId) {
+            loadCart();
+            previousUserIdRef.current = currentUserId;
+        }
+
+        // Clear cart when user logs out
+        if (!currentUserId && previousUserId) {
+            setItems([]);
+            previousUserIdRef.current = null;
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [session]);
+
+    const addToCart = async (product: { id: number; name: string; price: number; image: string; category?: string }) => {
+        if (!session?.user?.id) {
+            console.error('Cannot add to cart: user not logged in');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    productId: product.id,
+                    quantity: 1
+                })
+            });
+
+            if (response.ok) {
+                const cartItems = await response.json();
+                const transformedItems = cartItems.map((item: any) => ({
+                    id: item.productId,
+                    productId: item.productId,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    image: item.image,
+                    category: item.category
+                }));
+                setItems(transformedItems);
+            } else {
+                console.error('Error adding to cart:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+        }
+    };
+
+    const removeFromCart = async (productId: number) => {
+        if (!session?.user?.id) {
+            console.error('Cannot remove from cart: user not logged in');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/cart?productId=${productId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                await loadCart();
+            } else {
+                console.error('Error removing from cart:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error removing from cart:', error);
+        }
+    };
+
+    const updateQuantity = async (productId: number, quantity: number) => {
+        if (!session?.user?.id) {
+            console.error('Cannot update cart: user not logged in');
+            return;
+        }
+
+        if (quantity < 1) {
+            removeFromCart(productId);
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/cart', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    productId,
+                    quantity
+                })
+            });
+
+            if (response.ok) {
+                await loadCart();
+            } else {
+                console.error('Error updating cart:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error updating cart:', error);
+        }
+    };
+
+    const clearCart = async () => {
+        if (!session?.user?.id) {
+            setItems([]);
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/cart', {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                setItems([]);
+            } else {
+                console.error('Error clearing cart:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error clearing cart:', error);
+        }
+    };
 
     const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const count = items.reduce((sum, item) => sum + item.quantity, 0);
 
     return (
-        <CartContext.Provider value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, total, count }}>
+        <CartContext.Provider value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, total, count, isLoading }}>
             {children}
         </CartContext.Provider>
     );
