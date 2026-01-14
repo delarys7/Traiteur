@@ -31,10 +31,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const previousUserIdRef = React.useRef<string | null>(null);
     const skipSaveRef = React.useRef(false);
 
+    // Get cart key for current user
+    const getCartKey = (userId: string | null) => {
+        return userId ? `cart_${userId}` : 'cart_guest';
+    };
+
     // Load cart from localStorage on mount (only if user is logged in)
     useEffect(() => {
-        if (session?.user) {
-            const savedCart = localStorage.getItem('cart');
+        if (session?.user?.id) {
+            const cartKey = getCartKey(session.user.id);
+            const savedCart = localStorage.getItem(cartKey);
             if (savedCart) {
                 try {
                     const parsedCart = JSON.parse(savedCart);
@@ -55,11 +61,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
         const currentUserId = session?.user?.id || null;
         const previousUserId = previousUserIdRef.current;
 
-        // User just logged in (was logged out, now logged in)
-        if (currentUserId && !previousUserId) {
-            // Restore cart from localStorage
+        // User just logged in (was logged out, now logged in) OR switched accounts
+        if (currentUserId && currentUserId !== previousUserId) {
+            // Save previous user's cart before switching
+            if (previousUserId) {
+                const previousCartKey = getCartKey(previousUserId);
+                localStorage.setItem(previousCartKey, JSON.stringify(items));
+            }
+            
+            // Load new user's cart from localStorage
             skipSaveRef.current = true; // Skip saving when restoring
-            const savedCart = localStorage.getItem('cart');
+            const cartKey = getCartKey(currentUserId);
+            const savedCart = localStorage.getItem(cartKey);
             if (savedCart) {
                 try {
                     const parsedCart = JSON.parse(savedCart);
@@ -67,6 +80,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 } catch (e) {
                     console.error('Failed to parse cart', e);
                 }
+            } else {
+                // No saved cart for this user, start with empty cart
+                setItems([]);
             }
             // Reset flag after restore
             setTimeout(() => {
@@ -75,7 +91,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
         }
         // User just logged out (was logged in, now logged out)
         else if (!currentUserId && previousUserId) {
-            // Clear cart visually but DON'T touch localStorage
+            // Save current user's cart before logging out
+            const previousCartKey = getCartKey(previousUserId);
+            localStorage.setItem(previousCartKey, JSON.stringify(items));
+            
+            // Clear cart visually
             skipSaveRef.current = true; // Skip saving when clearing
             setItems([]);
             // Reset flag after clearing
@@ -86,12 +106,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
         // Update the ref for next comparison
         previousUserIdRef.current = currentUserId;
-    }, [session, isInitialized]);
+    }, [session, isInitialized, items]);
 
     // Save cart to localStorage whenever it changes (only if user is logged in and not skipping)
     useEffect(() => {
-        if (isInitialized && session?.user && !skipSaveRef.current) {
-            localStorage.setItem('cart', JSON.stringify(items));
+        if (isInitialized && session?.user?.id && !skipSaveRef.current) {
+            const cartKey = getCartKey(session.user.id);
+            localStorage.setItem(cartKey, JSON.stringify(items));
         }
     }, [items, isInitialized, session]);
 
