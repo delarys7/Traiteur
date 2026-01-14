@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useSession } from '@/lib/auth-client';
 
 export interface CartItem {
@@ -27,34 +27,73 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
     const [items, setItems] = useState<CartItem[]>([]);
     const { data: session } = useSession();
+    const [isInitialized, setIsInitialized] = useState(false);
+    const previousUserIdRef = React.useRef<string | null>(null);
+    const skipSaveRef = React.useRef(false);
 
-    // Load cart from localStorage on mount
-    useEffect(() => {
-        const savedCart = localStorage.getItem('cart');
-        if (savedCart) {
-            try {
-                // eslint-disable-next-line react-hooks/set-state-in-effect
-                setItems(JSON.parse(savedCart));
-            } catch (e) {
-                console.error('Failed to parse cart', e);
-            }
-        }
-    }, []);
-
-    // Clear cart when user logs out
-    useEffect(() => {
-        if (!session?.user) {
-            setItems([]);
-            localStorage.removeItem('cart');
-        }
-    }, [session]);
-
-    // Save cart to localStorage on change (only if user is logged in)
+    // Load cart from localStorage on mount (only if user is logged in)
     useEffect(() => {
         if (session?.user) {
+            const savedCart = localStorage.getItem('cart');
+            if (savedCart) {
+                try {
+                    const parsedCart = JSON.parse(savedCart);
+                    // eslint-disable-next-line react-hooks/set-state-in-effect
+                    setItems(parsedCart);
+                } catch (e) {
+                    console.error('Failed to parse cart', e);
+                }
+            }
+        }
+        setIsInitialized(true);
+    }, []);
+
+    // Handle cart based on authentication status changes
+    useEffect(() => {
+        if (!isInitialized) return;
+
+        const currentUserId = session?.user?.id || null;
+        const previousUserId = previousUserIdRef.current;
+
+        // User just logged in (was logged out, now logged in)
+        if (currentUserId && !previousUserId) {
+            // Restore cart from localStorage
+            skipSaveRef.current = true; // Skip saving when restoring
+            const savedCart = localStorage.getItem('cart');
+            if (savedCart) {
+                try {
+                    const parsedCart = JSON.parse(savedCart);
+                    setItems(parsedCart);
+                } catch (e) {
+                    console.error('Failed to parse cart', e);
+                }
+            }
+            // Reset flag after restore
+            setTimeout(() => {
+                skipSaveRef.current = false;
+            }, 50);
+        }
+        // User just logged out (was logged in, now logged out)
+        else if (!currentUserId && previousUserId) {
+            // Clear cart visually but DON'T touch localStorage
+            skipSaveRef.current = true; // Skip saving when clearing
+            setItems([]);
+            // Reset flag after clearing
+            setTimeout(() => {
+                skipSaveRef.current = false;
+            }, 50);
+        }
+
+        // Update the ref for next comparison
+        previousUserIdRef.current = currentUserId;
+    }, [session, isInitialized]);
+
+    // Save cart to localStorage whenever it changes (only if user is logged in and not skipping)
+    useEffect(() => {
+        if (isInitialized && session?.user && !skipSaveRef.current) {
             localStorage.setItem('cart', JSON.stringify(items));
         }
-    }, [items, session]);
+    }, [items, isInitialized, session]);
 
     const addToCart = (product: { id: number; name: string; price: number; image: string; category?: string }) => {
         console.log('CartContext addToCart received:', product);
