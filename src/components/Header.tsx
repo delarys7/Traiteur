@@ -85,7 +85,7 @@ export default function Header() {
                             {/* Icons hidden on mobile */}
                             <div className={styles.desktopIcons}>
                                 <a 
-                                    href="INSTAGRAM_LINK_HERE" 
+                                    href="https://www.instagram.com/athena_event_paris/" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className={styles.iconLink}
