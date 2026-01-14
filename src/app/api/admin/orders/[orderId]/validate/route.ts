@@ -34,12 +34,27 @@ export async function POST(
             return NextResponse.json({ error: 'La commande n\'est pas en attente' }, { status: 400 });
         }
 
-        // Mettre à jour le statut
+        // Récupérer l'historique actuel
+        const currentOrder = db.prepare('SELECT history FROM orders WHERE id = ?').get(orderId) as { history: string } | undefined;
+        let history = [];
+        if (currentOrder?.history) {
+            history = JSON.parse(currentOrder.history);
+        }
+        
+        // Ajouter le nouvel événement à l'historique
+        const now = new Date().toISOString();
+        history.push({
+            status: 'validated',
+            date: now,
+            label: 'Approuvée'
+        });
+        
+        // Mettre à jour le statut et l'historique
         db.prepare(`
             UPDATE orders 
-            SET status = 'validated', updatedAt = CURRENT_TIMESTAMP
+            SET status = 'validated', updatedAt = CURRENT_TIMESTAMP, history = ?
             WHERE id = ?
-        `).run(orderId);
+        `).run(JSON.stringify(history), orderId);
 
         return NextResponse.json({ success: true });
     } catch (error: any) {

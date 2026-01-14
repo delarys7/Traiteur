@@ -31,6 +31,7 @@ export async function GET() {
                 o.serviceType,
                 o.createdAt,
                 o.updatedAt,
+                o.history,
                 u.firstName,
                 u.lastName,
                 u.type as userType,
@@ -42,12 +43,26 @@ export async function GET() {
             ORDER BY o.updatedAt DESC
         `).all();
 
-        // Parser les items JSON
-        const parsedOrders = orders.map((order: any) => ({
-            ...order,
-            items: order.items ? JSON.parse(order.items) : [],
-            history: order.history ? JSON.parse(order.history) : []
-        }));
+        // Parser les items JSON et calculer la date de MAJ depuis l'historique
+        const parsedOrders = orders.map((order: any) => {
+            const history = order.history ? JSON.parse(order.history) : [];
+            // Utiliser la date du dernier événement de l'historique comme date de MAJ
+            let lastUpdateDate = order.updatedAt;
+            if (history && history.length > 0) {
+                // Prendre la date du dernier événement
+                const lastEvent = history[history.length - 1];
+                if (lastEvent && lastEvent.date) {
+                    lastUpdateDate = lastEvent.date;
+                }
+            }
+            
+            return {
+                ...order,
+                items: order.items ? JSON.parse(order.items) : [],
+                history: history,
+                updatedAt: lastUpdateDate // Utiliser la date de l'historique
+            };
+        });
 
         return NextResponse.json({ orders: parsedOrders });
     } catch (error: any) {

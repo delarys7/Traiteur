@@ -39,13 +39,27 @@ export async function POST(
             return NextResponse.json({ error: 'La commande n\'est pas en attente' }, { status: 400 });
         }
 
+        // Récupérer l'historique actuel
+        const currentOrder = db.prepare('SELECT history FROM orders WHERE id = ?').get(orderId) as { history: string } | undefined;
+        let history = [];
+        if (currentOrder?.history) {
+            history = JSON.parse(currentOrder.history);
+        }
+        
+        // Ajouter le nouvel événement à l'historique
+        const now = new Date().toISOString();
+        history.push({
+            status: 'refused',
+            date: now,
+            label: 'Refusée'
+        });
+        
         // Mettre à jour le statut avec le motif du refus
-        // Note: Si la table orders n'a pas de colonne refusalReason, il faudra l'ajouter
         db.prepare(`
             UPDATE orders 
-            SET status = 'refused', updatedAt = CURRENT_TIMESTAMP, refusalReason = ?
+            SET status = 'refused', updatedAt = CURRENT_TIMESTAMP, refusalReason = ?, history = ?
             WHERE id = ?
-        `).run(reason, orderId);
+        `).run(reason, JSON.stringify(history), orderId);
 
         return NextResponse.json({ success: true });
     } catch (error: any) {

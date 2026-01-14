@@ -7,8 +7,8 @@
     flex-direction: column;
     gap: 1.25rem;
     transition: all 0.2s ease;
-    min-width: 320px;
-    max-width: 320px;
+    min-width: 380px;
+    max-width: 380px;
     flex-shrink: 0;
     height: auto;
     align-self: stretch;
@@ -50,11 +50,18 @@
     font-weight: 500;
 }
 
+.datesRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 0.25rem;
+    gap: 1rem;
+}
+
 .dates {
     display: flex;
     flex-direction: column;
     gap: 0.15rem;
-    margin-top: 0.25rem;
 }
 
 .dateLabel {
@@ -68,6 +75,7 @@
     font-size: 0.75rem;
     color: #6b7280;
     font-style: italic;
+    text-decoration: underline;
 }
 
 .statusTag {

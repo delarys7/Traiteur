@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import AdminOrderCard, { AdminOrder } from '@/components/AdminOrderCard';
-import AdminOrderDetailModal from '@/components/AdminOrderDetailModal';
 import RefuseOrderModal from '@/components/RefuseOrderModal';
 import styles from './page.module.css';
 
@@ -19,8 +18,6 @@ function CommandesContent() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedOrder, setSelectedOrder] = useState<AdminOrder | null>(null);
-    const [showDetailModal, setShowDetailModal] = useState(false);
     const [showRefuseModal, setShowRefuseModal] = useState(false);
     const [orderToRefuse, setOrderToRefuse] = useState<AdminOrder | null>(null);
     
@@ -185,7 +182,7 @@ function CommandesContent() {
     const getStatusLabel = (status: string) => {
         switch (status) {
             case 'pending': return 'En attente';
-            case 'validated': return 'Validée';
+            case 'validated': return 'Approuvée';
             case 'paid': return 'Payée';
             case 'received': return 'Réceptionnée';
             case 'refused': return 'Refusée';
@@ -237,9 +234,12 @@ function CommandesContent() {
 
                 return (
                     <div key={status} className={styles.statusSection}>
-                        <h2 className={styles.statusTitle}>
-                            {getStatusLabel(status)} ({statusOrders.length})
-                        </h2>
+                        <div className={styles.statusHeader}>
+                            <h2 className={styles.statusTitle}>
+                                {getStatusLabel(status)} ({statusOrders.length})
+                            </h2>
+                            <div className={styles.statusSeparator}></div>
+                        </div>
                         <div className={styles.galleryWrapper}>
                             <button 
                                 className={`${styles.scrollArrow} ${styles.leftArrow}`}
@@ -256,8 +256,7 @@ function CommandesContent() {
                                         key={order.id}
                                         order={order}
                                         onDetails={(ord) => {
-                                            setSelectedOrder(ord);
-                                            setShowDetailModal(true);
+                                            router.push(`/admin/commandes/${ord.id}`);
                                         }}
                                         onValidate={(order.status === 'pending' || order.status === 'pending_confirmation') ? handleValidate : undefined}
                                         onRefuse={(order.status === 'pending' || order.status === 'pending_confirmation') ? handleRefuse : undefined}
@@ -276,17 +275,6 @@ function CommandesContent() {
                     </div>
                 );
             })}
-
-            {selectedOrder && (
-                <AdminOrderDetailModal
-                    order={selectedOrder}
-                    isOpen={showDetailModal}
-                    onClose={() => {
-                        setShowDetailModal(false);
-                        setSelectedOrder(null);
-                    }}
-                />
-            )}
 
             {showRefuseModal && orderToRefuse && (
                 <RefuseOrderModal

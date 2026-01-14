@@ -84,7 +84,7 @@ const AdminOrderCard: React.FC<AdminOrderCardProps> = ({
         const normalizedStatus = status === 'pending_confirmation' ? 'pending' : status;
         switch (normalizedStatus) {
             case 'pending': return 'En attente';
-            case 'validated': return 'Validée';
+            case 'validated': return 'Approuvée';
             case 'paid': return 'Payée';
             case 'received': return 'Réceptionnée';
             case 'refused': return 'Refusée';
@@ -102,13 +102,15 @@ const AdminOrderCard: React.FC<AdminOrderCardProps> = ({
                             {order.firstName} {order.lastName}
                         </span>
                     </div>
-                    <div className={styles.dates}>
-                        <span className={styles.dateLabel}>Création:</span>
-                        <span className={styles.dateValue}>{formatDate(order.createdAt)}</span>
-                    </div>
-                    <div className={styles.dates}>
-                        <span className={styles.dateLabel}>Maj statut:</span>
-                        <span className={styles.dateValue}>{formatDate(order.updatedAt)}</span>
+                    <div className={styles.datesRow}>
+                        <div className={styles.dates}>
+                            <span className={styles.dateLabel}>Création:</span>
+                            <span className={styles.dateValue}>{formatDate(order.createdAt)}</span>
+                        </div>
+                        <div className={styles.dates}>
+                            <span className={styles.dateLabel}>Maj statut:</span>
+                            <span className={styles.dateValue}>{formatDate(order.updatedAt)}</span>
+                        </div>
                     </div>
                 </div>
                 <div className={`${styles.statusTag} ${getStatusTagClass(order.status)}`}>
