@@ -186,190 +186,223 @@ export async function POST(request: NextRequest) {
                         <meta name="viewport" content="width=device-width, initial-scale=1.0">
                         <style>
                             body { 
-                                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-                                line-height: 1.6; 
-                                color: #333; 
-                                max-width: 600px;
-                                margin: 0 auto;
-                                padding: 20px;
+                                font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                                line-height: 1.5; 
+                                color: #111; 
+                                margin: 0;
+                                padding: 0;
                                 background-color: #f5f5f5;
+                            }
+                            .wrapper {
+                                width: 100%;
+                                background-color: #f5f5f5;
+                                padding: 40px 0;
                             }
                             .container {
                                 background-color: #ffffff;
-                                border-radius: 8px;
-                                padding: 30px;
-                                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                                max-width: 600px;
+                                margin: 0 auto;
+                                padding: 40px;
+                                text-align: center;
+                                border-radius: 8px; /* Slightly easier on the eyes */
+                                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
                             }
                             h1 { 
-                                color: #111; 
-                                font-size: 24px;
-                                margin-bottom: 10px;
-                                border-bottom: 2px solid #111;
-                                padding-bottom: 10px;
-                            }
-                            h2 { 
-                                color: #111; 
-                                font-size: 18px;
-                                margin-top: 25px;
-                                margin-bottom: 15px;
-                                font-weight: 600;
-                            }
-                            .field-group {
-                                margin-bottom: 20px;
-                                padding: 15px;
-                                background-color: #f9f9f9;
-                                border-radius: 4px;
-                                border-left: 3px solid #111;
-                            }
-                            .field-label {
-                                font-weight: 600;
-                                color: #666;
-                                font-size: 12px;
+                                font-size: 20px;
+                                font-weight: 300;
                                 text-transform: uppercase;
-                                letter-spacing: 0.5px;
+                                letter-spacing: 2px;
+                                margin: 0 0 10px 0;
+                                color: #111;
+                            }
+                            .motif {
+                                font-size: 14px;
+                                color: #666;
+                                margin-bottom: 30px;
+                                text-transform: uppercase;
+                                letter-spacing: 1px;
+                            }
+                            .divider {
+                                height: 1px;
+                                background-color: #eee;
+                                width: 100px;
+                                margin: 20px auto;
+                                border: none;
+                            }
+                            .section {
+                                margin-bottom: 20px;
+                            }
+                            .enterprise {
+                                font-size: 18px;
+                                font-weight: 600;
+                                color: #000;
                                 margin-bottom: 5px;
                             }
-                            .field-value {
-                                color: #111;
+                            .name {
+                                font-size: 24px;
+                                font-weight: 400;
+                                color: #000;
+                                margin-bottom: 5px;
+                            }
+                            .contact-info {
                                 font-size: 14px;
-                                margin: 0;
+                                color: #555;
+                            }
+                            .contact-info span {
+                                margin: 0 10px;
+                            }
+                            .details-grid {
+                                display: table;
+                                width: 100%;
+                                margin-top: 30px;
+                                margin-bottom: 30px;
+                                text-align: left; /* Reset alignment for this section */
+                                border-top: 1px solid #eee;
+                                border-bottom: 1px solid #eee;
+                            }
+                            .details-column {
+                                display: table-cell;
+                                width: 50%;
+                                padding: 20px;
+                                vertical-align: top;
+                            }
+                            .details-title {
+                                font-size: 11px;
+                                text-transform: uppercase;
+                                letter-spacing: 1px;
+                                font-weight: 700;
+                                color: #999;
+                                margin-bottom: 10px;
+                                display: block;
+                            }
+                            .address-text, .cart-list {
+                                font-size: 13px;
+                                color: #333;
+                                line-height: 1.6;
+                            }
+                            .cart-item {
+                                margin-bottom: 8px;
+                                display: block;
+                            }
+                            .cart-total {
+                                margin-top: 10px;
+                                font-weight: 600;
+                                border-top: 1px solid #eee;
+                                padding-top: 5px;
+                                display: block;
+                            }
+                            .message-box {
+                                text-align: left;
+                                background-color: #fafafa;
+                                padding: 20px;
+                                margin-top: 20px;
+                                border-radius: 4px;
+                                white-space: pre-wrap;
+                                font-size: 14px;
+                                color: #444;
                             }
                             .button {
                                 display: inline-block;
-                                padding: 12px 24px;
+                                padding: 12px 30px;
+                                border: 1px solid #111;
                                 background-color: #111;
-                                color: #ffffff;
+                                color: #ffffff !important;
                                 text-decoration: none;
-                                border-radius: 4px;
-                                margin-top: 20px;
-                                font-weight: 600;
-                                text-align: center;
+                                font-size: 12px;
+                                text-transform: uppercase;
+                                letter-spacing: 1px;
+                                margin-top: 40px;
+                                transition: all 0.2s;
                             }
                             .button:hover {
-                                background-color: #333;
-                            }
-                            ul {
-                                margin: 10px 0;
-                                padding-left: 20px;
-                            }
-                            li {
-                                margin: 5px 0;
+                                background-color: #fff;
+                                color: #111 !important;
                             }
                             .footer {
                                 margin-top: 30px;
-                                padding-top: 20px;
-                                border-top: 1px solid #eee;
-                                font-size: 12px;
-                                color: #999;
-                                text-align: center;
+                                font-size: 11px;
+                                color: #aaa;
                             }
                         </style>
                     </head>
                     <body>
-                        <div class="container">
-                            <h1>Nouveau Formulaire de Contact</h1>
-                            
-                            <div class="field-group">
-                                <div class="field-label">Motif</div>
-                                <p class="field-value">${getMotifLabel(motif)}</p>
-                            </div>
+                        <div class="wrapper">
+                            <div class="container">
+                                <h1>Nouvelle Demande</h1>
+                                <div class="motif">${getMotifLabel(motif)}</div>
 
-                            ${entreprise ? `
-                            <div class="field-group">
-                                <div class="field-label">Entreprise</div>
-                                <p class="field-value">${entreprise}</p>
-                            </div>
-                            ` : ''}
+                                <hr class="divider">
 
-                            <div class="field-group">
-                                <div class="field-label">Prénom</div>
-                                <p class="field-value">${firstName}</p>
-                            </div>
+                                <!-- Ligne 1: Entreprise -->
+                                ${entreprise ? `<div class="enterprise">${entreprise}</div>` : ''}
 
-                            <div class="field-group">
-                                <div class="field-label">Nom</div>
-                                <p class="field-value">${lastName}</p>
-                            </div>
+                                <!-- Ligne 2: Nom et Prénom -->
+                                <div class="name">${firstName} ${lastName}</div>
 
-                            <div class="field-group">
-                                <div class="field-label">Email</div>
-                                <p class="field-value">${email}</p>
-                            </div>
-
-                            ${phone ? `
-                            <div class="field-group">
-                                <div class="field-label">Téléphone</div>
-                                <p class="field-value">${phone}</p>
-                            </div>
-                            ` : ''}
-
-                            ${(selectedAddress || manualAddress) ? `
-                            <h2>Adresse de l'événement / livraison</h2>
-                            ${addressDetails}
-                            ${manualAddress ? `
-                                <div class="field-group">
-                                    <div class="field-label">Adresse saisie manuellement</div>
-                                    <p class="field-value">
-                                        ${restaurantName ? `<strong>Nom du restaurant:</strong> ${restaurantName}<br>` : ''}
-                                        ${manualAddress}<br>
-                                        ${manualPostalCode} ${manualCity}
-                                        ${kitchenStaff ? `<br><strong>Employés en cuisine:</strong> ${kitchenStaff}` : ''}
-                                    </p>
+                                <!-- Ligne 3: Mail et Téléphone -->
+                                <div class="contact-info">
+                                    <a href="mailto:${email}" style="color: #555; text-decoration: none;">${email}</a>
+                                    ${phone ? `<span>|</span> <a href="tel:${phone}" style="color: #555; text-decoration: none;">${phone}</a>` : ''}
                                 </div>
-                            ` : ''}
-                            ` : ''}
 
-                            ${(motif === 'collaboration-entreprise' || motif === 'collaboration-particulier') ? `
-                            <h2>Détails de l'événement</h2>
-                            ${eventDate ? `
-                            <div class="field-group">
-                                <div class="field-label">Date de l'événement</div>
-                                <p class="field-value">${eventDate}</p>
-                            </div>
-                            ` : ''}
-                            ${numberOfGuests ? `
-                            <div class="field-group">
-                                <div class="field-label">Nombre d'invités</div>
-                                <p class="field-value">${numberOfGuests}</p>
-                            </div>
-                            ` : ''}
-                            ${budgetPerPerson ? `
-                            <div class="field-group">
-                                <div class="field-label">Budget par personne</div>
-                                <p class="field-value">${budgetPerPerson} €</p>
-                            </div>
-                            ` : ''}
-                            ` : ''}
+                                <!-- Ligne 4: Récapitulatif et Adresse (Side by Side) -->
+                                ${(cartItems && cartItems.length > 0) || selectedAddress || manualAddress ? `
+                                    <div class="details-grid">
+                                        <!-- Colonne Gauche: Panier -->
+                                        ${cartItems && cartItems.length > 0 ? `
+                                            <div class="details-column" style="border-right: 1px solid #eee;">
+                                                <span class="details-title">Votre Sélection</span>
+                                                <div class="cart-list">
+                                                    ${cartItems.map((item: any) => `
+                                                        <span class="cart-item">
+                                                            <strong>${item.name}</strong><br>
+                                                            <span style="color: #666;">${item.quantity} x ${item.price.toFixed(2)}€</span>
+                                                        </span>
+                                                    `).join('')}
+                                                    ${cartTotal ? `<span class="cart-total">Total: ${cartTotal.toFixed(2)} €</span>` : ''}
+                                                </div>
+                                            </div>
+                                        ` : '<div class="details-column"></div>'}
 
-                            ${motif === 'commande' && cartItems && cartItems.length > 0 ? `
-                            <h2>Récapitulatif du panier</h2>
-                            <div class="field-group">
-                                <ul>
-                                    ${cartItems.map((item: any) => `
-                                        <li>
-                                            <strong>${item.name}</strong><br>
-                                            Quantité: ${item.quantity} × ${item.price.toFixed(2)} € = ${(item.price * item.quantity).toFixed(2)} €
-                                        </li>
-                                    `).join('')}
-                                </ul>
-                                ${cartTotal ? `
-                                <p style="margin-top: 15px; font-weight: 600; font-size: 16px;">
-                                    Total: ${cartTotal.toFixed(2)} €
-                                </p>
+                                        <!-- Colonne Droite: Adresse -->
+                                        <div class="details-column">
+                                            <span class="details-title">Lieu de réception</span>
+                                            <div class="address-text">
+                                                ${selectedAddress ? (() => {
+                                                    const addr = db.prepare('SELECT * FROM addresses WHERE id = ?').get(selectedAddress) as any;
+                                                    return addr ? `${addr.name}<br>${addr.address}<br>${addr.postalCode} ${addr.city}` : 'Adresse introuvable';
+                                                })() : ''}
+                                                ${manualAddress ? `
+                                                    ${restaurantName ? `<strong>${restaurantName}</strong><br>` : ''}
+                                                    ${manualAddress}<br>
+                                                    ${manualPostalCode} ${manualCity}
+                                                    ${kitchenStaff ? `<br><br><em>Staff cuisine: ${kitchenStaff}</em>` : ''}
+                                                ` : ''}
+                                                
+                                                ${(motif === 'collaboration-entreprise' || motif === 'collaboration-particulier') ? `
+                                                    <br><br>
+                                                    <strong>Date:</strong> ${eventDate || 'Non spécifiée'}<br>
+                                                    <strong>Invités:</strong> ${numberOfGuests || '-'}<br>
+                                                    <strong>Budget:</strong> ${budgetPerPerson || '-'} €/pers
+                                                ` : ''}
+                                            </div>
+                                        </div>
+                                    </div>
                                 ` : ''}
-                            </div>
-                            ` : ''}
 
-                            <h2>Message</h2>
-                            <div class="field-group">
-                                <p class="field-value" style="white-space: pre-wrap;">${message}</p>
-                            </div>
+                                <!-- Ligne 5: Message -->
+                                <div class="section" style="margin-bottom: 0;">
+                                    <span class="details-title" style="text-align: center;">Message du client</span>
+                                    <div class="message-box">${message}</div>
+                                </div>
 
-                            <a href="${orderDetailsUrl}" class="button">Voir les détails de la commande</a>
+                                <!-- Bouton Action -->
+                                <a href="${orderDetailsUrl}" class="button">Accéder à la commande</a>
 
-                            <div class="footer">
-                                <p>ID de la commande: ${orderId}</p>
-                                <p>Date de création: ${new Date(now).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' })}</p>
+                                <!-- Footer -->
+                                <div class="footer">
+                                    ID: ${orderId} &bull; ${new Date(now).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' })}
+                                </div>
                             </div>
                         </div>
                     </body>
