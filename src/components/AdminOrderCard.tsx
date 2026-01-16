@@ -31,6 +31,13 @@ export interface AdminOrder {
     phone?: string;
     entreprise?: string;
     history?: { status: string; date: string; label?: string }[];
+    contactData?: {
+        motif?: string;
+        message?: string;
+        phone?: string;
+        entreprise?: string;
+        address?: string;
+    };
 }
 
 interface AdminOrderCardProps {

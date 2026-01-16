@@ -142,6 +142,12 @@ const AdminOrderDetailModal: React.FC<AdminOrderDetailModalProps> = ({ order, is
                                         <span className={styles.clientInfoValue}>{getMotifLabel(order.contactData.motif)}</span>
                                     </div>
                                 )}
+                                {order.contactData?.address && (
+                                    <div className={styles.clientInfoRow}>
+                                        <span className={styles.clientInfoLabel}>Adresse:</span>
+                                        <span className={styles.clientInfoValue}>{order.contactData.address}</span>
+                                    </div>
+                                )}
                                 {order.contactData?.message && (
                                     <div className={styles.clientInfoRow} style={{ gridColumn: '1 / -1' }}>
                                         <span className={styles.clientInfoLabel}>Message:</span>

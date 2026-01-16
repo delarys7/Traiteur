@@ -86,9 +86,10 @@ export async function POST(request: NextRequest) {
         db.prepare(`
             INSERT INTO contact_messages (
                 id, userId, firstName, lastName, email, phone, entreprise, 
-                motif, message, status, createdAt, updatedAt
+                motif, message, status, createdAt, updatedAt,
+                manualAddress, manualPostalCode, manualCity, selectedAddress
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?)
         `).run(
             messageId,
             session.user.id,
@@ -100,7 +101,11 @@ export async function POST(request: NextRequest) {
             motif,
             message,
             now,
-            now
+            now,
+            manualAddress || null,
+            manualPostalCode || null,
+            manualCity || null,
+            selectedAddress || null
         );
 
         // Créer une commande pour TOUS les motifs (pas seulement 'commande')

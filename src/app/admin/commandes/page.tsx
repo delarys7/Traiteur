@@ -20,6 +20,7 @@ function CommandesContent() {
     const [searchQuery, setSearchQuery] = useState('');
     const [showRefuseModal, setShowRefuseModal] = useState(false);
     const [orderToRefuse, setOrderToRefuse] = useState<AdminOrder | null>(null);
+    const [toast, setToast] = useState<{ message: string; visible: boolean }>({ message: '', visible: false });
     
     const galleryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
@@ -111,6 +112,11 @@ function CommandesContent() {
         }
     };
 
+    const showNotification = (message: string) => {
+        setToast({ message, visible: true });
+        setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000);
+    };
+
     const handleValidate = async (order: AdminOrder) => {
         try {
             const response = await fetch(`/api/admin/orders/${order.id}/validate`, {
@@ -122,6 +128,7 @@ function CommandesContent() {
             }
             
             await fetchOrders();
+            showNotification('Commande approuvée');
         } catch (err: any) {
             console.error('Erreur:', err);
             alert(err.message || 'Erreur lors de la validation');
@@ -150,6 +157,7 @@ function CommandesContent() {
             setShowRefuseModal(false);
             setOrderToRefuse(null);
             await fetchOrders();
+            showNotification('Commande refusée');
         } catch (err: any) {
             console.error('Erreur:', err);
             alert(err.message || 'Erreur lors du refus');
@@ -287,6 +295,27 @@ function CommandesContent() {
                     onConfirm={handleRefuseConfirm}
                 />
             )}
+
+            {/* Toast Notification */}
+            {toast.visible && (
+                <div style={{
+                    position: 'fixed',
+                    bottom: '20px',
+                    right: '20px',
+                    backgroundColor: '#000',
+                    color: '#fff',
+                    padding: '12px 24px',
+                    borderRadius: '4px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                    zIndex: 2000,
+                    fontFamily: 'Arial, sans-serif',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    animation: 'fadeIn 0.3s ease-out'
+                }}>
+                    {toast.message}
+                </div>
+            )}
         </div>
     );
 }
@@ -299,6 +328,12 @@ export default function CommandesPage() {
             </div>
         }>
             <CommandesContent />
+            <style jsx global>{`
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            `}</style>
         </Suspense>
     );
 }

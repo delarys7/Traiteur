@@ -43,20 +43,54 @@ export async function GET(request: NextRequest) {
                 u.firstName ASC
         `).all() as any[];
 
+        // Préparer les requêtes en dehors de la boucle pour optimiser
+        const getOrders = db.prepare(`
+            SELECT 
+                id,
+                type,
+                total,
+                createdAt,
+                serviceType,
+                status
+            FROM orders
+            WHERE userId = ?
+            ORDER BY createdAt DESC
+        `);
+
+        const getActiveOrder = db.prepare(`
+            SELECT id 
+            FROM orders 
+            WHERE userId = ? 
+            AND status != 'received' 
+            AND status != 'refused'
+            AND (serviceType = 'commande' OR type = 'product')
+            ORDER BY createdAt DESC 
+            LIMIT 1
+        `);
+
+        const getActiveServiceRequest = db.prepare(`
+            SELECT id 
+            FROM orders 
+            WHERE userId = ? 
+            AND status != 'received' 
+            AND status != 'refused'
+            AND serviceType NOT IN ('commande', 'autre')
+            ORDER BY createdAt DESC 
+            LIMIT 1
+        `);
+
+        const getPendingMessage = db.prepare(`
+            SELECT motif
+            FROM contact_messages
+            WHERE userId = ? AND status = 'pending'
+            ORDER BY createdAt DESC
+            LIMIT 1
+        `);
+
         // Pour chaque client, récupérer les statistiques de commandes et le statut des messages
         const clientsWithStats = clients.map(client => {
             // Récupérer toutes les commandes du client
-            const orders = db.prepare(`
-                SELECT 
-                    id,
-                    type,
-                    total,
-                    createdAt,
-                    serviceType
-                FROM orders
-                WHERE userId = ?
-                ORDER BY createdAt DESC
-            `).all(client.id) as any[];
+            const orders = getOrders.all(client.id) as any[];
 
             const orderCount = orders.length;
             const lastOrder = orders[0] || null;
@@ -64,14 +98,14 @@ export async function GET(request: NextRequest) {
                 ? orders.reduce((sum, order) => sum + (order.total || 0), 0) / orderCount 
                 : 0;
 
-            // Récupérer le dernier message en attente de réponse
-            const pendingMessage = db.prepare(`
-                SELECT motif, createdAt
-                FROM contact_messages
-                WHERE userId = ? AND status = 'pending'
-                ORDER BY createdAt DESC
-                LIMIT 1
-            `).get(client.id) as any;
+            // Récupérer la commande en cours (Product / Commande)
+            const activeOrder = getActiveOrder.get(client.id) as { id: string } | undefined;
+
+            // Récupérer la demande de service en cours (Service / Autre que Commande/Autre)
+            const activeServiceRequest = getActiveServiceRequest.get(client.id) as { id: string } | undefined;
+
+            // Récupérer le dernier message en attente
+            const pendingMessage = getPendingMessage.get(client.id) as { motif: string } | undefined;
 
             return {
                 id: client.id,
@@ -86,6 +120,8 @@ export async function GET(request: NextRequest) {
                 lastOrderDate: lastOrder ? lastOrder.createdAt : null,
                 lastOrderType: lastOrder ? (lastOrder.type === 'product' ? 'Produits' : (lastOrder.serviceType || 'Prestation')) : null,
                 averageOrderPrice: averagePrice,
+                activeOrderId: activeOrder?.id || null,
+                activeServiceRequestId: activeServiceRequest?.id || null,
                 pendingMessageMotif: pendingMessage ? pendingMessage.motif : null
             };
         });

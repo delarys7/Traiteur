@@ -42,12 +42,21 @@ export async function GET() {
                 cm.message as contactMessage,
                 cm.phone as contactPhone,
                 cm.entreprise as contactEntreprise,
-                cm.createdAt as contactCreatedAt
+                cm.createdAt as contactCreatedAt,
+                cm.manualAddress,
+                cm.manualPostalCode,
+                cm.manualCity,
+                cm.selectedAddress,
+                addr.name as addrName,
+                addr.address as addrStreet,
+                addr.postalCode as addrZip,
+                addr.city as addrCity
             FROM orders o
             LEFT JOIN user u ON o.userId = u.id
             LEFT JOIN contact_messages cm ON cm.userId = o.userId 
                 AND cm.motif = o.serviceType 
                 AND DATE(cm.createdAt) = DATE(o.createdAt)
+            LEFT JOIN addresses addr ON cm.selectedAddress = addr.id
             ORDER BY o.updatedAt DESC
         `).all();
 
@@ -63,6 +72,14 @@ export async function GET() {
                     lastUpdateDate = lastEvent.date;
                 }
             }
+
+            // Construire l'objet adresse unifié
+            let addressDisplay = null;
+            if (order.manualAddress) {
+                addressDisplay = `${order.manualAddress}, ${order.manualPostalCode} ${order.manualCity}`;
+            } else if (order.addrStreet) {
+                addressDisplay = `${order.addrStreet}, ${order.addrZip} ${order.addrCity}`;
+            }
             
             return {
                 ...order,
@@ -73,7 +90,9 @@ export async function GET() {
                     motif: order.motif,
                     message: order.contactMessage,
                     phone: order.contactPhone || order.phone,
-                    entreprise: order.contactEntreprise || order.entreprise
+                    entreprise: order.contactEntreprise || order.entreprise,
+                    // Ajouter l'objet adresse
+                    address: addressDisplay
                 }
             };
         });

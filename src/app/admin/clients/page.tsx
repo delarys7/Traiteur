@@ -14,11 +14,12 @@ interface Client {
     phone: string;
     type: string;
     entreprise: string;
-    allergies: string;
     orderCount: number;
     lastOrderDate: string | null;
     lastOrderType: string | null;
     averageOrderPrice: number;
+    activeOrderId: string | null;
+    activeServiceRequestId: string | null;
     pendingMessageMotif: string | null;
 }
 
@@ -280,23 +281,23 @@ function ClientsContent() {
                 <table className={styles.table}>
                     <thead>
                         <tr>
-                            <th onClick={() => handleSort('lastName')} className={styles.sortable}>
+                            <th onClick={() => handleSort('lastName')} className={styles.sortable} style={{ textAlign: 'center' }}>
                                 Nom {sortField === 'lastName' && (sortDirection === 'asc' ? '↑' : '↓')}
                             </th>
-                            <th onClick={() => handleSort('firstName')} className={styles.sortable}>
+                            <th onClick={() => handleSort('firstName')} className={styles.sortable} style={{ textAlign: 'center' }}>
                                 Prénom {sortField === 'firstName' && (sortDirection === 'asc' ? '↑' : '↓')}
                             </th>
-                            <th onClick={() => handleSort('email')} className={styles.sortable}>
+                            <th onClick={() => handleSort('email')} className={styles.sortable} style={{ textAlign: 'center' }}>
                                 Mail {sortField === 'email' && (sortDirection === 'asc' ? '↑' : '↓')}
                             </th>
-                            <th>Téléphone</th>
-                            <th onClick={() => handleSort('type')} className={styles.sortable}>
+                            <th style={{ textAlign: 'center' }}>Téléphone</th>
+                            <th onClick={() => handleSort('type')} className={styles.sortable} style={{ textAlign: 'center' }}>
                                 Type {sortField === 'type' && (sortDirection === 'asc' ? '↑' : '↓')}
                             </th>
-                            <th>Entreprise</th>
-                            <th>Allergies</th>
-                            <th>Statut</th>
-                            <th>Actions</th>
+                            <th style={{ textAlign: 'center' }}>Entreprise</th>
+                            <th style={{ textAlign: 'center' }}>Commande en cours</th>
+                            <th style={{ textAlign: 'center' }}>Demande de service</th>
+                            <th style={{ textAlign: 'center' }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -318,28 +319,32 @@ function ClientsContent() {
                                     )}
                                     {groupClients.map((client) => (
                                         <tr key={client.id}>
-                                            <td>{client.lastName || '-'}</td>
-                                            <td>{client.firstName || '-'}</td>
-                                            <td>{client.email}</td>
-                                            <td>{client.phone || '-'}</td>
-                                            <td>
+                                            <td align="center">{client.lastName || '-'}</td>
+                                            <td align="center">{client.firstName || '-'}</td>
+                                            <td align="center">{client.email}</td>
+                                            <td align="center">{client.phone || '-'}</td>
+                                            <td align="center">
                                                 <span className={client.type === 'entreprise' ? styles.badgeEnterprise : styles.badgeParticulier}>
                                                     {client.type === 'entreprise' ? 'Entreprise' : 'Particulier'}
                                                 </span>
                                             </td>
-                                            <td>{client.type === 'entreprise' ? (client.entreprise || '-') : '-'}</td>
-                                            <td>{client.type === 'particulier' ? (client.allergies || '-') : '-'}</td>
-                                            <td>
-                                                {client.pendingMessageMotif ? (
-                                                    <span className={styles.statusTag}>
-                                                        {getMotifLabel(client.pendingMessageMotif)}
-                                                    </span>
-                                                ) : (
-                                                    '-'
-                                                )}
+                                            <td align="center">{client.type === 'entreprise' ? (client.entreprise || '-') : '-'}</td>
+                                            <td align="center">
+                                                {client.activeOrderId ? (
+                                                    <Link href={`/admin/commandes/${client.activeOrderId}`} className={styles.orderLink}>
+                                                        #{client.activeOrderId.substring(0, 8)}
+                                                    </Link>
+                                                ) : '-'}
                                             </td>
-                                            <td>
-                                                <div className={styles.actionButtons}>
+                                            <td align="center">
+                                                {client.activeServiceRequestId ? (
+                                                    <Link href={`/admin/commandes/${client.activeServiceRequestId}`} className={styles.orderLink}>
+                                                        #{client.activeServiceRequestId.substring(0, 8)}
+                                                    </Link>
+                                                ) : '-'}
+                                            </td>
+                                            <td align="center">
+                                                <div className={styles.actionButtons} style={{ justifyContent: 'center' }}>
                                                     <Link 
                                                         href={`/admin/clients/${client.id}/detail`}
                                                         className={styles.detailButton}
