@@ -431,6 +431,119 @@ export async function POST(request: NextRequest) {
             console.warn('[API] Aucun administrateur trouvé pour l\'envoi de l\'email');
         }
 
+        // --- ENVOI DE L'EMAIL DE CONFIRMATION AU CLIENT ---
+        if (process.env.RESEND_API_KEY) {
+            try {
+                const baseURL = process.env.NEXT_PUBLIC_APP_URL || 
+                    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) || 
+                    "http://localhost:3000";
+                
+                // Utiliser une URL d'image valide accessible publiquement
+                const logoURL = `https://utfs.io/f/8a4b0c5e-3043-4a3b-a526-267d09cf7ea3-logo.png`; // Fallback ou URL réelle si disponible, sinon utiliser texte
+                // Note: Pour cet exemple, on reprend le style d'auth.ts mais on s'assure que le logo est accessible.
+                // Si pas de logo externe stable, on peut utiliser le texte stylisé.
+
+                let clientSubject = "Confirmation de votre demande - Athéna Event";
+                let clientTitle = "Nous avons bien reçu votre demande";
+                let clientMessage = "";
+                let clientSubMessage = "Nous reviendrons vers vous dans les plus brefs délais.";
+
+                // Personnalisation du message selon le motif
+                switch (motif) {
+                    case 'commande':
+                        clientSubject = "Votre commande est en de bonnes mains";
+                        clientTitle = "L'Art de recevoir commence ici";
+                        clientMessage = `Cher(e) ${firstName} ${lastName},<br><br>Votre commande a bien été enregistrée. Nos chefs et nos équipes s'attellent déjà à imaginer la mise en scène de vos envies culinaires.`;
+                        clientSubMessage = "Vous recevrez prochainement une confirmation détaillée de la validation de votre commande.";
+                        break;
+                    case 'collaboration-entreprise':
+                    case 'collaboration-particulier':
+                        clientSubject = "Merci de votre confiance";
+                        clientTitle = "Tissons des liens d'exception";
+                        clientMessage = `Cher(e) ${firstName} ${lastName},<br><br>Nous sommes honorés de votre intérêt pour une collaboration. Chaque projet est une nouvelle page blanche que nous avons hâte d'écrire avec vous.`;
+                        clientSubMessage = "Notre équipe dédiée va étudier votre proposition et vous contactera très rapidement.";
+                        break;
+                    case 'prestation-domicile':
+                    case 'consulting':
+                        clientSubject = "Votre projet, notre expertise";
+                        clientTitle = "L'Excellence s'invite chez vous";
+                        clientMessage = `Cher(e) ${firstName} ${lastName},<br><br>Merci de nous confier vos projets. Nous mettrons tout en œuvre pour transformer votre vision en une réalité inoubliable.`;
+                        break;
+                    default: // 'autre' et cas par défaut
+                        clientSubject = "Nous avons bien reçu votre message";
+                        clientTitle = "À votre écoute";
+                        clientMessage = `Cher(e) ${firstName} ${lastName},<br><br>Merci de nous avoir contactés. Votre message a retenu toute notre attention.`;
+                        break;
+                }
+
+                const clientEmailHtml = `
+                    <!DOCTYPE html>
+                    <html lang="fr">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <style>
+                            body { font-family: 'Times New Roman', Times, serif; background-color: #ffffff; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+                            .wrapper { width: 100%; table-layout: fixed; background-color: #ffffff; padding-bottom: 40px; }
+                            .main { background-color: #ffffff; margin: 0 auto; width: 100%; max-width: 600px; border-spacing: 0; color: #1a1a1a; }
+                            .content { padding: 40px 20px; text-align: center; }
+                            .logo-text { font-family: 'Times New Roman', Times, serif; font-size: 24px; letter-spacing: 3px; text-transform: uppercase; padding: 40px 0; display: block; color: #000; text-decoration: none; }
+                            h1 { font-family: 'Times New Roman', Times, serif; font-size: 22px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 30px; color: #1a1a1a; }
+                            p { font-family: Arial, sans-serif; font-size: 14px; line-height: 1.8; color: #444444; margin-bottom: 20px; }
+                            .footer { padding: 40px 20px; text-align: center; font-family: Arial, sans-serif; font-size: 11px; color: #999999; border-top: 1px solid #eeeeee; }
+                            .button { background-color: #111; color: #fff !important; padding: 12px 25px; text-decoration: none; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; display: inline-block; margin-top: 20px; }
+                        </style>
+                    </head>
+                    <body>
+                        <center class="wrapper">
+                            <table class="main">
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <div class="logo-text">ATHÉNA EVENT</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="content">
+                                        <h1>${clientTitle}</h1>
+                                        <p>${clientMessage}</p>
+                                        <p>${clientSubMessage}</p>
+                                        
+                                        ${motif === 'commande' ? `
+                                            <a href="${baseURL}/compte" class="button">Suivre ma commande</a>
+                                        ` : ''}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="content">
+                                        <p style="font-style: italic; font-family: 'Times New Roman', Times, serif; font-size: 16px;">"Le luxe, c'est la simplicité."</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="footer">
+                                        ATHÉNA EVENT PARIS<br>
+                                        Traiteur de Haute Gastronomie – Paris<br>
+                                        <a href="${baseURL}" style="color: #999; text-decoration: none;">www.athena-event.com</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </center>
+                    </body>
+                    </html>
+                `;
+
+                await resend.emails.send({
+                    from: "Traiteur <contact@delarys.com>",
+                    to: [email],
+                    subject: clientSubject,
+                    html: clientEmailHtml,
+                });
+                console.log(`[API] Email de confirmation client envoyé à ${email}`);
+            } catch (clientEmailError) {
+                console.error('[API] Erreur envoi email client:', clientEmailError);
+                // On ne bloque pas la réponse si l'email client échoue
+            }
+        }
+
         return NextResponse.json({
             success: true,
             message: 'Message envoyé avec succès'

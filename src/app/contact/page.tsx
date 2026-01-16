@@ -22,7 +22,7 @@ export default function Contact() {
     const { user, isLoading } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { items, total, removeFromCart } = useCart();
+    const { items, total, removeFromCart, clearCart } = useCart();
     
     const [formData, setFormData] = useState({
         firstName: '',
@@ -186,6 +186,11 @@ export default function Contact() {
 
             if (!response.ok) {
                 throw new Error(data.error || 'Erreur lors de l\'envoi du message');
+            }
+
+            // Si c'était une commande, vider le panier
+            if (formData.motif === 'commande') {
+                clearCart();
             }
 
             // Succès
