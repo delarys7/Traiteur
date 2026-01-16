@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, Suspense } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
 import Link from 'next/link';
@@ -13,6 +13,8 @@ function OrderDetailContent() {
     const { user, isLoading } = useAuth();
     const router = useRouter();
     const params = useParams();
+    const searchParams = useSearchParams();
+    const fromClients = searchParams.get('from') === 'clients';
     const orderId = params.orderId as string;
     const { t } = useLanguage();
     
@@ -79,8 +81,8 @@ function OrderDetailContent() {
         return (
             <div className={styles.container}>
                 <div className={styles.error}>{error}</div>
-                <Link href="/admin/commandes" className={styles.backLink}>
-                    ← Retour aux commandes
+                <Link href={fromClients ? "/admin/clients" : "/admin/commandes"} className={styles.backLink}>
+                    {fromClients ? "← Retour aux clients" : "← Retour aux commandes"}
                 </Link>
             </div>
         );
@@ -94,8 +96,8 @@ function OrderDetailContent() {
         return (
             <div className={styles.container}>
                 <div className={styles.error}>Commande introuvable</div>
-                <Link href="/admin/commandes" className={styles.backLink}>
-                    ← Retour aux commandes
+                <Link href={fromClients ? "/admin/clients" : "/admin/commandes"} className={styles.backLink}>
+                    {fromClients ? "← Retour aux clients" : "← Retour aux commandes"}
                 </Link>
             </div>
         );
@@ -103,13 +105,13 @@ function OrderDetailContent() {
 
     return (
         <div className={styles.container}>
-            <Link href="/admin/commandes" className={styles.backLink}>
-                ← Retour aux commandes
+            <Link href={fromClients ? "/admin/clients" : "/admin/commandes"} className={styles.backLink}>
+                {fromClients ? "← Retour aux clients" : "← Retour aux commandes"}
             </Link>
             <AdminOrderDetailModal
                 order={order}
                 isOpen={true}
-                onClose={() => router.push('/admin/commandes')}
+                onClose={() => router.push(fromClients ? '/admin/clients' : '/admin/commandes')}
             />
         </div>
     );

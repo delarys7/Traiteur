@@ -152,6 +152,19 @@
     color: #669900;
 }
 
+/* New style for order links */
+.orderLink {
+    color: inherit;
+    text-decoration: none;
+    transition: text-decoration 0.2s;
+    font-weight: 500;
+}
+
+.orderLink:hover {
+    text-decoration: underline;
+    color: #000;
+}
+
 .viewButton {
     display: inline-block;
     padding: 0.6rem 1.2rem;
