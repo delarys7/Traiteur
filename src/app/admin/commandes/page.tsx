@@ -21,6 +21,7 @@ function CommandesContent() {
     const [showRefuseModal, setShowRefuseModal] = useState(false);
     const [orderToRefuse, setOrderToRefuse] = useState<AdminOrder | null>(null);
     const [toast, setToast] = useState<{ message: string; visible: boolean }>({ message: '', visible: false });
+    const [filterType, setFilterType] = useState<'commandes' | 'services' | 'autres'>('commandes');
     
     const galleryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
@@ -65,20 +66,28 @@ function CommandesContent() {
         }
     };
 
-    // Filtrer par recherche
+    // Filtrer par recherche et par type
     useEffect(() => {
-        if (!searchQuery.trim()) {
-            setFilteredOrders(orders);
-            return;
+        let filtered = [...orders];
+
+        // Filtre par type
+        if (filterType === 'commandes') {
+            filtered = filtered.filter(order => order.serviceType === 'commande');
+        } else if (filterType === 'services') {
+            filtered = filtered.filter(order => order.serviceType !== 'commande' && order.serviceType !== 'autre');
+        } else if (filterType === 'autres') {
+            filtered = filtered.filter(order => order.serviceType === 'autre');
         }
 
-        const query = searchQuery.toLowerCase();
-        const filtered = orders.filter(order => {
-            const fullName = `${order.firstName || ''} ${order.lastName || ''}`.toLowerCase();
-            return fullName.includes(query);
-        });
+        if (searchQuery.trim()) {
+            const query = searchQuery.toLowerCase();
+            filtered = filtered.filter(order => {
+                const fullName = `${order.firstName || ''} ${order.lastName || ''}`.toLowerCase();
+                return fullName.includes(query);
+            });
+        }
         setFilteredOrders(filtered);
-    }, [searchQuery, orders]);
+    }, [searchQuery, orders, filterType]);
 
     // Grouper par statut (normaliser pending_confirmation en pending)
     const groupedOrders = filteredOrders.reduce((acc, order) => {
@@ -224,7 +233,29 @@ function CommandesContent() {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h1 className={styles.title}>Commandes</h1>
+                <div className={styles.titleSection}>
+                    <h1 className={styles.title}>Demandes</h1>
+                    <div className={styles.filterButtons}>
+                        <button 
+                            className={`${styles.filterButton} ${filterType === 'commandes' ? styles.active : ''}`}
+                            onClick={() => setFilterType('commandes')}
+                        >
+                            Commandes
+                        </button>
+                        <button 
+                            className={`${styles.filterButton} ${filterType === 'services' ? styles.active : ''}`}
+                            onClick={() => setFilterType('services')}
+                        >
+                            Services
+                        </button>
+                        <button 
+                            className={`${styles.filterButton} ${filterType === 'autres' ? styles.active : ''}`}
+                            onClick={() => setFilterType('autres')}
+                        >
+                            Autres
+                        </button>
+                    </div>
+                </div>
                 <div className={styles.searchContainer}>
                     <input
                         type="text"

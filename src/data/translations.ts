@@ -28,7 +28,7 @@ export const translations = {
             admin: {
                 data: 'Données',
                 clients: 'Clients',
-                orders: 'Commandes',
+                orders: 'Demandes',
                 stats: 'Statistiques'
             }
         },
@@ -571,7 +571,7 @@ export const translations = {
             admin: {
                 data: 'Data',
                 clients: 'Clients',
-                orders: 'Orders',
+                orders: 'Requests',
                 stats: 'Statistics'
             }
         },
