@@ -14,51 +14,51 @@ export async function GET() {
         }
 
         // Vérifier que l'utilisateur est administrateur
-        const user = db.prepare('SELECT type FROM user WHERE id = ?').get(session.user.id) as { type: string } | undefined;
+        const user = await db.get<{ type: string }>('SELECT type FROM "user" WHERE id = ?', [session.user.id]);
         if (!user || user.type !== 'administrateur') {
             return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
         }
 
         // Récupérer toutes les commandes avec les informations utilisateur et les messages de contact
-        const orders = db.prepare(`
+        const orders = await db.query(`
             SELECT 
                 o.id,
-                o.userId,
+                o."userId",
                 o.type,
                 o.status,
                 o.total,
                 o.items,
-                o.serviceType,
-                o.createdAt,
-                o.updatedAt,
+                o."serviceType",
+                o."createdAt",
+                o."updatedAt",
                 o.history,
-                u.firstName,
-                u.lastName,
-                u.type as userType,
+                u."firstName",
+                u."lastName",
+                u.type as "userType",
                 u.email,
                 u.phone,
-                u.raisonSociale as entreprise,
+                u."raisonSociale" as entreprise,
                 cm.motif,
-                cm.message as contactMessage,
-                cm.phone as contactPhone,
-                cm.entreprise as contactEntreprise,
-                cm.createdAt as contactCreatedAt,
-                cm.manualAddress,
-                cm.manualPostalCode,
-                cm.manualCity,
-                cm.selectedAddress,
-                addr.name as addrName,
-                addr.address as addrStreet,
-                addr.postalCode as addrZip,
-                addr.city as addrCity
+                cm.message as "contactMessage",
+                cm.phone as "contactPhone",
+                cm.entreprise as "contactEntreprise",
+                cm."createdAt" as "contactCreatedAt",
+                cm."manualAddress",
+                cm."manualPostalCode",
+                cm."manualCity",
+                cm."selectedAddress",
+                addr.name as "addrName",
+                addr.address as "addrStreet",
+                addr."postalCode" as "addrZip",
+                addr.city as "addrCity"
             FROM orders o
-            LEFT JOIN user u ON o.userId = u.id
-            LEFT JOIN contact_messages cm ON cm.userId = o.userId 
-                AND cm.motif = o.serviceType 
-                AND DATE(cm.createdAt) = DATE(o.createdAt)
-            LEFT JOIN addresses addr ON cm.selectedAddress = addr.id
-            ORDER BY o.updatedAt DESC
-        `).all();
+            LEFT JOIN "user" u ON o."userId" = u.id
+            LEFT JOIN contact_messages cm ON cm."userId" = o."userId" 
+                AND cm.motif = o."serviceType" 
+                AND cm."createdAt"::date = o."createdAt"::date
+            LEFT JOIN addresses addr ON cm."selectedAddress" = addr.id
+            ORDER BY o."updatedAt" DESC
+        `);
 
         // Parser les items JSON et calculer la date de MAJ depuis l'historique
         const parsedOrders = orders.map((order: any) => {

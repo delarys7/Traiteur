@@ -17,7 +17,7 @@ export async function POST(
         }
 
         // Vérifier que l'utilisateur est administrateur
-        const user = db.prepare('SELECT type FROM user WHERE id = ?').get(session.user.id) as { type: string } | undefined;
+        const user = await db.get<{ type: string }>('SELECT type FROM "user" WHERE id = ?', [session.user.id]);
         if (!user || user.type !== 'administrateur') {
             return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
         }
@@ -25,7 +25,7 @@ export async function POST(
         const { orderId } = await params;
 
         // Vérifier que la commande existe et est en attente
-        const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId) as any;
+        const order = await db.get<any>('SELECT * FROM orders WHERE id = ?', [orderId]);
         if (!order) {
             return NextResponse.json({ error: 'Commande introuvable' }, { status: 404 });
         }
@@ -35,7 +35,7 @@ export async function POST(
         }
 
         // Récupérer l'historique actuel
-        const currentOrder = db.prepare('SELECT history FROM orders WHERE id = ?').get(orderId) as { history: string } | undefined;
+        const currentOrder = await db.get<{ history: string }>('SELECT history FROM orders WHERE id = ?', [orderId]);
         let history = [];
         if (currentOrder?.history) {
             history = JSON.parse(currentOrder.history);
@@ -50,17 +50,17 @@ export async function POST(
         });
         
         // Mettre à jour le statut et l'historique
-        db.prepare(`
+        await db.run(`
             UPDATE orders 
-            SET status = 'validated', updatedAt = CURRENT_TIMESTAMP, history = ?
+            SET status = 'validated', "updatedAt" = CURRENT_TIMESTAMP, history = ?
             WHERE id = ?
-        `).run(JSON.stringify(history), orderId);
+        `, [JSON.stringify(history), orderId]);
 
         // --- ENVOI DE L'EMAIL DE CONFIRMATION AU CLIENT ---
         if (process.env.RESEND_API_KEY) {
             try {
                 // Récupérer l'email du client
-                const client = db.prepare('SELECT u.email, u.firstName, u.lastName FROM orders o JOIN user u ON o.userId = u.id WHERE o.id = ?').get(orderId) as any;
+                const client = await db.get<any>('SELECT u.email, u."firstName", u."lastName" FROM orders o JOIN "user" u ON o."userId" = u.id WHERE o.id = ?', [orderId]);
                 
                 if (client && client.email) {
                     const { Resend } = require('resend');

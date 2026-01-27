@@ -18,7 +18,7 @@ export async function GET(
         }
 
         // Vérifier que l'utilisateur est administrateur
-        const user = db.prepare('SELECT * FROM user WHERE id = ?').get(session.user.id) as any;
+        const user = await db.get<any>('SELECT * FROM "user" WHERE id = ?', [session.user.id]);
         
         if (!user || user.type !== 'administrateur') {
             return NextResponse.json(
@@ -30,7 +30,7 @@ export async function GET(
         const { userId } = await params;
 
         // Récupérer les informations du client
-        const client = db.prepare('SELECT * FROM user WHERE id = ?').get(userId) as any;
+        const client = await db.get<any>('SELECT * FROM "user" WHERE id = ?', [userId]);
         
         if (!client) {
             return NextResponse.json(
@@ -40,20 +40,20 @@ export async function GET(
         }
 
         // Récupérer toutes les commandes du client
-        const orders = db.prepare(`
+        const orders = await db.query<any>(`
             SELECT 
                 id,
                 type,
                 status,
                 total,
                 items,
-                serviceType,
-                createdAt,
-                updatedAt
+                "serviceType",
+                "createdAt",
+                "updatedAt"
             FROM orders
-            WHERE userId = ?
-            ORDER BY createdAt DESC
-        `).all(userId) as any[];
+            WHERE "userId" = ?
+            ORDER BY "createdAt" DESC
+        `, [userId]);
 
         // Parser les items JSON
         const ordersWithParsedItems = orders.map(order => ({

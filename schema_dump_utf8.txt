@@ -1,0 +1,158 @@
+﻿--- TABLES ---
+
+Table: users
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE,
+    password TEXT,
+    name TEXT
+  );
+
+Table: sqlite_sequence
+CREATE TABLE sqlite_sequence(name,seq);
+
+Table: products
+CREATE TABLE products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    description TEXT,
+    price REAL,
+    category TEXT,
+    subcategory TEXT,
+    image TEXT,
+    cuisine TEXT,
+    dietary TEXT,
+    allergies TEXT
+  );
+
+Table: user
+CREATE TABLE user (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    emailVerified BOOLEAN NOT NULL,
+    image TEXT,
+    createdAt DATETIME NOT NULL,
+    updatedAt DATETIME NOT NULL,
+    firstName TEXT,
+    lastName TEXT,
+    type TEXT,
+    raisonSociale TEXT,
+    phone TEXT
+  , allergies TEXT);
+
+Table: session
+CREATE TABLE session (
+    id TEXT PRIMARY KEY,
+    expiresAt DATETIME NOT NULL,
+    token TEXT NOT NULL UNIQUE,
+    createdAt DATETIME NOT NULL,
+    updatedAt DATETIME NOT NULL,
+    ipAddress TEXT,
+    userAgent TEXT,
+    userId TEXT NOT NULL REFERENCES user(id)
+  );
+
+Table: account
+CREATE TABLE account (
+    id TEXT PRIMARY KEY,
+    accountId TEXT NOT NULL,
+    providerId TEXT NOT NULL,
+    userId TEXT NOT NULL REFERENCES user(id),
+    accessToken TEXT,
+    refreshToken TEXT,
+    idToken TEXT,
+    accessTokenExpiresAt DATETIME,
+    refreshTokenExpiresAt DATETIME,
+    scope TEXT,
+    password TEXT,
+    createdAt DATETIME NOT NULL,
+    updatedAt DATETIME NOT NULL
+  );
+
+Table: verification
+CREATE TABLE verification (
+    id TEXT PRIMARY KEY,
+    identifier TEXT NOT NULL,
+    value TEXT NOT NULL,
+    expiresAt DATETIME NOT NULL,
+    createdAt DATETIME,
+    updatedAt DATETIME
+  );
+
+Table: addresses
+CREATE TABLE addresses (
+    id TEXT PRIMARY KEY,
+    userId TEXT NOT NULL REFERENCES user(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    address TEXT NOT NULL,
+    postalCode TEXT NOT NULL,
+    city TEXT NOT NULL,
+    createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  );
+
+Table: orders
+CREATE TABLE orders (
+    id TEXT PRIMARY KEY,
+    userId TEXT NOT NULL REFERENCES user(id) ON DELETE CASCADE,
+    type TEXT NOT NULL, -- 'product' pour commande de produits, 'service' pour demande de prestation
+    status TEXT NOT NULL DEFAULT 'pending', -- 'pending', 'confirmed', 'completed', 'cancelled'
+    total REAL NOT NULL,
+    items TEXT, -- JSON string pour les produits command├®s
+    serviceType TEXT, -- Type de prestation si type='service' (commande, collaboration, prestation-domicile, consulting, etc.)
+    createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  , refusalReason TEXT, history TEXT);
+
+Table: contact_messages
+CREATE TABLE contact_messages (
+    id TEXT PRIMARY KEY,
+    userId TEXT NOT NULL REFERENCES user(id) ON DELETE CASCADE,
+    firstName TEXT NOT NULL,
+    lastName TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT,
+    entreprise TEXT,
+    motif TEXT NOT NULL,
+    message TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending', -- 'pending' = en attente de r├®ponse, 'replied' = r├®pondu, 'closed' = ferm├®
+    createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  , manualAddress TEXT, manualPostalCode TEXT, manualCity TEXT, selectedAddress TEXT);
+
+Table: reviews
+CREATE TABLE reviews (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            productId INTEGER NOT NULL, -- -1 pour les avis sur la commande globale
+            userId TEXT NOT NULL,
+            orderId TEXT,
+            rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+            comment TEXT,
+            isOrderReview INTEGER DEFAULT 0,
+            createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (userId) REFERENCES user(id) ON DELETE CASCADE,
+            UNIQUE(productId, userId, orderId) -- Permet un avis par produit par commande, et un avis global par commande
+        );
+
+Table: cart
+CREATE TABLE cart (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            userId TEXT NOT NULL,
+            productId INTEGER NOT NULL,
+            quantity INTEGER NOT NULL DEFAULT 1,
+            createdAt TEXT NOT NULL DEFAULT (datetime('now')),
+            updatedAt TEXT NOT NULL DEFAULT (datetime('now')),
+            UNIQUE(userId, productId),
+            FOREIGN KEY (userId) REFERENCES user(id) ON DELETE CASCADE
+        );
+
+--- INDEXES ---
+CREATE INDEX idx_addresses_userId ON addresses(userId);
+CREATE INDEX idx_orders_userId ON orders(userId);
+CREATE INDEX idx_orders_createdAt ON orders(createdAt);
+CREATE INDEX idx_contact_messages_userId ON contact_messages(userId);
+CREATE INDEX idx_contact_messages_status ON contact_messages(status);
+CREATE INDEX idx_contact_messages_createdAt ON contact_messages(createdAt);
+CREATE INDEX idx_cart_userId ON cart(userId)
+    ;

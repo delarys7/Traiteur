@@ -1,5 +1,5 @@
 import { betterAuth } from "better-auth";
-import db from "./db";
+import { pool } from "./db";
 import { Resend } from "resend";
 import fs from "fs";
 import path from "path";
@@ -21,19 +21,13 @@ try {
     console.log('[Better-Auth] Logo chargé en base64 avec succès');
 } catch (error: any) {
     console.error('[Better-Auth] Impossible de charger le logo:', error.message);
-    console.error('[Better-Auth] Chemin tenté:', path.join(process.cwd(), 'public', 'images', 'Logo-NoBG-rogne.png'));
-}
-
-// Vérifier que la base de données est bien connectée
-try {
-    db.prepare('SELECT 1').get();
-    console.log('[Better-Auth] Base de données vérifiée et opérationnelle');
-} catch (error) {
-    console.error('[Better-Auth] Erreur de connexion à la base de données:', error);
 }
 
 export const auth = betterAuth({
-    database: db,
+    database: {
+        db: pool,
+        type: "postgres"
+    },
     baseURL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
     secret: process.env.BETTER_AUTH_SECRET || "dev-secret-change-in-production",
     emailAndPassword: {

@@ -17,7 +17,7 @@ export async function POST(
         }
 
         // Vérifier que l'utilisateur est administrateur
-        const user = db.prepare('SELECT type FROM user WHERE id = ?').get(session.user.id) as { type: string } | undefined;
+        const user = await db.get<{ type: string }>('SELECT type FROM "user" WHERE id = ?', [session.user.id]);
         if (!user || user.type !== 'administrateur') {
             return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
         }
@@ -25,7 +25,7 @@ export async function POST(
         const { orderId } = await params;
 
         // Vérifier que la commande existe et est validée
-        const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId) as any;
+        const order = await db.get<any>('SELECT * FROM orders WHERE id = ?', [orderId]);
         if (!order) {
             return NextResponse.json({ error: 'Commande introuvable' }, { status: 404 });
         }
@@ -36,11 +36,11 @@ export async function POST(
 
         // TODO: Envoyer un email de relance
         // Pour l'instant, on met juste à jour la date de mise à jour
-        db.prepare(`
+        await db.run(`
             UPDATE orders 
-            SET updatedAt = CURRENT_TIMESTAMP
+            SET "updatedAt" = CURRENT_TIMESTAMP
             WHERE id = ?
-        `).run(orderId);
+        `, [orderId]);
 
         return NextResponse.json({ success: true });
     } catch (error: any) {

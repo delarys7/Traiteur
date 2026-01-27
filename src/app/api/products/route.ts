@@ -11,18 +11,26 @@ export async function GET(request: Request) {
         const params = [];
 
         if (category) {
-            query += ' WHERE category = ?';
+            // Use ILIKE for case-insensitive matching in PostgreSQL
+            query += ' WHERE category ILIKE ?';
             params.push(category);
             if (subcategory) {
-                query += ' AND subcategory = ?';
+                query += ' AND subcategory ILIKE ?';
                 params.push(subcategory);
             }
         }
 
-        const stmt = db.prepare(query);
-        const products = stmt.all(...params);
+        console.log(`[API Products] Query: ${query} with params:`, params);
+        const products = await db.query(query, params);
+        console.log(`[API Products] Found ${products.length} products`);
 
-        return NextResponse.json(products);
+        // Convert decimal strings to numbers for the frontend
+        const formattedProducts = products.map((p: any) => ({
+            ...p,
+            price: Number(p.price)
+        }));
+
+        return NextResponse.json(formattedProducts);
     } catch (error) {
         console.error('Database error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

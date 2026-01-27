@@ -14,10 +14,10 @@ export async function POST(request: NextRequest) {
         }
 
         // Rechercher le token dans la table verification
-        const verification = db.prepare(`
+        const verification = await db.get<any>(`
             SELECT * FROM verification 
-            WHERE value = ? AND expiresAt > datetime('now')
-        `).get(token) as any;
+            WHERE value = ? AND "expiresAt" > NOW()
+        `, [token]);
 
         if (!verification) {
             return NextResponse.json({
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Vérifier que l'utilisateur existe
-        const user = db.prepare('SELECT * FROM user WHERE email = ?').get(verification.identifier) as any;
+        const user = await db.get<any>('SELECT * FROM "user" WHERE email = ?', [verification.identifier]);
         
         if (!user) {
             return NextResponse.json({

@@ -61,9 +61,12 @@ function TraiteurContent() {
     // Détermine si on est dans la catégorie boutique
     const isBoutique = activeTab === 'boutique';
 
+    const [error, setError] = useState<string | null>(null);
+
     useEffect(() => {
         async function fetchProducts() {
             setLoading(true);
+            setError(null);
             let url = `/api/products?category=${activeTab}`;
             if (activeTab === 'cocktail') {
                 url += `&subcategory=${activeSubTab}`;
@@ -72,10 +75,20 @@ function TraiteurContent() {
             try {
                 const res = await fetch(url);
                 const data = await res.json();
-                setAllProducts(data);
-                setFilteredProducts(data);
-            } catch (error) {
+                
+                if (!res.ok) {
+                    throw new Error(data.error || 'Erreur lors de la récupération des produits');
+                }
+                
+                if (Array.isArray(data)) {
+                    setAllProducts(data);
+                    setFilteredProducts(data);
+                } else {
+                    throw new Error('Format de données invalide');
+                }
+            } catch (error: any) {
                 console.error('Failed to fetch products', error);
+                setError(error.message);
             } finally {
                 setLoading(false);
             }
@@ -237,6 +250,16 @@ function TraiteurContent() {
 
             {loading ? (
                 <div className={styles.loading}>{t('traiteur.loading')}</div>
+            ) : error ? (
+                <div className={styles.emptyContainer}>
+                    <p className={styles.empty} style={{ color: '#c00' }}>{error}</p>
+                    <button 
+                        className={styles.clearAllButton}
+                        onClick={() => window.location.reload()}
+                    >
+                        Réessayer
+                    </button>
+                </div>
             ) : (
                 <div className={styles.grid}>
                     {filteredProducts.map((product) => (

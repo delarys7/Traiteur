@@ -23,11 +23,11 @@ export async function PUT(request: NextRequest) {
         const updateValues: any[] = [];
 
         if (firstName !== undefined) {
-            updateFields.push('firstName = ?');
+            updateFields.push('"firstName" = ?');
             updateValues.push(firstName);
         }
         if (lastName !== undefined) {
-            updateFields.push('lastName = ?');
+            updateFields.push('"lastName" = ?');
             updateValues.push(lastName);
         }
         if (phone !== undefined) {
@@ -35,7 +35,7 @@ export async function PUT(request: NextRequest) {
             updateValues.push(phone);
         }
         if (raisonSociale !== undefined) {
-            updateFields.push('raisonSociale = ?');
+            updateFields.push('"raisonSociale" = ?');
             updateValues.push(raisonSociale);
         }
         if (allergies !== undefined) {
@@ -47,21 +47,21 @@ export async function PUT(request: NextRequest) {
             return NextResponse.json({ error: 'Aucun champ à mettre à jour' }, { status: 400 });
         }
 
-        updateFields.push('updatedAt = ?');
+        updateFields.push('"updatedAt" = ?');
         updateValues.push(new Date().toISOString());
         updateValues.push(session.user.id);
 
         const updateQuery = `
-            UPDATE user 
+            UPDATE "user" 
             SET ${updateFields.join(', ')}
             WHERE id = ?
         `;
 
-        const result = db.prepare(updateQuery).run(...updateValues);
+        const result = await db.run(updateQuery, updateValues);
         console.log('[API] Résultat mise à jour:', result);
 
         // Récupérer l'utilisateur mis à jour
-        const updatedUser = db.prepare('SELECT * FROM user WHERE id = ?').get(session.user.id);
+        const updatedUser = await db.get('SELECT * FROM "user" WHERE id = ?', [session.user.id]);
         console.log('[API] Utilisateur mis à jour:', updatedUser);
 
         return NextResponse.json({ 

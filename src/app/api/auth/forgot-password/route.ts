@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Vérifier que l'utilisateur existe
-        const user = db.prepare('SELECT * FROM user WHERE email = ?').get(email) as any;
+        const user = await db.get<any>('SELECT * FROM "user" WHERE email = ?', [email]);
         
         if (!user) {
             // Pour la sécurité, on ne révèle pas si l'email existe ou non
@@ -49,17 +49,17 @@ export async function POST(request: NextRequest) {
         const resetUrl = `${appUrl}/reset-password?token=${token}`;
         
         // Supprimer les anciens tokens de réinitialisation pour cet email
-        db.prepare('DELETE FROM verification WHERE identifier = ?').run(email);
+        await db.run('DELETE FROM verification WHERE identifier = ?', [email]);
         
         // Générer un ID unique pour le token
         const verificationId = randomBytes(16).toString('hex');
         const now = new Date().toISOString();
         
         // Insérer le nouveau token dans la table verification
-        db.prepare(`
-            INSERT INTO verification (id, identifier, value, expiresAt, createdAt, updatedAt)
+        await db.run(`
+            INSERT INTO verification (id, identifier, value, "expiresAt", "createdAt", "updatedAt")
             VALUES (?, ?, ?, ?, ?, ?)
-        `).run(verificationId, email, token, expiresAt.toISOString(), now, now);
+        `, [verificationId, email, token, expiresAt.toISOString(), now, now]);
 
         // Initialiser Resend et envoyer l'email
         if (!process.env.RESEND_API_KEY) {

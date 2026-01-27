@@ -18,7 +18,7 @@ export async function GET(
         }
 
         // Vérifier que l'utilisateur est administrateur
-        const user = db.prepare('SELECT * FROM user WHERE id = ?').get(session.user.id) as any;
+        const user = await db.get<any>('SELECT * FROM "user" WHERE id = ?', [session.user.id]);
         
         if (!user || user.type !== 'administrateur') {
             return NextResponse.json(
@@ -30,7 +30,7 @@ export async function GET(
         const { userId } = await params;
 
         // Récupérer les informations du client
-        const client = db.prepare('SELECT * FROM user WHERE id = ?').get(userId) as any;
+        const client = await db.get<any>('SELECT * FROM "user" WHERE id = ?', [userId]);
         
         if (!client) {
             return NextResponse.json(
@@ -40,42 +40,42 @@ export async function GET(
         }
 
         // Récupérer les adresses
-        const addresses = db.prepare(`
+        const addresses = await db.query<any>(`
             SELECT * FROM addresses
-            WHERE userId = ?
-            ORDER BY createdAt DESC
-        `).all(userId) as any[];
+            WHERE "userId" = ?
+            ORDER BY "createdAt" DESC
+        `, [userId]);
 
         // Récupérer les commandes
-        const orders = db.prepare(`
+        const orders = await db.query<any>(`
             SELECT 
                 id,
                 type,
                 status,
                 total,
                 items,
-                serviceType,
-                createdAt,
-                updatedAt
+                "serviceType",
+                "createdAt",
+                "updatedAt"
             FROM orders
-            WHERE userId = ?
-            ORDER BY createdAt DESC
-        `).all(userId) as any[];
+            WHERE "userId" = ?
+            ORDER BY "createdAt" DESC
+        `, [userId]);
 
         // Calculer les statistiques
         const orderCount = orders.length;
         const lastOrder = orders[0] || null;
         const averagePrice = orderCount > 0 
-            ? orders.reduce((sum, order) => sum + (order.total || 0), 0) / orderCount 
+            ? orders.reduce((sum, order) => sum + (Number(order.total) || 0), 0) / orderCount 
             : 0;
 
         // Récupérer les messages en attente
-        const pendingMessages = db.prepare(`
-            SELECT id, motif, message, createdAt
+        const pendingMessages = await db.query<any>(`
+            SELECT id, motif, message, "createdAt"
             FROM contact_messages
-            WHERE userId = ? AND status = 'pending'
-            ORDER BY createdAt DESC
-        `).all(userId) as any[];
+            WHERE "userId" = ? AND status = 'pending'
+            ORDER BY "createdAt" DESC
+        `, [userId]);
 
         return NextResponse.json({
             client: {

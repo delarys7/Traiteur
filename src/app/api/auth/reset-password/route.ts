@@ -22,10 +22,10 @@ export async function POST(request: NextRequest) {
         }
 
         // Rechercher le token dans la table verification
-        const verification = db.prepare(`
+        const verification = await db.get<any>(`
             SELECT * FROM verification 
-            WHERE value = ? AND expiresAt > datetime('now')
-        `).get(token) as any;
+            WHERE value = ? AND "expiresAt" > NOW()
+        `, [token]);
 
         if (!verification) {
             return NextResponse.json(
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Récupérer l'utilisateur
-        const user = db.prepare('SELECT * FROM user WHERE email = ?').get(verification.identifier) as any;
+        const user = await db.get<any>('SELECT * FROM "user" WHERE email = ?', [verification.identifier]);
         
         if (!user) {
             return NextResponse.json(
@@ -45,12 +45,12 @@ export async function POST(request: NextRequest) {
         }
 
         // Récupérer le compte associé (better-auth utilise 'credential' pour email/password)
-        const account = db.prepare('SELECT * FROM account WHERE userId = ? AND providerId = ?').get(user.id, 'credential') as any;
+        const account = await db.get<any>('SELECT * FROM account WHERE "userId" = ? AND "providerId" = ?', [user.id, 'credential']);
         
         // Si pas trouvé avec 'credential', chercher n'importe quel compte avec un mot de passe
         let accountToUpdate = account;
         if (!accountToUpdate) {
-            accountToUpdate = db.prepare('SELECT * FROM account WHERE userId = ? AND password IS NOT NULL').get(user.id) as any;
+            accountToUpdate = await db.get<any>('SELECT * FROM account WHERE "userId" = ? AND password IS NOT NULL', [user.id]);
         }
         
         if (!accountToUpdate) {
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
 
         // IMPORTANT : Supprimer toutes les sessions existantes pour cet utilisateur
         // pour éviter qu'il soit automatiquement connecté après la réinitialisation
-        db.prepare('DELETE FROM session WHERE userId = ?').run(user.id);
+        await db.run('DELETE FROM session WHERE "userId" = ?', [user.id]);
         console.log('[API] Toutes les sessions supprimées pour:', user.email);
 
         // Hasher le nouveau mot de passe avec bcrypt (comme better-auth)
@@ -79,24 +79,24 @@ export async function POST(request: NextRequest) {
 
         // Mettre à jour le mot de passe dans la table account
         const now = new Date().toISOString();
-        const updateResult = db.prepare(`
+        const updateResult = await db.run(`
             UPDATE account 
-            SET password = ?, updatedAt = ?
+            SET password = ?, "updatedAt" = ?
             WHERE id = ?
-        `).run(hashedPassword, now, accountToUpdate.id);
+        `, [hashedPassword, now, accountToUpdate.id]);
         
-        console.log('[API] Lignes affectées par UPDATE:', updateResult.changes);
+        console.log('[API] Lignes affectées par UPDATE:', updateResult.rowCount);
         console.log('[API] Account ID mis à jour:', accountToUpdate.id);
 
         // Vérifier que le mot de passe a bien été mis à jour
-        const updatedAccount = db.prepare('SELECT password FROM account WHERE id = ?').get(accountToUpdate.id) as any;
+        const updatedAccount = await db.get<any>('SELECT password FROM account WHERE id = ?', [accountToUpdate.id]);
         if (updatedAccount && updatedAccount.password) {
             console.log('[API] Mot de passe après UPDATE (premiers 30 caractères):', updatedAccount.password.substring(0, 30));
             console.log('[API] Les deux hash correspondent:', updatedAccount.password === hashedPassword);
         }
 
         // Supprimer le token de réinitialisation utilisé
-        db.prepare('DELETE FROM verification WHERE value = ?').run(token);
+        await db.run('DELETE FROM verification WHERE value = ?', [token]);
 
         console.log('[API] Mot de passe réinitialisé pour:', user.email);
 

@@ -15,11 +15,11 @@ export async function GET() {
 
         console.log('[API Orders] Fetching for user:', session.user.id);
 
-        const orders = db.prepare(`
+        const orders = await db.query(`
             SELECT * FROM orders 
-            WHERE userId = ? 
-            ORDER BY createdAt DESC
-        `).all(session.user.id);
+            WHERE "userId" = ? 
+            ORDER BY "createdAt" DESC
+        `, [session.user.id]);
 
         // Parser les items et l'historique JSON
         const parsedOrders = orders.map((order: any) => ({

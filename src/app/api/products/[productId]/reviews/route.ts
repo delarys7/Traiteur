@@ -9,13 +9,13 @@ export async function GET(
         const { productId } = await params;
         
         // Calculer la moyenne des notes et le nombre d'avis
-        const stats = db.prepare(`
+        const stats = await db.get<{ averageRating: number | string, reviewCount: number }>(`
             SELECT 
-                COALESCE(AVG(rating), 0) as averageRating,
-                COUNT(*) as reviewCount
+                COALESCE(AVG(rating), 0) as "averageRating",
+                COUNT(*) as "reviewCount"
             FROM reviews
-            WHERE productId = ?
-        `).get(parseInt(productId)) as { averageRating: number | string, reviewCount: number } | undefined;
+            WHERE "productId" = ?
+        `, [parseInt(productId)]);
 
         return NextResponse.json({
             averageRating: stats ? parseFloat(stats.averageRating as string) : 0,

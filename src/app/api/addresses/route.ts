@@ -14,12 +14,12 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
         }
 
-        const addresses = db.prepare(`
-            SELECT id, name, address, postalCode, city, createdAt, updatedAt
+        const addresses = await db.query(`
+            SELECT id, name, address, "postalCode", city, "createdAt", "updatedAt"
             FROM addresses
-            WHERE userId = ?
-            ORDER BY createdAt DESC
-        `).all(session.user.id);
+            WHERE "userId" = ?
+            ORDER BY "createdAt" DESC
+        `, [session.user.id]);
 
         return NextResponse.json({ addresses });
     } catch (error: any) {
@@ -49,10 +49,10 @@ export async function POST(request: NextRequest) {
         const id = randomBytes(16).toString('hex');
         const now = new Date().toISOString();
 
-        db.prepare(`
-            INSERT INTO addresses (id, userId, name, address, postalCode, city, createdAt, updatedAt)
+        await db.run(`
+            INSERT INTO addresses (id, "userId", name, address, "postalCode", city, "createdAt", "updatedAt")
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `).run(id, session.user.id, name, address, postalCode, city, now, now);
+        `, [id, session.user.id, name, address, postalCode, city, now, now]);
 
         return NextResponse.json({ 
             success: true, 
@@ -83,7 +83,7 @@ export async function PUT(request: NextRequest) {
         }
 
         // Vérifier que l'adresse appartient à l'utilisateur
-        const existingAddress = db.prepare('SELECT userId FROM addresses WHERE id = ?').get(id) as { userId: string } | undefined;
+        const existingAddress = await db.get<{ userId: string }>('SELECT "userId" FROM addresses WHERE id = ?', [id]);
         
         if (!existingAddress) {
             return NextResponse.json({ error: 'Adresse non trouvée' }, { status: 404 });
@@ -95,13 +95,13 @@ export async function PUT(request: NextRequest) {
 
         const now = new Date().toISOString();
 
-        db.prepare(`
+        await db.run(`
             UPDATE addresses 
-            SET name = ?, address = ?, postalCode = ?, city = ?, updatedAt = ?
+            SET name = ?, address = ?, "postalCode" = ?, city = ?, "updatedAt" = ?
             WHERE id = ?
-        `).run(name, address, postalCode, city, now, id);
+        `, [name, address, postalCode, city, now, id]);
 
-        const updatedAddress = db.prepare('SELECT * FROM addresses WHERE id = ?').get(id);
+        const updatedAddress = await db.get('SELECT * FROM addresses WHERE id = ?', [id]);
 
         return NextResponse.json({ 
             success: true, 
@@ -132,7 +132,7 @@ export async function DELETE(request: NextRequest) {
         }
 
         // Vérifier que l'adresse appartient à l'utilisateur
-        const address = db.prepare('SELECT userId FROM addresses WHERE id = ?').get(addressId) as { userId: string } | undefined;
+        const address = await db.get<{ userId: string }>('SELECT "userId" FROM addresses WHERE id = ?', [addressId]);
         
         if (!address) {
             return NextResponse.json({ error: 'Adresse non trouvée' }, { status: 404 });
@@ -142,7 +142,7 @@ export async function DELETE(request: NextRequest) {
             return NextResponse.json({ error: 'Non autorisé' }, { status: 403 });
         }
 
-        db.prepare('DELETE FROM addresses WHERE id = ?').run(addressId);
+        await db.run('DELETE FROM addresses WHERE id = ?', [addressId]);
 
         return NextResponse.json({ success: true });
     } catch (error: any) {

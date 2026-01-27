@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
         }
 
         // Vérifier que l'utilisateur est administrateur
-        const user = db.prepare('SELECT * FROM user WHERE id = ?').get(session.user.id) as any;
+        const user = await db.get<any>('SELECT * FROM "user" WHERE id = ?', [session.user.id]);
         
         if (!user || user.type !== 'administrateur') {
             return NextResponse.json(
@@ -25,87 +25,70 @@ export async function GET(request: NextRequest) {
         }
 
         // Récupérer tous les utilisateurs (sauf les administrateurs) triés par nom de famille
-        const clients = db.prepare(`
+        const clients = await db.query<any>(`
             SELECT 
                 u.id,
-                u.firstName,
-                u.lastName,
+                u."firstName",
+                u."lastName",
                 u.email,
                 u.phone,
                 u.type,
-                u.raisonSociale,
+                u."raisonSociale",
                 u.allergies
-            FROM user u
+            FROM "user" u
             WHERE u.type != 'administrateur' OR u.type IS NULL
             ORDER BY 
-                CASE WHEN u.lastName IS NULL OR u.lastName = '' THEN 1 ELSE 0 END,
-                u.lastName ASC,
-                u.firstName ASC
-        `).all() as any[];
-
-        // Préparer les requêtes en dehors de la boucle pour optimiser
-        const getOrders = db.prepare(`
-            SELECT 
-                id,
-                type,
-                total,
-                createdAt,
-                serviceType,
-                status
-            FROM orders
-            WHERE userId = ?
-            ORDER BY createdAt DESC
-        `);
-
-        const getActiveOrder = db.prepare(`
-            SELECT id 
-            FROM orders 
-            WHERE userId = ? 
-            AND status != 'received' 
-            AND status != 'refused'
-            AND (serviceType = 'commande' OR type = 'product')
-            ORDER BY createdAt DESC 
-            LIMIT 1
-        `);
-
-        const getActiveServiceRequest = db.prepare(`
-            SELECT id 
-            FROM orders 
-            WHERE userId = ? 
-            AND status != 'received' 
-            AND status != 'refused'
-            AND serviceType NOT IN ('commande', 'autre')
-            ORDER BY createdAt DESC 
-            LIMIT 1
-        `);
-
-        const getPendingMessage = db.prepare(`
-            SELECT motif
-            FROM contact_messages
-            WHERE userId = ? AND status = 'pending'
-            ORDER BY createdAt DESC
-            LIMIT 1
+                CASE WHEN u."lastName" IS NULL OR u."lastName" = '' THEN 1 ELSE 0 END,
+                u."lastName" ASC,
+                u."firstName" ASC
         `);
 
         // Pour chaque client, récupérer les statistiques de commandes et le statut des messages
-        const clientsWithStats = clients.map(client => {
+        const clientsWithStats = await Promise.all(clients.map(async (client) => {
             // Récupérer toutes les commandes du client
-            const orders = getOrders.all(client.id) as any[];
+            const orders = await db.query<any>(`
+                SELECT id, type, total, "createdAt", "serviceType", status
+                FROM orders
+                WHERE "userId" = ?
+                ORDER BY "createdAt" DESC
+            `, [client.id]);
 
             const orderCount = orders.length;
             const lastOrder = orders[0] || null;
             const averagePrice = orderCount > 0 
-                ? orders.reduce((sum, order) => sum + (order.total || 0), 0) / orderCount 
+                ? orders.reduce((sum, order) => sum + (Number(order.total) || 0), 0) / orderCount 
                 : 0;
 
-            // Récupérer la commande en cours (Product / Commande)
-            const activeOrder = getActiveOrder.get(client.id) as { id: string } | undefined;
+            // Récupérer la commande en cours
+            const activeOrder = await db.get<{ id: string }>(`
+                SELECT id 
+                FROM orders 
+                WHERE "userId" = ? 
+                AND status NOT IN ('received', 'refused')
+                AND ("serviceType" = 'commande' OR type = 'product')
+                ORDER BY "createdAt" DESC 
+                LIMIT 1
+            `, [client.id]);
 
-            // Récupérer la demande de service en cours (Service / Autre que Commande/Autre)
-            const activeServiceRequest = getActiveServiceRequest.get(client.id) as { id: string } | undefined;
+            // Récupérer la demande de service en cours
+            const activeServiceRequest = await db.get<{ id: string }>(`
+                SELECT id 
+                FROM orders 
+                WHERE "userId" = ? 
+                AND status NOT IN ('received', 'refused')
+                AND "serviceType" NOT IN ('commande', 'autre')
+                ORDER BY "createdAt" DESC 
+                LIMIT 1
+            `, [client.id]);
 
             // Récupérer le dernier message en attente
-            const pendingMessage = getPendingMessage.get(client.id) as { motif: string } | undefined;
+            const pendingMessage = await db.get<{ motif: string }>(`
+                SELECT motif
+                FROM contact_messages
+                WHERE "userId" = ? AND status = 'pending'
+                ORDER BY "createdAt" DESC
+                LIMIT 1
+            `, [client.id]);
 
             return {
                 id: client.id,
@@ -124,7 +107,7 @@ export async function GET(request: NextRequest) {
                 activeServiceRequestId: activeServiceRequest?.id || null,
                 pendingMessageMotif: pendingMessage ? pendingMessage.motif : null
             };
-        });
+        }));
 
         return NextResponse.json({
             clients: clientsWithStats

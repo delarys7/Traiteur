@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Récupérer le type d'utilisateur depuis la base de données
-        const user = db.prepare('SELECT type FROM user WHERE id = ?').get(session.user.id) as { type: string } | undefined;
+        const user = await db.get<{ type: string }>('SELECT type FROM "user" WHERE id = ?', [session.user.id]);
         
         // Validation pour les entreprises
         if (user?.type === 'entreprise' && !entreprise) {
@@ -88,14 +88,14 @@ export async function POST(request: NextRequest) {
         const messageId = randomUUID();
         const now = new Date().toISOString();
         
-        db.prepare(`
+        await db.run(`
             INSERT INTO contact_messages (
-                id, userId, firstName, lastName, email, phone, entreprise, 
-                motif, message, status, createdAt, updatedAt,
-                manualAddress, manualPostalCode, manualCity, selectedAddress
+                id, "userId", "firstName", "lastName", email, phone, entreprise, 
+                motif, message, status, "createdAt", "updatedAt",
+                "manualAddress", "manualPostalCode", "manualCity", "selectedAddress"
             )
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?, ?)
-        `).run(
+        `, [
             messageId,
             session.user.id,
             firstName,
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
             manualPostalCode || null,
             manualCity || null,
             selectedAddress || null
-        );
+        ]);
 
         // Créer une commande pour TOUS les motifs (pas seulement 'commande')
         const orderId = `ORD-${Date.now().toString().slice(-6)}`;
@@ -138,12 +138,12 @@ export async function POST(request: NextRequest) {
         }
 
         // Créer l'entrée dans la table orders
-        db.prepare(`
+        await db.run(`
             INSERT INTO orders (
-                id, userId, type, status, total, items, serviceType, history, createdAt, updatedAt
+                id, "userId", type, status, total, items, "serviceType", history, "createdAt", "updatedAt"
             )
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `).run(
+        `, [
             orderId,
             session.user.id,
             orderType,
@@ -154,12 +154,12 @@ export async function POST(request: NextRequest) {
             JSON.stringify(initialHistory),
             now,
             now
-        );
+        ]);
         
         console.log(`[API] Commande créée: ${orderId} (type: ${orderType}, motif: ${motif})`);
 
         // Récupérer tous les emails des administrateurs
-        const admins = db.prepare('SELECT email FROM user WHERE type = ?').all('administrateur') as { email: string }[];
+        const admins = await db.query<{ email: string }>('SELECT email FROM "user" WHERE type = ?', ['administrateur']);
         const adminEmails = admins.map(admin => admin.email);
 
         // Envoyer l'email aux administrateurs si au moins un admin existe
@@ -172,8 +172,9 @@ export async function POST(request: NextRequest) {
                 
                 // Récupérer l'adresse si sélectionnée
                 let addressDetails = '';
+                let resolvedAddressHtml = '';
                 if (selectedAddress) {
-                    const address = db.prepare('SELECT * FROM addresses WHERE id = ?').get(selectedAddress) as any;
+                    const address = await db.get<any>('SELECT * FROM addresses WHERE id = ?', [selectedAddress]);
                     if (address) {
                         addressDetails = `
                             <div class="field-group">
@@ -185,6 +186,9 @@ export async function POST(request: NextRequest) {
                                 </p>
                             </div>
                         `;
+                        resolvedAddressHtml = `${address.name}<br>${address.address}<br>${address.postalCode} ${address.city}`;
+                    } else {
+                        resolvedAddressHtml = 'Adresse introuvable';
                     }
                 }
                 
@@ -215,7 +219,7 @@ export async function POST(request: NextRequest) {
                                 margin: 0 auto;
                                 padding: 40px;
                                 text-align: center;
-                                border-radius: 8px; /* Slightly easier on the eyes */
+                                border-radius: 8px;
                                 box-shadow: 0 4px 12px rgba(0,0,0,0.05);
                             }
                             h1 { 
@@ -267,7 +271,7 @@ export async function POST(request: NextRequest) {
                                 width: 100%;
                                 margin-top: 30px;
                                 margin-bottom: 30px;
-                                text-align: left; /* Reset alignment for this section */
+                                text-align: left;
                                 border-top: 1px solid #eee;
                                 border-bottom: 1px solid #eee;
                             }
@@ -379,10 +383,7 @@ export async function POST(request: NextRequest) {
                                         <div class="details-column">
                                             <span class="details-title">Lieu de réception</span>
                                             <div class="address-text">
-                                                ${selectedAddress ? (() => {
-                                                    const addr = db.prepare('SELECT * FROM addresses WHERE id = ?').get(selectedAddress) as any;
-                                                    return addr ? `${addr.name}<br>${addr.address}<br>${addr.postalCode} ${addr.city}` : 'Adresse introuvable';
-                                                })() : ''}
+                                                ${resolvedAddressHtml}
                                                 ${manualAddress ? `
                                                     ${restaurantName ? `<strong>${restaurantName}</strong><br>` : ''}
                                                     ${manualAddress}<br>

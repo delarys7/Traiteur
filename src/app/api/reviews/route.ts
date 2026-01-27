@@ -21,7 +21,7 @@ export async function POST(req: Request) {
         }
 
         // Vérifier que la commande appartient à l'utilisateur et est reçue
-        const order = db.prepare('SELECT status FROM orders WHERE id = ? AND userId = ?').get(orderId, session.user.id) as any;
+        const order = await db.get<any>('SELECT status FROM orders WHERE id = ? AND "userId" = ?', [orderId, session.user.id]);
         if (!order) {
             return NextResponse.json({ error: 'Commande introuvable' }, { status: 404 });
         }
@@ -29,35 +29,31 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Vous ne pouvez laisser un avis que sur une commande reçue' }, { status: 400 });
         }
 
-        const transaction = db.transaction(() => {
-            if (type === 'global') {
-                const { rating, comment } = body;
-                db.prepare(`
-                    INSERT INTO reviews (productId, userId, rating, comment, orderId, isOrderReview)
+        if (type === 'global') {
+            const { rating, comment } = body;
+            await db.run(`
+                INSERT INTO reviews ("productId", "userId", rating, comment, "orderId", "isOrderReview")
+                VALUES (?, ?, ?, ?, ?, ?)
+            `, [-1, session.user.id, rating, comment, orderId, 1]);
+        } else {
+            const { reviews, generalComment } = body;
+            
+            // Insérer les avis par produit
+            for (const [productId, reviewData] of Object.entries(reviews) as any) {
+                await db.run(`
+                    INSERT INTO reviews ("productId", "userId", rating, comment, "orderId", "isOrderReview")
                     VALUES (?, ?, ?, ?, ?, ?)
-                `).run(-1, session.user.id, rating, comment, orderId, 1);
-            } else {
-                const { reviews, generalComment } = body;
-                
-                // Insérer les avis par produit
-                for (const [productId, reviewData] of Object.entries(reviews) as any) {
-                    db.prepare(`
-                        INSERT INTO reviews (productId, userId, rating, comment, orderId, isOrderReview)
-                        VALUES (?, ?, ?, ?, ?, ?)
-                    `).run(Number(productId), session.user.id, reviewData.rating, reviewData.comment, orderId, 0);
-                }
-
-                // Optionnellement insérer un avis global si le commentaire général est rempli
-                if (generalComment) {
-                    db.prepare(`
-                        INSERT INTO reviews (productId, userId, rating, comment, orderId, isOrderReview)
-                        VALUES (?, ?, ?, ?, ?, ?)
-                    `).run(-1, session.user.id, 5, generalComment, orderId, 1);
-                }
+                `, [Number(productId), session.user.id, reviewData.rating, reviewData.comment, orderId, 0]);
             }
-        });
 
-        transaction();
+            // Optionnellement insérer un avis global si le commentaire général est rempli
+            if (generalComment) {
+                await db.run(`
+                    INSERT INTO reviews ("productId", "userId", rating, comment, "orderId", "isOrderReview")
+                    VALUES (?, ?, ?, ?, ?, ?)
+                `, [-1, session.user.id, 5, generalComment, orderId, 1]);
+            }
+        }
 
         return NextResponse.json({ success: true });
     } catch (error: any) {

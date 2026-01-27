@@ -13,20 +13,20 @@ export async function GET(request: NextRequest) {
 
         const userId = session.user.id;
         
-        const cartItems = db.prepare(`
+        const cartItems = await db.query(`
             SELECT 
                 c.id,
-                c.productId,
+                c."productId",
                 c.quantity,
                 p.name,
                 p.price,
                 p.image,
                 p.category
             FROM cart c
-            JOIN products p ON c.productId = p.id
-            WHERE c.userId = ?
-            ORDER BY c.createdAt ASC
-        `).all(userId);
+            JOIN products p ON c."productId" = p.id
+            WHERE c."userId" = ?
+            ORDER BY c."createdAt" ASC
+        `, [userId]);
 
         return NextResponse.json(cartItems);
     } catch (error) {
@@ -53,45 +53,44 @@ export async function POST(request: NextRequest) {
         }
 
         // Check if product exists
-        const product = db.prepare('SELECT id, name, price, image, category FROM products WHERE id = ?').get(productId);
+        const product = await db.get('SELECT id, name, price, image, category FROM products WHERE id = ?', [productId]);
         if (!product) {
             return NextResponse.json({ error: 'Product not found' }, { status: 404 });
         }
 
         // Check if item already exists in cart
-        const existingItem = db.prepare('SELECT id, quantity FROM cart WHERE userId = ? AND productId = ?').get(userId, productId) as { id: string | number, quantity: number } | undefined;
+        const existingItem = await db.get<{ id: string | number, quantity: number }>('SELECT id, quantity FROM cart WHERE "userId" = ? AND "productId" = ?', [userId, productId]);
 
         if (existingItem) {
-            // Update quantity
             const newQuantity = existingItem.quantity + quantity;
-            db.prepare(`
+            await db.run(`
                 UPDATE cart 
-                SET quantity = ?, updatedAt = datetime('now')
+                SET quantity = ?, "updatedAt" = NOW()
                 WHERE id = ?
-            `).run(newQuantity, existingItem.id);
+            `, [newQuantity, existingItem.id]);
         } else {
             // Insert new item
-            db.prepare(`
-                INSERT INTO cart (userId, productId, quantity)
+            await db.run(`
+                INSERT INTO cart ("userId", "productId", quantity)
                 VALUES (?, ?, ?)
-            `).run(userId, productId, quantity);
+            `, [userId, productId, quantity]);
         }
 
         // Return updated cart
-        const cartItems = db.prepare(`
+        const cartItems = await db.query(`
             SELECT 
-                c.id as cartId,
-                c.productId,
+                c.id as "cartId",
+                c."productId",
                 c.quantity,
                 p.name,
                 p.price,
                 p.image,
                 p.category
             FROM cart c
-            JOIN products p ON c.productId = p.id
-            WHERE c.userId = ?
-            ORDER BY c.createdAt ASC
-        `).all(userId);
+            JOIN products p ON c."productId" = p.id
+            WHERE c."userId" = ?
+            ORDER BY c."createdAt" ASC
+        `, [userId]);
 
         return NextResponse.json(cartItems);
     } catch (error) {
@@ -119,31 +118,31 @@ export async function PUT(request: NextRequest) {
 
         if (quantity < 1) {
             // Remove item if quantity is 0 or less
-            db.prepare('DELETE FROM cart WHERE userId = ? AND productId = ?').run(userId, productId);
+            await db.run('DELETE FROM cart WHERE "userId" = ? AND "productId" = ?', [userId, productId]);
         } else {
             // Update quantity
-            db.prepare(`
+            await db.run(`
                 UPDATE cart 
-                SET quantity = ?, updatedAt = datetime('now')
-                WHERE userId = ? AND productId = ?
-            `).run(quantity, userId, productId);
+                SET quantity = ?, "updatedAt" = NOW()
+                WHERE "userId" = ? AND "productId" = ?
+            `, [quantity, userId, productId]);
         }
 
         // Return updated cart
-        const cartItems = db.prepare(`
+        const cartItems = await db.query(`
             SELECT 
-                c.id as cartId,
-                c.productId,
+                c.id as "cartId",
+                c."productId",
                 c.quantity,
                 p.name,
                 p.price,
                 p.image,
                 p.category
             FROM cart c
-            JOIN products p ON c.productId = p.id
-            WHERE c.userId = ?
-            ORDER BY c.createdAt ASC
-        `).all(userId);
+            JOIN products p ON c."productId" = p.id
+            WHERE c."userId" = ?
+            ORDER BY c."createdAt" ASC
+        `, [userId]);
 
         return NextResponse.json(cartItems);
     } catch (error) {
@@ -167,10 +166,10 @@ export async function DELETE(request: NextRequest) {
 
         if (productId) {
             // Remove specific item
-            db.prepare('DELETE FROM cart WHERE userId = ? AND productId = ?').run(userId, productId);
+            await db.run('DELETE FROM cart WHERE "userId" = ? AND "productId" = ?', [userId, productId]);
         } else {
             // Clear entire cart
-            db.prepare('DELETE FROM cart WHERE userId = ?').run(userId);
+            await db.run('DELETE FROM cart WHERE "userId" = ?', [userId]);
         }
 
         return NextResponse.json({ success: true });
