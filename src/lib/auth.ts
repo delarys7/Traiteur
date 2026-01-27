@@ -10,25 +10,23 @@ const getResend = () => {
     return new Resend(apiKey);
 };
 
+const baseURL = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+
 export const auth = betterAuth({
     database: {
         db: pool,
         type: "postgres"
     },
-    baseURL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+    baseURL: baseURL,
+    // On laisse better-auth gérer les origines de confiance par défaut 
+    // ou on en ajoute si on détecte une adresse spécifique plus tard
     secret: process.env.BETTER_AUTH_SECRET || "dev-secret-change-in-production",
     
     emailAndPassword: {
         enabled: true,
         requireEmailVerification: true,
-        password: {
-            hash: async (password: string) => {
-                return await hash(password, 10);
-            },
-            verify: async ({ hash, password }: { hash: string; password: string }) => {
-                return await compare(password, hash);
-            },
-        },
+        // better-auth utilise scrypt par défaut, ce qui est plus sûr sur Vercel que bcrypt (problèmes de binaires natifs)
+        
         // Nom correct pour v1 : sendResetPassword
         sendResetPassword: async ({ user, url, token }) => {
             console.log(`[Better-Auth] Envoi d'email de réinitialisation à: ${user.email}`);

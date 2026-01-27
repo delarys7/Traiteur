@@ -28,15 +28,19 @@ if (global.dbPool) {
     
     // Intercepter toutes les requêtes pour le debug
     const originalQuery = pool.query.bind(pool);
-    pool.query = (async (text: any, params: any) => {
+    pool.query = (async (...args: any[]) => {
+        const text = args[0];
+        const params = args[1];
         const queryText = typeof text === 'string' ? text : text?.text;
-        console.log(`[PG Query] ${queryText}`, params || text?.values || []);
+        const queryValues = Array.isArray(params) ? params : (text?.values || []);
+        
+        console.log(`[PG SQL] ${queryText?.substring(0, 200)}...`, queryValues);
         try {
-            const result = await originalQuery(text, params);
-            console.log(`[PG Success] ${result.rowCount} rows`);
+            const result = await originalQuery(...args);
+            console.log(`[PG OK] ${result.rowCount} lignes`);
             return result;
-        } catch (error) {
-            console.error(`[PG Error] ${queryText}`, error);
+        } catch (error: any) {
+            console.error(`[PG FAIL] ${queryText}`, error.message);
             throw error;
         }
     }) as any;
