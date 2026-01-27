@@ -5,13 +5,16 @@ import db from '@/lib/db';
 // GET /api/cart - Get user's cart
 export async function GET(request: NextRequest) {
     try {
+        console.log('[API Cart] GET Request received');
         const session = await auth.api.getSession({ headers: request.headers });
         
         if (!session?.user?.id) {
+            console.log('[API Cart] Non autorisé - Pas de session');
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
         const userId = session.user.id;
+        console.log('[API Cart] Fetching cart for user:', userId);
         
         const cartItems = await db.query(`
             SELECT 
@@ -28,9 +31,10 @@ export async function GET(request: NextRequest) {
             ORDER BY c."createdAt" ASC
         `, [userId]);
 
+        console.log(`[API Cart] Found ${cartItems.length} items`);
         return NextResponse.json(cartItems);
     } catch (error) {
-        console.error('Error fetching cart:', error);
+        console.error('[API Cart] Error fetching cart:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

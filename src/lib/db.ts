@@ -22,10 +22,25 @@ if (global.dbPool) {
     pool = new Pool({
         connectionString,
         ssl: {
-            rejectUnauthorized: false // Requis pour Supabase dans certains environnements
+            rejectUnauthorized: false
         }
     });
     
+    // Intercepter toutes les requêtes pour le debug
+    const originalQuery = pool.query.bind(pool);
+    pool.query = (async (text: any, params: any) => {
+        const queryText = typeof text === 'string' ? text : text?.text;
+        console.log(`[PG Query] ${queryText}`, params || text?.values || []);
+        try {
+            const result = await originalQuery(text, params);
+            console.log(`[PG Success] ${result.rowCount} rows`);
+            return result;
+        } catch (error) {
+            console.error(`[PG Error] ${queryText}`, error);
+            throw error;
+        }
+    }) as any;
+
     pool.on('connect', (client) => {
         console.log('[DB] Nouvelle connexion au pool PostgreSQL établie');
     });
@@ -45,8 +60,15 @@ const db = {
         // Conversion basique des placeholders ? vers $1, $2 (SQLite -> Postgres)
         let i = 1;
         const pgSql = sql.replace(/\?/g, () => `$${i++}`);
-        const result = await pool.query<T>(pgSql, params);
-        return result.rows;
+        console.log(`[DB Query] ${pgSql}`, params);
+        try {
+            const result = await pool.query<T>(pgSql, params);
+            console.log(`[DB Success] ${result.rowCount} rows`);
+            return result.rows;
+        } catch (error) {
+            console.error(`[DB Error] ${sql}`, error);
+            throw error;
+        }
     },
 
     // Équivalent de .prepare(sql).get(params)
@@ -59,8 +81,15 @@ const db = {
     async run(sql: string, params: any[] = []): Promise<{ rowCount: number }> {
         let i = 1;
         const pgSql = sql.replace(/\?/g, () => `$${i++}`);
-        const result = await pool.query(pgSql, params);
-        return { rowCount: result.rowCount || 0 };
+        console.log(`[DB Run] ${pgSql}`, params);
+        try {
+            const result = await pool.query(pgSql, params);
+            console.log(`[DB Success] ${result.rowCount} rows affected`);
+            return { rowCount: result.rowCount || 0 };
+        } catch (error) {
+            console.error(`[DB Error] ${sql}`, error);
+            throw error;
+        }
     },
 
     // Accès direct au pool si besoin
