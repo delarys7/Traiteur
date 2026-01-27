@@ -15,7 +15,7 @@ export async function GET(
                 COUNT(*) as reviewCount
             FROM reviews
             WHERE productId = ?
-        `).get(parseInt(productId));
+        `).get(parseInt(productId)) as { averageRating: number | string, reviewCount: number } | undefined;
 
         return NextResponse.json({
             averageRating: stats ? parseFloat(stats.averageRating as string) : 0,

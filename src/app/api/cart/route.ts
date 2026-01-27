@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Check if item already exists in cart
-        const existingItem = db.prepare('SELECT id, quantity FROM cart WHERE userId = ? AND productId = ?').get(userId, productId);
+        const existingItem = db.prepare('SELECT id, quantity FROM cart WHERE userId = ? AND productId = ?').get(userId, productId) as { id: string | number, quantity: number } | undefined;
 
         if (existingItem) {
             // Update quantity

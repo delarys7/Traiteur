@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signOut } from '@/lib/auth-client';
 import { useLanguage } from '@/context/LanguageContext';
 import styles from '../compte/page.module.css';
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { t } = useLanguage();
@@ -192,5 +192,13 @@ export default function ResetPasswordPage() {
                 </form>
             </div>
         </div>
+    );
+}
+
+export default function ResetPasswordPage() {
+    return (
+        <Suspense fallback={null}>
+            <ResetPasswordContent />
+        </Suspense>
     );
 }

@@ -39,11 +39,11 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ order, onClose, onSuccess }) 
     const [globalComment, setGlobalComment] = useState('');
 
     // Individual items review state
-    const [itemReviews, setItemReviews] = useState<Record<number, { rating: number; comment: string }>>(
+    const [itemReviews, setItemReviews] = useState<Record<string | number, { rating: number; comment: string }>>(
         order.items.reduce((acc, item) => ({
             ...acc,
             [item.id]: { rating: 5, comment: '' }
-        }), {})
+        }), {} as Record<string | number, { rating: number; comment: string }>)
     );
 
     const handleSubmit = async (e: React.FormEvent) => {

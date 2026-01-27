@@ -17,7 +17,7 @@ interface Address {
     city: string;
 }
 
-export default function Contact() {
+function ContactForm() {
     const { t } = useLanguage();
     const { user, isLoading } = useAuth();
     const router = useRouter();
@@ -772,5 +772,13 @@ export default function Contact() {
                 </div>
             )}
         </div>
+    );
+}
+
+export default function Contact() {
+    return (
+        <Suspense fallback={null}>
+            <ContactForm />
+        </Suspense>
     );
 }

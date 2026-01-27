@@ -83,7 +83,7 @@ export async function PUT(request: NextRequest) {
         }
 
         // Vérifier que l'adresse appartient à l'utilisateur
-        const existingAddress = db.prepare('SELECT userId FROM addresses WHERE id = ?').get(id);
+        const existingAddress = db.prepare('SELECT userId FROM addresses WHERE id = ?').get(id) as { userId: string } | undefined;
         
         if (!existingAddress) {
             return NextResponse.json({ error: 'Adresse non trouvée' }, { status: 404 });
@@ -132,7 +132,7 @@ export async function DELETE(request: NextRequest) {
         }
 
         // Vérifier que l'adresse appartient à l'utilisateur
-        const address = db.prepare('SELECT userId FROM addresses WHERE id = ?').get(addressId);
+        const address = db.prepare('SELECT userId FROM addresses WHERE id = ?').get(addressId) as { userId: string } | undefined;
         
         if (!address) {
             return NextResponse.json({ error: 'Adresse non trouvée' }, { status: 404 });
