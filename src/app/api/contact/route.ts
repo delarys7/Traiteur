@@ -4,7 +4,12 @@ import { Resend } from 'resend';
 import db from '@/lib/db';
 import { randomUUID } from 'crypto';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Initialiser Resend seulement quand on en a besoin
+const getResendClient = () => {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) return null;
+    return new Resend(apiKey);
+};
 
 export async function POST(request: NextRequest) {
     try {
@@ -158,7 +163,8 @@ export async function POST(request: NextRequest) {
         const adminEmails = admins.map(admin => admin.email);
 
         // Envoyer l'email aux administrateurs si au moins un admin existe
-        if (process.env.RESEND_API_KEY && adminEmails.length > 0) {
+        const resend = getResendClient();
+        if (resend && adminEmails.length > 0) {
             try {
                 // Construire le lien vers la page de détails de la commande
                 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
@@ -437,7 +443,7 @@ export async function POST(request: NextRequest) {
         }
 
         // --- ENVOI DE L'EMAIL DE CONFIRMATION AU CLIENT ---
-        if (process.env.RESEND_API_KEY) {
+        if (resend) {
             try {
                 const baseURL = process.env.NEXT_PUBLIC_APP_URL || 
                     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) || 

@@ -62,6 +62,13 @@ export async function POST(request: NextRequest) {
         `).run(verificationId, email, token, expiresAt.toISOString(), now, now);
 
         // Initialiser Resend et envoyer l'email
+        if (!process.env.RESEND_API_KEY) {
+            console.error('[API] RESEND_API_KEY non configurée !');
+            return NextResponse.json(
+                { error: 'Configuration email manquante' },
+                { status: 500 }
+            );
+        }
         const resend = new Resend(process.env.RESEND_API_KEY);
         
         console.log('[API] Envoi d\'email de réinitialisation pour:', user.email);

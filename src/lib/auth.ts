@@ -5,7 +5,12 @@ import fs from "fs";
 import path from "path";
 import { hash, compare } from "bcrypt";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Initialiser Resend seulement quand on en a besoin pour éviter les erreurs au build
+const getResend = () => {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) return null;
+    return new Resend(apiKey);
+};
 
 // Charger le logo en base64 au démarrage
 let logoBase64: string | null = null;
@@ -52,12 +57,13 @@ export const auth = betterAuth({
             const logoURL = `${baseURL}/images/Logo-NoBG-rogne.png`;
             console.log(`[Better-Auth] Utilisation du logo via URL publique: ${logoURL}`);
             
-            if (!process.env.RESEND_API_KEY) {
-                console.warn("[Better-Auth] RESEND_API_KEY non configurée. URL de réinitialisation:", url);
-                return;
-            }
             
             try {
+                const resend = getResend();
+                if (!resend) {
+                    console.warn("[Better-Auth] RESEND_API_KEY non configurée. URL de réinitialisation:", url);
+                    return;
+                }
                 const { data, error } = await resend.emails.send({
                     from: "Traiteur <contact@delarys.com>",
                     to: [user.email],
@@ -171,7 +177,8 @@ export const auth = betterAuth({
             console.log(`[Better-Auth] Utilisation du logo via URL publique: ${logoURL}`);
             
             // Si pas de clé API Resend, on log juste l'URL pour le développement
-            if (!process.env.RESEND_API_KEY) {
+            const resend = getResend();
+            if (!resend) {
                 console.warn("[Better-Auth] RESEND_API_KEY non configurée. URL de vérification:", url);
                 return; // On retourne sans erreur pour permettre l'inscription en développement
             }
