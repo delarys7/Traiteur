@@ -36,7 +36,7 @@ export const auth = betterAuth({
                 const logoUrl = `${baseURL}/images/Logo-NoBG-rogne.png`;
                 
                 await resend.emails.send({
-                    from: "Traiteur <contact@delarys.com>",
+                    from: "Athéna Event <contact@delarys.com>",
                     to: [user.email],
                     subject: "Réinitialisation de votre mot de passe",
                     html: `
@@ -114,8 +114,13 @@ export const auth = betterAuth({
 
                 const logoUrl = `${baseURL}/images/Logo-NoBG-rogne.png`;
                 
+                // Personnalisation du message de bienvenue pour les pros
+                const userName = user.name || user.email;
+                const companySuffix = (user as any).raisonSociale ? ` (${(user as any).raisonSociale})` : "";
+                const greeting = `Bonjour ${userName}${companySuffix},`;
+
                 const { data, error } = await resend.emails.send({
-                    from: "Traiteur <contact@delarys.com>",
+                    from: "Athéna Event <contact@delarys.com>",
                     to: [user.email],
                     subject: "Vérifiez votre adresse email",
                     html: `
@@ -150,7 +155,7 @@ export const auth = betterAuth({
             <tr>
                 <td class="content">
                     <h1>UNE INVITATION À L'EXCEPTION</h1>
-                    <p>Bonjour ${user.name || user.email},</p>
+                    <p>${greeting}</p>
                     <p>Nous sommes enchantés de vous accueillir. Pour accéder à votre espace personnel et commencer la confection de votre prochain événement, merci de valider votre inscription :</p>
                     
                     <div class="button-container">

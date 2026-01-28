@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
         console.log('[API] Reset URL:', resetUrl);
         
         const { data, error } = await resend.emails.send({
-            from: "Traiteur <contact@delarys.com>",
+            from: "Athéna Event <contact@delarys.com>",
             to: [user.email],
             subject: "Réinitialisation de votre mot de passe",
             html: `
