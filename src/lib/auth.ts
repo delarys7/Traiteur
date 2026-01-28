@@ -27,18 +27,77 @@ export const auth = betterAuth({
         requireEmailVerification: true,
         // better-auth utilise scrypt par défaut, ce qui est plus sûr sur Vercel que bcrypt (problèmes de binaires natifs)
         
-        // Nom correct pour v1 : sendResetPassword
         sendResetPassword: async ({ user, url, token }) => {
-            console.log(`[Better-Auth] Envoi d'email de réinitialisation à: ${user.email}`);
-            const resend = getResend();
-            if (!resend) return;
-            
-            await resend.emails.send({
-                from: "Traiteur <contact@delarys.com>",
-                to: [user.email],
-                subject: "Réinitialisation de votre mot de passe",
-                html: `<p>Bonjour ${user.name},</p><p>Cliquez ici pour réinitialiser : <a href="${url}">${url}</a></p>`
-            });
+            try {
+                console.log(`[Better-Auth] Réinitialisation pour: ${user.email}`);
+                const resend = getResend();
+                if (!resend) return;
+
+                const logoUrl = `${baseURL}/images/Logo-NoBG-rogne.png`;
+                
+                await resend.emails.send({
+                    from: "Traiteur <contact@delarys.com>",
+                    to: [user.email],
+                    subject: "Réinitialisation de votre mot de passe",
+                    html: `
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: 'Times New Roman', Times, serif; background-color: #ffffff; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        .wrapper { width: 100%; table-layout: fixed; background-color: #ffffff; padding-bottom: 40px; }
+        .main { background-color: #ffffff; margin: 0 auto; width: 100%; max-width: 600px; border-spacing: 0; color: #1a1a1a; }
+        .content { padding: 40px 20px; text-align: center; }
+        .logo { padding: 40px 0; text-align: center; }
+        .logo img { width: 180px; height: auto; }
+        h1 { font-size: 20px; font-weight: 400; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; color: #1a1a1a; }
+        p { font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6; color: #444444; margin-bottom: 20px; }
+        .button-container { padding: 30px 0; }
+        .button { background-color: #000000; color: #ffffff !important; padding: 15px 35px; text-decoration: none; font-size: 13px; font-family: Arial, sans-serif; text-transform: uppercase; letter-spacing: 1px; display: inline-block; border-radius: 2px; }
+        .footer { padding: 20px; text-align: center; font-family: Arial, sans-serif; font-size: 11px; color: #999999; border-top: 1px solid #eeeeee; }
+        .link-alt { font-size: 10px; color: #999999; word-break: break-all; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <center class="wrapper">
+        <table class="main">
+            <tr>
+                <td class="logo">
+                    <img src="${logoUrl}" alt="Athéna Event Paris" style="display: block; max-width: 180px; height: auto; margin: 0 auto;">
+                </td>
+            </tr>
+            <tr>
+                <td class="content">
+                    <h1>Réinitialisation du mot de passe</h1>
+                    <p>Bonjour ${user.name || user.email},</p>
+                    <p>Vous avez demandé à réinitialiser votre mot de passe. Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :</p>
+                    
+                    <div class="button-container">
+                        <a href="${url}" class="button">Réinitialiser mon mot de passe</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="footer">
+                    ATHÉNA EVENT PARIS<br>
+                    Traiteur de Haute Gastronomie – Paris<br><br>
+                    <div class="link-alt">
+                        Si le bouton ne fonctionne pas, copiez ce lien : <br>
+                        ${url}
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </center>
+</body>
+</html>
+                    `
+                });
+            } catch (err) {
+                console.error('[Better-Auth] EXCEPTION dans sendResetPassword:', err);
+            }
         }
     },
     
@@ -46,19 +105,76 @@ export const auth = betterAuth({
         sendVerificationEmail: async ({ user, url, token }) => {
             try {
                 console.log(`[Better-Auth] Tentative d'envoi d'email à: ${user.email}`);
-                console.log(`[Better-Auth] Vérifiez cet URL si le lien ne part pas: ${url}`);
                 
                 const resend = getResend();
                 if (!resend) {
-                    console.error('[Better-Auth] ERREUR: Resend non configuré (check RESEND_API_KEY)');
+                    console.error('[Better-Auth] ERREUR: Resend non configuré');
                     return;
                 }
+
+                const logoUrl = `${baseURL}/images/Logo-NoBG-rogne.png`;
                 
                 const { data, error } = await resend.emails.send({
                     from: "Traiteur <contact@delarys.com>",
                     to: [user.email],
                     subject: "Vérifiez votre adresse email",
-                    html: `<p>Bonjour ${user.name},</p><p>Cliquez ici pour valider votre compte : <a href="${url}">${url}</a></p>`
+                    html: `
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: 'Times New Roman', Times, serif; background-color: #ffffff; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        .wrapper { width: 100%; table-layout: fixed; background-color: #ffffff; padding-bottom: 40px; }
+        .main { background-color: #ffffff; margin: 0 auto; width: 100%; max-width: 600px; border-spacing: 0; color: #1a1a1a; }
+        .content { padding: 40px 20px; text-align: center; }
+        .logo { padding: 40px 0; text-align: center; }
+        .logo img { width: 180px; height: auto; }
+        h1 { font-size: 20px; font-weight: 400; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; color: #1a1a1a; }
+        p { font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6; color: #444444; margin-bottom: 20px; }
+        .button-container { padding: 30px 0; }
+        .button { background-color: #000000; color: #ffffff !important; padding: 15px 35px; text-decoration: none; font-size: 13px; font-family: Arial, sans-serif; text-transform: uppercase; letter-spacing: 1px; display: inline-block; border-radius: 2px; }
+        .footer { padding: 20px; text-align: center; font-family: Arial, sans-serif; font-size: 11px; color: #999999; border-top: 1px solid #eeeeee; }
+        .link-alt { font-size: 10px; color: #999999; word-break: break-all; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <center class="wrapper">
+        <table class="main">
+            <tr>
+                <td class="logo">
+                    <img src="${logoUrl}" alt="Athéna Event Paris" style="display: block; max-width: 180px; height: auto; margin: 0 auto;">
+                </td>
+            </tr>
+            <tr>
+                <td class="content">
+                    <h1>UNE INVITATION À L'EXCEPTION</h1>
+                    <p>Bonjour ${user.name || user.email},</p>
+                    <p>Nous sommes enchantés de vous accueillir. Pour accéder à votre espace personnel et commencer la confection de votre prochain événement, merci de valider votre inscription :</p>
+                    
+                    <div class="button-container">
+                        <a href="${url}" class="button">CONFIRMER MON EMAIL</a>
+                    </div>
+                    
+                    <p style="font-style: italic; font-size: 12px; color: #999999; margin-top: 30px;">L'art de recevoir, tout simplement.</p>
+                </td>
+            </tr>
+            <tr>
+                <td class="footer">
+                    ATHÉNA EVENT PARIS<br>
+                    Traiteur de Haute Gastronomie – Paris<br><br>
+                    <div class="link-alt">
+                        Si le bouton ne fonctionne pas, copiez ce lien : <br>
+                        ${url}
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </center>
+</body>
+</html>
+                    `
                 });
 
                 if (error) {
