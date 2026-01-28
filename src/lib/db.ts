@@ -19,6 +19,9 @@ let pool: Pool;
 if (global.dbPool) {
     pool = global.dbPool;
 } else {
+    const maskedUrl = connectionString ? connectionString.replace(/:[^:@]+@/, ':****@') : 'UNDEFINED';
+    console.log(`[DB] Tentative de connexion avec DATABASE_URL: ${maskedUrl}`);
+    
     pool = new Pool({
         connectionString,
         ssl: {

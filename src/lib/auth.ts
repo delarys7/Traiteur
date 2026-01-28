@@ -44,16 +44,31 @@ export const auth = betterAuth({
     
     emailVerification: {
         sendVerificationEmail: async ({ user, url, token }) => {
-            console.log(`[Better-Auth] Envoi d'email de vérification à: ${user.email}`);
-            const resend = getResend();
-            if (!resend) return;
-            
-            await resend.emails.send({
-                from: "Traiteur <contact@delarys.com>",
-                to: [user.email],
-                subject: "Vérifiez votre adresse email",
-                html: `<p>Bonjour ${user.name},</p><p>Cliquez ici pour valider : <a href="${url}">${url}</a></p>`
-            });
+            try {
+                console.log(`[Better-Auth] Tentative d'envoi d'email à: ${user.email}`);
+                console.log(`[Better-Auth] Vérifiez cet URL si le lien ne part pas: ${url}`);
+                
+                const resend = getResend();
+                if (!resend) {
+                    console.error('[Better-Auth] ERREUR: Resend non configuré (check RESEND_API_KEY)');
+                    return;
+                }
+                
+                const { data, error } = await resend.emails.send({
+                    from: "Traiteur <contact@delarys.com>",
+                    to: [user.email],
+                    subject: "Vérifiez votre adresse email",
+                    html: `<p>Bonjour ${user.name},</p><p>Cliquez ici pour valider votre compte : <a href="${url}">${url}</a></p>`
+                });
+
+                if (error) {
+                    console.error('[Better-Auth] ERREUR Resend:', error);
+                } else {
+                    console.log('[Better-Auth] Email envoyé avec succès, ID:', data?.id);
+                }
+            } catch (err) {
+                console.error('[Better-Auth] EXCEPTION dans sendVerificationEmail:', err);
+            }
         }
     },
 
