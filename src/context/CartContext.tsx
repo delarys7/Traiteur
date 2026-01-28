@@ -80,38 +80,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
         const currentUserId = session?.user?.id || null;
         const previousUserId = previousUserIdRef.current;
 
-        // LOAD OR MERGE
+        // LOAD OR DISCARD GUEST CART
         if (currentUserId && currentUserId !== previousUserId) {
             // User just logged in
-            const syncGuestCart = async () => {
-                const savedGuestCart = localStorage.getItem('guestCart');
-                if (savedGuestCart) {
-                    try {
-                        const guestItems = JSON.parse(savedGuestCart) as CartItem[];
-                        if (guestItems.length > 0) {
-                            console.log('[Cart] Merging guest items into persistent account...');
-                            // Merge sequentially to avoid pool issues or racing
-                            for (const item of guestItems) {
-                                await fetch('/api/cart', {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({
-                                        productId: item.productId,
-                                        quantity: item.quantity
-                                    })
-                                });
-                            }
-                            localStorage.removeItem('guestCart');
-                        }
-                    } catch (e) {
-                        console.error('Error merging guest cart:', e);
-                    }
-                }
-                // Refresh full cart from API after merging
-                loadCart();
-            };
-            
-            syncGuestCart();
+            console.log('[Cart] User logged in. Discarding guest items and loading account cart...');
+            localStorage.removeItem('guestCart');
+            loadCart();
             previousUserIdRef.current = currentUserId;
         } else if (!currentUserId && previousUserId) {
             // User just logged out
