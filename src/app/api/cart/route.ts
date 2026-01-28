@@ -50,10 +50,11 @@ export async function POST(request: NextRequest) {
 
         const userId = session.user.id;
         const body = await request.json();
-        const { productId, quantity = 1 } = body;
+        const productId = Number(body.productId);
+        const quantity = Number(body.quantity || 1);
 
-        if (!productId) {
-            return NextResponse.json({ error: 'Product ID is required' }, { status: 400 });
+        if (!productId || isNaN(productId)) {
+            return NextResponse.json({ error: 'Valid Product ID is required' }, { status: 400 });
         }
 
         // Check if product exists
@@ -114,10 +115,11 @@ export async function PUT(request: NextRequest) {
 
         const userId = session.user.id;
         const body = await request.json();
-        const { productId, quantity } = body;
+        const productId = Number(body.productId);
+        const quantity = Number(body.quantity);
 
-        if (!productId || quantity === undefined) {
-            return NextResponse.json({ error: 'Product ID and quantity are required' }, { status: 400 });
+        if (!productId || isNaN(productId) || isNaN(quantity)) {
+            return NextResponse.json({ error: 'Valid Product ID and quantity are required' }, { status: 400 });
         }
 
         if (quantity < 1) {
@@ -169,8 +171,9 @@ export async function DELETE(request: NextRequest) {
         const productId = searchParams.get('productId');
 
         if (productId) {
+            const pid = Number(productId);
             // Remove specific item
-            await db.run('DELETE FROM cart WHERE "userId" = ? AND "productId" = ?', [userId, productId]);
+            await db.run('DELETE FROM cart WHERE "userId" = ? AND "productId" = ?', [userId, pid]);
         } else {
             // Clear entire cart
             await db.run('DELETE FROM cart WHERE "userId" = ?', [userId]);

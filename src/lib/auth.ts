@@ -10,16 +10,16 @@ const getResend = () => {
     return new Resend(apiKey);
 };
 
-const baseURL = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+const baseURL = process.env.BETTER_AUTH_URL || process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
 
 export const auth = betterAuth({
-    database: {
-        db: pool,
-        type: "postgres"
-    },
+    database: pool,
     baseURL: baseURL,
-    // On laisse better-auth gérer les origines de confiance par défaut 
-    // ou on en ajoute si on détecte une adresse spécifique plus tard
+    trustedOrigins: [
+        "https://athena-event.vercel.app",
+        "https://athena-event-git-main-delarys7s-projects.vercel.app",
+        process.env.NEXT_PUBLIC_APP_URL as string,
+    ].filter(Boolean),
     secret: process.env.BETTER_AUTH_SECRET || "dev-secret-change-in-production",
     
     emailAndPassword: {
