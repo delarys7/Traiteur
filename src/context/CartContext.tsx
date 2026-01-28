@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useRef } from 'react';
 import { useSession } from '@/lib/auth-client';
 
 export interface CartItem {
@@ -30,10 +30,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const [items, setItems] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const { data: session } = useSession();
-    const previousUserIdRef = React.useRef<string | null>(null);
+    const previousUserIdRef = useRef<string | null>(null);
 
     // Load cart from API
-    const loadCart = async () => {
+    const loadCart = useCallback(async () => {
         if (!session?.user?.id) {
             setItems([]);
             return;
@@ -64,7 +64,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [session?.user?.id]);
 
     // Load cart on mount and when user changes
     useEffect(() => {
@@ -85,7 +85,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session]);
 
-    const addToCart = async (product: { id: number; name: string; price: number; image: string; category?: string }) => {
+    const addToCart = useCallback(async (product: { id: number; name: string; price: number; image: string; category?: string }) => {
         if (!session?.user?.id) {
             console.error('Cannot add to cart: user not logged in');
             return;
@@ -121,9 +121,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
         } catch (error) {
             console.error('Error adding to cart:', error);
         }
-    };
+    }, [session?.user?.id]);
 
-    const removeFromCart = async (productId: number) => {
+    const removeFromCart = useCallback(async (productId: number) => {
         if (!session?.user?.id) {
             console.error('Cannot remove from cart: user not logged in');
             return;
@@ -142,9 +142,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
         } catch (error) {
             console.error('Error removing from cart:', error);
         }
-    };
+    }, [session?.user?.id, loadCart]);
 
-    const updateQuantity = async (productId: number, quantity: number) => {
+    const updateQuantity = useCallback(async (productId: number, quantity: number) => {
         if (!session?.user?.id) {
             console.error('Cannot update cart: user not logged in');
             return;
@@ -175,9 +175,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
         } catch (error) {
             console.error('Error updating cart:', error);
         }
-    };
+    }, [session?.user?.id, loadCart, removeFromCart]);
 
-    const clearCart = async () => {
+    const clearCart = useCallback(async () => {
         if (!session?.user?.id) {
             setItems([]);
             return;
@@ -196,7 +196,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         } catch (error) {
             console.error('Error clearing cart:', error);
         }
-    };
+    }, [session?.user?.id]);
 
     const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const count = items.reduce((sum, item) => sum + item.quantity, 0);

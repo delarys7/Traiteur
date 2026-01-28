@@ -61,7 +61,7 @@ export async function PUT(request: NextRequest) {
         console.log('[API] Résultat mise à jour:', result);
 
         // Récupérer l'utilisateur mis à jour
-        const updatedUser = await db.get('SELECT * FROM "user" WHERE id = ?', [session.user.id]);
+        const updatedUser = await db.get<any>('SELECT * FROM "user" WHERE id = ?', [session.user.id]);
         console.log('[API] Utilisateur mis à jour:', updatedUser);
 
         return NextResponse.json({ 

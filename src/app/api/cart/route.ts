@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Check if product exists
-        const product = await db.get('SELECT id, name, price, image, category FROM products WHERE id = ?', [productId]);
+        const product = await db.get<any>('SELECT id, name, price, image, category FROM products WHERE id = ?', [productId]);
         if (!product) {
             return NextResponse.json({ error: 'Product not found' }, { status: 404 });
         }

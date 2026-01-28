@@ -101,7 +101,7 @@ export async function PUT(request: NextRequest) {
             WHERE id = ?
         `, [name, address, postalCode, city, now, id]);
 
-        const updatedAddress = await db.get('SELECT * FROM addresses WHERE id = ?', [id]);
+        const updatedAddress = await db.get<any>('SELECT * FROM addresses WHERE id = ?', [id]);
 
         return NextResponse.json({ 
             success: true, 
