@@ -121,7 +121,7 @@ export default function Header() {
                         <div className={styles.logoCenter}>
                             <Link href="/">
                                 <Image
-                                    src="/images/Logo-NoBG-rogné.png"
+                                    src="/images/Logo-NoBG-rogne.png"
                                     alt="Athéna Event Paris"
                                     width={300}
                                     height={120}

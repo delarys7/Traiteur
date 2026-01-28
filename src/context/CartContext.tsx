@@ -32,10 +32,21 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const { data: session } = useSession();
     const previousUserIdRef = useRef<string | null>(null);
 
-    // Load cart from API
+    // Load cart from API or LocalStorage
     const loadCart = useCallback(async () => {
         if (!session?.user?.id) {
-            setItems([]);
+            // Guest mode: load from LocalStorage
+            const savedCart = localStorage.getItem('guestCart');
+            if (savedCart) {
+                try {
+                    setItems(JSON.parse(savedCart));
+                } catch (e) {
+                    console.error('Error parsing guest cart:', e);
+                    setItems([]);
+                }
+            } else {
+                setItems([]);
+            }
             return;
         }
 
@@ -44,9 +55,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
             const response = await fetch('/api/cart');
             if (response.ok) {
                 const cartItems = await response.json();
-                // Transform API response to match CartItem interface
                 const transformedItems = cartItems.map((item: any) => ({
-                    id: item.productId, // Use productId as id for compatibility
+                    id: item.productId,
                     productId: item.productId,
                     name: item.name,
                     price: item.price,
@@ -55,8 +65,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
                     category: item.category
                 }));
                 setItems(transformedItems);
-            } else if (response.status === 401) {
-                // Not logged in, clear cart
+            } else {
                 setItems([]);
             }
         } catch (error) {
@@ -71,23 +80,76 @@ export function CartProvider({ children }: { children: ReactNode }) {
         const currentUserId = session?.user?.id || null;
         const previousUserId = previousUserIdRef.current;
 
-        // Load cart when user logs in or switches accounts
-        if (currentUserId !== previousUserId) {
-            loadCart();
+        // LOAD OR MERGE
+        if (currentUserId && currentUserId !== previousUserId) {
+            // User just logged in
+            const syncGuestCart = async () => {
+                const savedGuestCart = localStorage.getItem('guestCart');
+                if (savedGuestCart) {
+                    try {
+                        const guestItems = JSON.parse(savedGuestCart) as CartItem[];
+                        if (guestItems.length > 0) {
+                            console.log('[Cart] Merging guest items into persistent account...');
+                            // Merge sequentially to avoid pool issues or racing
+                            for (const item of guestItems) {
+                                await fetch('/api/cart', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        productId: item.productId,
+                                        quantity: item.quantity
+                                    })
+                                });
+                            }
+                            localStorage.removeItem('guestCart');
+                        }
+                    } catch (e) {
+                        console.error('Error merging guest cart:', e);
+                    }
+                }
+                // Refresh full cart from API after merging
+                loadCart();
+            };
+            
+            syncGuestCart();
             previousUserIdRef.current = currentUserId;
-        }
-
-        // Clear cart when user logs out
-        if (!currentUserId && previousUserId) {
+        } else if (!currentUserId && previousUserId) {
+            // User just logged out
             setItems([]);
             previousUserIdRef.current = null;
+        } else if (!currentUserId && !previousUserId) {
+            // Initial mount or guest mode
+            loadCart();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session]);
 
     const addToCart = useCallback(async (product: { id: number; name: string; price: number; image: string; category?: string }) => {
         if (!session?.user?.id) {
-            console.error('Cannot add to cart: user not logged in');
+            // Guest mode: update state and LocalStorage
+            setItems(prev => {
+                const existingItem = prev.find(item => item.productId === product.id);
+                let newItems;
+                if (existingItem) {
+                    newItems = prev.map(item => 
+                        item.productId === product.id 
+                        ? { ...item, quantity: item.quantity + 1 } 
+                        : item
+                    );
+                } else {
+                    newItems = [...prev, {
+                        id: product.id,
+                        productId: product.id,
+                        name: product.name,
+                        price: product.price,
+                        quantity: 1,
+                        image: product.image,
+                        category: product.category
+                    }];
+                }
+                localStorage.setItem('guestCart', JSON.stringify(newItems));
+                return newItems;
+            });
             return;
         }
 
@@ -125,7 +187,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     const removeFromCart = useCallback(async (productId: number) => {
         if (!session?.user?.id) {
-            console.error('Cannot remove from cart: user not logged in');
+            // Guest mode
+            setItems(prev => {
+                const newItems = prev.filter(item => item.productId !== productId);
+                localStorage.setItem('guestCart', JSON.stringify(newItems));
+                return newItems;
+            });
             return;
         }
 
@@ -145,13 +212,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }, [session?.user?.id, loadCart]);
 
     const updateQuantity = useCallback(async (productId: number, quantity: number) => {
-        if (!session?.user?.id) {
-            console.error('Cannot update cart: user not logged in');
+        if (quantity < 1) {
+            removeFromCart(productId);
             return;
         }
 
-        if (quantity < 1) {
-            removeFromCart(productId);
+        if (!session?.user?.id) {
+            // Guest mode
+            setItems(prev => {
+                const newItems = prev.map(item => 
+                    item.productId === productId 
+                    ? { ...item, quantity } 
+                    : item
+                );
+                localStorage.setItem('guestCart', JSON.stringify(newItems));
+                return newItems;
+            });
             return;
         }
 
@@ -179,7 +255,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     const clearCart = useCallback(async () => {
         if (!session?.user?.id) {
+            // Guest mode
             setItems([]);
+            localStorage.removeItem('guestCart');
             return;
         }
 
@@ -190,6 +268,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
             if (response.ok) {
                 setItems([]);
+                localStorage.removeItem('guestCart'); // Just in case
             } else {
                 console.error('Error clearing cart:', response.statusText);
             }

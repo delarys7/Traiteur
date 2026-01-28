@@ -18,8 +18,13 @@ const cormorant = Cormorant_Garamond({
 })
 
 export const metadata: Metadata = {
-  title: 'Traiteur - Excellence & Luxe',
-  description: 'Traiteur de prestige, chef à domicile et consultant.',
+  title: 'Athéna Event Paris - Traiteur de Haute Gastronomie',
+  description: "L'art de recevoir à son apogée. Traiteur d'exception à Paris pour vos réceptions privées et événements d'entreprise.",
+  icons: {
+    icon: '/images/logo_onglet_web.jpeg',
+    shortcut: '/images/logo_onglet_web.jpeg',
+    apple: '/images/logo_onglet_web.jpeg',
+  },
 }
 
 export default function RootLayout({
